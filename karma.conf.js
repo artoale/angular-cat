@@ -1,4 +1,5 @@
-module.exports = function(config) {
+//jshint node:true
+module.exports = function (config) {
     'use strict';
 
     config.set({
@@ -15,9 +16,19 @@ module.exports = function(config) {
             'test/**/*.js': ['browserify']
         },
         reporters: ['mocha', 'notify'],
+        customLaunchers: {
+            ChromeTravis: {
+                base: 'Chrome',
+                flags: ['--no-sandbox']
+            }
+        },
         browserify: {
             debug: true,
             transform: ['babelify']
         }
     });
+
+    if (process.env.TRAVIS) {
+        config.browsers = ['ChromeTravis'];
+    }
 };
