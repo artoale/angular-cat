@@ -1,0 +1,29 @@
+{
+  "name": "animations",
+  "version": "0.0.0",
+  "description": "Set of angularjs directives to simplify development of animations on static websites",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/artoale/animations.git"
+  },
+  "keywords": [
+    "angularjs",
+    "animations"
+  ],
+  "author": "Alessandro Artoni <aartoni@google.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/artoale/animations/issues"
+  },
+  "homepage": "https://github.com/artoale/animations",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-babel": "^5.1.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-sourcemaps": "^1.5.2"
+  }
+}

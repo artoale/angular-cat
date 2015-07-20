@@ -1,0 +1,22 @@
+{
+  "name": "animations",
+  "version": "0.0.0",
+  "homepage": "https://github.com/artoale/animations",
+  "authors": [
+    "Alessandro Artoni <aartoni@google.com>",
+    "Paolo Chillari <killer.paolo@gmail.com>"
+  ],
+  "description": "Set of angularjs directives to simplify development of animations on static websites",
+  "keywords": [
+    "angularjs",
+    "animations"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
