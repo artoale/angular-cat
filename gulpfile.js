@@ -5,9 +5,9 @@ var gulp = require('gulp'),
     sourcemaps = require('gulp-sourcemaps'),
     babel = require('gulp-babel'),
     concat = require('gulp-concat'),
-    karmaServer = require('karma').Server;
+    KarmaServer = require('karma').Server;
 
-gulp.task('default', function() {
+gulp.task('default', function () {
     return gulp.src('src/js/**/*.js')
         .pipe(sourcemaps.init())
         .pipe(babel({
@@ -18,8 +18,8 @@ gulp.task('default', function() {
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('karma', function(done) {
-    new karmaServer({
+gulp.task('karma', function (done) {
+    new KarmaServer({
         configFile: __dirname + '/karma.conf.js'
     }, done).start();
 });
