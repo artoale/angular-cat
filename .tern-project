@@ -1,0 +1,15 @@
+{
+  "libs": [
+    "browser",
+    "ecma5",
+    "ecma6"
+  ],
+  "loadEagerly": [
+    "src/js/**.js"
+  ],
+  "plugins": {
+    "complete_strings": {},
+    "doc_comment": {},
+    "angular": {}
+  }
+}
