@@ -1,15 +1,16 @@
-var gulp = require('gulp');
+//jshint node:true
+'use strict';
 
-var gulp = require('gulp');
-var sourcemaps = require('gulp-sourcemaps');
-var babel = require('gulp-babel');
-var concat = require('gulp-concat');
+var gulp = require('gulp'),
+    sourcemaps = require('gulp-sourcemaps'),
+    babel = require('gulp-babel'),
+    concat = require('gulp-concat');
 
 gulp.task('default', function () {
-  return gulp.src('src/js/**/*.js')
-    .pipe(sourcemaps.init())
-    .pipe(babel())
-    .pipe(concat('all.js'))
-    .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest('dist'));
+    return gulp.src('src/js/**/*.js')
+        .pipe(sourcemaps.init())
+        .pipe(babel())
+        .pipe(concat('all.js'))
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest('dist'));
 });

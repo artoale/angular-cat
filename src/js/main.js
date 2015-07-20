@@ -1,3 +1,3 @@
 const test = 'TEST';
 
-export {test};
+export var test2 = 'TEST' + test;

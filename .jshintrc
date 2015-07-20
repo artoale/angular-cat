@@ -17,10 +17,6 @@
     "nonew"         : true,
     "plusplus"      : true,
     "quotmark"      : "single",
-
-
-
-
     "undef"         : true,
     "unused"        : true,
     "strict"        : true,
@@ -29,7 +25,6 @@
     "maxstatements" : false,
     "maxcomplexity" : false,
     "maxlen"        : false,
-
     "browser"       : true,
     "couch"         : false,
     "devel"         : true,
@@ -37,9 +32,8 @@
     "jasmine"       : false,
     "mocha"         : false,
     "node"          : false,
-    "esnext"        : true,
-
     "globals"       : {
-        "angular": true,
-    }
+        "angular": true
+    },
+    "esnext"        : true
 }
