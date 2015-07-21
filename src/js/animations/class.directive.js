@@ -1,4 +1,4 @@
-const mod = angular.module('pa.animations.class', ['ngAnimate']),
+const mod = angular.module('pa.animations.class', []),
     directiveName = 'paClass';
 
 mod.directive(directiveName, ($animate) => {
@@ -39,7 +39,9 @@ mod.directive(directiveName, ($animate) => {
                         classNameStart
                     ).then(() => {
                         setStatus('FINISHED');
-                        scope.$apply();
+                        // Used to be necessary in angular 1.3. Tests fail
+                        // when called, need to check on demo version.
+                        // scope.$apply();
                     });
                 } else if (undo) {
                     setUp();
