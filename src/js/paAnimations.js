@@ -1,8 +1,8 @@
-import classDirective from './animations/class.directive';
+import animations from './animations/animations.module';
 
 const module = angular.module('paAnimations', [
     'ngAnimate',
-    classDirective.name
+    animations.name
 ]);
 
 export default module;
