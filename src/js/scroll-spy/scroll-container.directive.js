@@ -40,7 +40,7 @@ scrollSpyDirective.directive('paScrollContainer', ($window, $timeout, paDebounce
 
                 selfCtrl.spies.forEach((spy)=> {
                     let spyRect = spy.getRect();
-                    if ((spyRect.top >= viewportRect.top && (spyRect.top + spyRect.height) <= (viewportRect.top + viewportRect.height)) ||
+                    if ((spyRect.top >= (viewportRect.top - spyRect.height) && (spyRect.top + spyRect.height) <= (viewportRect.top + viewportRect.height)) ||
                         (spyRect.top < viewportRect.top && (spyRect.height) >= vpHeight)) {
                         spy.setInView(true);
                     } else {
