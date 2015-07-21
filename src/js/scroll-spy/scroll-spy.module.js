@@ -1,7 +1,7 @@
-import scrollSpy from './scrollSpy.directive';
-import spy from './spy.directive';
+import scrollSpy from './scroll-container.directive';
+import spy from './visible.directive';
 
-var module = angular.module('paScrollSpyModule', [scrollSpy.name, spy.name]).run(() => {
+var module = angular.module('pa.scrollSpy', [scrollSpy.name, spy.name]).run(() => {
     console.log('ScrollSpy module run!');
 });
 
