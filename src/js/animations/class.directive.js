@@ -39,7 +39,6 @@ mod.directive(directiveName, ($animate) => {
                         //usecase, needs more cowbell
                         resolve();
                     }
-
                     setUp();
 
                     return clearDeferred.promise;
@@ -52,8 +51,10 @@ mod.directive(directiveName, ($animate) => {
                         $element,
                         classNameStart
                     ).then(() => {
-                        setStatus('FINISHED');
-                        resolve();
+                        if (status === 'RUNNING') {
+                            setStatus('FINISHED');
+                            resolve();
+                        }
                     });
 
                 },
@@ -68,10 +69,10 @@ mod.directive(directiveName, ($animate) => {
             //APIs used by linking function
             this.setUp = setUp;
             this.runAnimation = runAnimation;
+            this.resolve = resolve;
 
             //Public APIs
             this.play = play;
-            this.resolve = resolve;
             this.clear = clear;
 
         },
