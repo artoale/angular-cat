@@ -1,4 +1,4 @@
-const debounce = angular.module('paDebounce', []);
+const debounce = angular.module('pa.utils.debounce', []);
 
 debounce.factory('paDebounce', ['$timeout', '$q', ($timeout, $q) => {
     return (func, wait, immediate) => {
