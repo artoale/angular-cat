@@ -48,7 +48,8 @@ describe('scrollSpy', () => {
                             top: 500,
                             height: 500
                         };
-                    })
+                    }),
+                    setInView: sinon.spy()
                 };
                 controller.registerSpy(spy);
                 controller.spies.length.should.be.equal(1);
