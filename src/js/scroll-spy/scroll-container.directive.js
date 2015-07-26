@@ -1,7 +1,7 @@
-import debounce from '../utils/debounce.module'
-const scrollSpyDirective = angular.module('pa.scrollSpy.scrollContainer', [debounce.name]);
+import debounce from '../utils/debounce.service';
+const mod = angular.module('pa.scrollSpy.scrollContainer', [debounce.name]);
 
-scrollSpyDirective.directive('paScrollContainer', ($window, $timeout, paDebounce) => {
+mod.directive('paScrollContainer', ($window, $timeout, paDebounce) => {
     return {
         restrict: 'A',
         controller($scope, $element) {
@@ -57,4 +57,4 @@ scrollSpyDirective.directive('paScrollContainer', ($window, $timeout, paDebounce
     };
 });
 
-export default scrollSpyDirective;
+export default mod;

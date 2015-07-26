@@ -1,6 +1,6 @@
-const spyDirective = angular.module('pa.scrollSpy.visible', []);
+const mod = angular.module('pa.scrollSpy.visible', []);
 
-spyDirective.directive('paVisible', ($window) => {
+mod.directive('paVisible', ($window) => {
     return {
         restrict: 'A',
         require: '^^paScrollContainer',
@@ -33,4 +33,4 @@ spyDirective.directive('paVisible', ($window) => {
     };
 });
 
-export default spyDirective;
+export default mod;
