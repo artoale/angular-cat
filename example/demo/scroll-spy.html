@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Scroll spy example page</title>
+    <script src="../angular/angular.js"></script>
+    <script src="../angular-animate/angular-animate.js"></script>
+    <script data-main="../main.js" src="../requirejs/require.js"></script>
+    <style media="screen">
+        body {
+          margin: 0;
+        }
+
+        .info {
+          position: fixed;
+          top: 50px;
+          left: 25px;
+          background-color: white;
+        }
+
+        .intro {
+          height: 1500px;
+          background-color: violet;
+        }
+        .green {
+          background-color: green;
+          height: 70px;
+        }
+        .red {
+          background-color: red;
+          height: 1200px;
+        }
+        .blue {
+          background-color: blue;
+          height: 300px;
+          padding: 50px;
+        }
+    </style>
+</head>
+
+<body pa-scroll-container>
+    <div class="info">
+      <dv ng-show='!greenVisible && !redVisible && !blueTitleVisible'> No spied element visible</dv>
+      <div> Green section is visible: {{ greenVisible || 'false' }}</div>
+      <div> Red section is visible: {{ redVisible || 'false' }}</div>
+      <div> Blu section title is visible: {{ blueTitleVisible || 'false' }}</div>
+    </div>
+    <section class="intro">
+    </section>
+    <section class="green" pa-visible="greenVisible"></section>
+    <section class="red" pa-visible="redVisible"></section>
+    <section class="blue">
+      <h1 pa-visible="blueTitleVisible">I'm red</h1>
+    </section>
+</body>
+
+</html>
