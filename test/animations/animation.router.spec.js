@@ -1,15 +1,18 @@
 describe('pa-router directive', () => {
     let scope = {},
         template = `
-            <div    pa-router
-                    pa-active="visible"
-                    pa-status="status"
-                    pa-animation-name="animation-name"
-                ></div>
+            <div>
+                <div    pa-router
+                        pa-active="visible"
+                        pa-status="status"
+                        pa-animation-name="animation-name"
+                    ></div>
+                </div>
             </div>
             `,
         compile,
         animate,
+        element,
         routerController = {
             register() {
                 return;
@@ -24,8 +27,10 @@ describe('pa-router directive', () => {
         animate = $animate;
         scope.visible = false;
         compile = () => {
-            let element = angular.element(template);
-            $compile(element)(scope);
+            let parentElement = angular.element(template);
+            parentElement.data('$paRouterController', routerController);
+            $compile(parentElement)(scope);
+            element = parentElement.children();
             return element.controller('paRouter');
         };
 
@@ -37,6 +42,13 @@ describe('pa-router directive', () => {
         scope.status.should.equal('READY');
     });
 
+    it('should register itself on the paRouter parent controller', () => {
+        sinon.spy(routerController, 'register');
+        let controller = compile();
+
+        routerController.register.should.have.been.calledOnce;
+        routerController.register.should.have.been.calledWith('animation-name', controller);
+    });
 
     describe('active watch', () => {
         it('should trigger all registered animations', angular.mock.inject(($q) => {
@@ -250,5 +262,89 @@ describe('pa-router directive', () => {
 
             }));
         });
+        describe('#clear', () => {
+            it('Should clear all registered animations',  angular.mock.inject(($q) => {
+                let controller = compile(),
+                    deferred1 = $q.defer(),
+                    deferred2 = $q.defer(),
+                    mockAnimation1 = {
+                        clear: () => deferred1.promise
+                    },
+                    mockAnimation2 = {
+                        clear: () => deferred2.promise
+                    };
+
+                sinon.spy(mockAnimation1, 'clear');
+                sinon.spy(mockAnimation2, 'clear');
+                mockAnimation1.clear.should.not.have.been.called;
+                mockAnimation2.clear.should.not.have.been.called;
+                controller.register('a-name', mockAnimation1);
+                controller.register('a-name-2', mockAnimation2);
+                controller.clear();
+                mockAnimation1.clear.should.have.been.calledOnce;
+                mockAnimation2.clear.should.have.been.calledOnce;
+            }));
+
+            it('Should set the status correctly',  angular.mock.inject(($q) => {
+                let controller = compile(),
+                    deferred1 = $q.defer(),
+                    deferred2 = $q.defer(),
+                    mockAnimation1 = {
+                        clear: () => deferred1.promise
+                    },
+                    mockAnimation2 = {
+                        clear: () => deferred2.promise
+                    };
+
+                sinon.spy(mockAnimation1, 'clear');
+                sinon.spy(mockAnimation2, 'clear');
+
+                controller.play();
+                scope.$apply();
+                scope.status.should.equal('FINISHED');
+
+                controller.register('a-name', mockAnimation1);
+                controller.register('a-name-2', mockAnimation2);
+
+                controller.clear();
+                deferred1.resolve();
+                deferred2.resolve();
+                scope.$apply();
+                scope.status.should.equal('READY');
+            }));
+
+
+            it('should resolve the play promise',  angular.mock.inject(($q) => {
+                let controller = compile(),
+                    deferred1 = $q.defer(),
+                    deferred2 = $q.defer(),
+                    mockAnimation1 = {
+                        clear: () => deferred1.promise,
+                        play: () => deferred2.promise
+                    },
+                    playPromise,
+                    promiseSpy = sinon.spy();
+
+
+                controller.register('a-name', mockAnimation1);
+
+                playPromise = controller.play();
+                playPromise.then(promiseSpy);
+
+                scope.$apply();
+
+                // (since deferred 1 not fulfilled yet)
+                promiseSpy.should.not.have.been.called;
+
+
+                controller.clear();
+                scope.$apply();
+                deferred1.resolve();
+                promiseSpy.should.have.been.called;
+
+            }));
+
+        });
+
     });
 });

@@ -9,10 +9,8 @@ mod.directive(directiveName, () => {
             const statusScopeVar = $attrs.paStatus;
 
             let animations = [],
+                deferred = $q.defer(),
                 status = '',
-                clear = () => $q.all(
-                    animations.map(animation => animation.controller.clear())
-                ),
                 register = (name, controller, order = 0) => {
                     animations.push({
                         name,
@@ -27,31 +25,46 @@ mod.directive(directiveName, () => {
                     }
                     status = newStatus;
                 },
+                clear = () => {
+                    if (status === 'RUNNING') {
+                        deferred.resolve();
+                    }
+                    return $q.all(
+                        animations.map(animation => animation.controller.clear())
+                    ).then(() => {
+                        setStatus('READY');
+                    });
+                },
                 setUp = () => {
                     setStatus('READY');
                 },
                 runAnimation = () => {
-                    let ordered = animations.slice().sort((a, b) => {
-                        let delta = a.order - b.order;
-                        return delta ? delta : a.pushOrder - b.pushOrder;
-                    }),
-                    deferred = $q.defer();
+                    let ordered = animations.slice()
+                        .sort((a, b) => {
+                            let delta = a.order - b.order;
+                            return delta ? delta : a.pushOrder - b.pushOrder;
+                        }),
+                        initDeferred = $q.defer();
 
                     //Used for init purposes only.
-                    deferred.resolve();
+                    initDeferred.resolve();
 
                     setStatus('RUNNING');
 
 
                     return ordered.reduce(
                         (prev, curr) => prev.then(curr.controller.play.bind(curr.controller)),
-                        deferred.promise
+                        initDeferred.promise
                     ).then(setStatus.bind(undefined, 'FINISHED'));
 
 
                 },
                 play = () => {
-                    return runAnimation();
+                    if (status === 'READY') {
+                        deferred = $q.defer();
+                        runAnimation().then(deferred.resolve.bind(deferred));
+                    }
+                    return deferred.promise;
                 };
 
             //APIs used by linking function
