@@ -1,8 +1,10 @@
 import animations from './animations/animations.module';
+import delay from './utils/delay.service';
 
 const module = angular.module('paAnimations', [
     'ngAnimate',
-    animations.name
+    animations.name,
+    delay.name
 ]);
 
 export default module;
