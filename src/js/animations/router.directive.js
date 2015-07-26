@@ -29,6 +29,9 @@ mod.directive(directiveName, () => {
                     if (status === 'RUNNING') {
                         deferred.resolve();
                     }
+
+                    setStatus('CLEARING');
+
                     return $q.all(
                         animations.map(animation => animation.controller.clear())
                     ).then(() => {
@@ -53,7 +56,10 @@ mod.directive(directiveName, () => {
 
 
                     return ordered.reduce(
-                        (prev, curr) => prev.then(curr.controller.play.bind(curr.controller)),
+                        (prev, curr) => prev.then(
+                            //Prevent animation to run if cleared
+                            () =>  status === 'RUNNING' ? curr.controller.play() : prev
+                        ),
                         initDeferred.promise
                     ).then(setStatus.bind(undefined, 'FINISHED'));
 
@@ -93,7 +99,7 @@ mod.directive(directiveName, () => {
                     if (newVal) {
                         selfController.runAnimation();
                     } else if (attrs.paUndo) {
-                        selfController.setUp();
+                        selfController.clear();
                     }
                 });
             }

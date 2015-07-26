@@ -86,6 +86,50 @@ describe('pa-router directive', () => {
             scope.status.should.equal('FINISHED');
 
         }));
+
+        it('should clear animations if undo is set', angular.mock.inject(($q) => {
+
+            let oldTemplate = template,
+                controller,
+                deferred = $q.defer(),
+                deferred2 = $q.defer(),
+                mockAnimation = {
+                    play: () => deferred.promise,
+                    clear: () => {
+                        return deferred2.promise;
+                    }
+                };
+
+            template = `
+               <div>
+                   <div    pa-router
+                           pa-active="visible"
+                           pa-status="status"
+                           pa-animation-name="animation-name"
+                           pa-undo="1"
+                       ></div>
+                   </div>
+               </div>
+               `;
+            controller = compile();
+
+            controller.register('a-name', mockAnimation);
+            sinon.spy(mockAnimation, 'clear');
+
+            scope.visible = true;
+            scope.$apply();
+
+            deferred.resolve();
+            scope.$apply();
+
+            mockAnimation.clear.should.not.have.been.called;
+
+            scope.visible = false;
+            scope.$apply();
+
+            mockAnimation.clear.should.have.been.calledOnce;
+            template = oldTemplate;
+        }));
     });
 
     describe('controller', () => {
