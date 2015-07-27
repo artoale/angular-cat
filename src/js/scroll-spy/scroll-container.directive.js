@@ -39,11 +39,19 @@ mod.directive('paScrollContainer', ($window, $timeout, paDebounce) => {
                     };
 
                 selfCtrl.spies.forEach((spy)=> {
-                    let spyRect = spy.getRect();
-                    if ((spyRect.top >= (viewportRect.top - spyRect.height) && (spyRect.top + spyRect.height) <= (viewportRect.top + viewportRect.height)) ||
-                        (spyRect.top < viewportRect.top && (spyRect.height) >= vpHeight)) {
+                    let spyRect = spy.getRect(),
+                        isFullyVisible = (spyRect.top >= viewportRect.top && //Top border in viewport
+                            (spyRect.top + spyRect.height) <= (viewportRect.top + viewportRect.height)) || //Bottom border in viewport
+                            (spyRect.top < viewportRect.top && (spyRect.height) >= vpHeight), // Bigger than viewport
+                        isFullyHidden = !isFullyVisible &&
+                            spyRect.top > (viewportRect.top + viewportRect.height) || //Top border below viewport bottom
+                            (spyRect.top + spyRect.height) < viewportRect.top; //Bottom border above viewport top
+
+
+                    //Only change state when fully visible/hidden
+                    if (isFullyVisible) {
                         spy.setInView(true);
-                    } else {
+                    } else if (isFullyHidden) {
                         spy.setInView(false);
                     }
                 });
