@@ -10,7 +10,7 @@
     <style media="screen">
         body {
           margin: 0;
-          padding: 0 50px;
+          padding: 0 50px 50px;
           font-family: Roboto;
         }
 
@@ -23,8 +23,12 @@
 
         .intro {
           height: 110vh;
-          border-left: solid 10px teal;
-          padding-left: 10px;
+
+        }
+
+        .with-border {
+            border-left: solid 10px teal;
+            padding-left: 10px;
         }
 
         .animation-1 {
@@ -58,10 +62,41 @@
 
         }
 
+        .before-nested {
+            background-color: #0303D2;
+            height: 30px;
+            margin-bottom: 30px;
+            transition: background-color .7s ease-in-out;
+            width: 100%;
+        }
+
+        .before-nested--start {
+            background-color: violet;
+            transition: none;
+        }
+
+        .after-nested {
+            background-color: violet;
+            height: 30px;
+            margin-bottom: 30px;
+            transition: background-color .7s ease-in-out;
+            width: 100%;
+        }
+
+        .after-nested--start {
+            background-color: #0303D2;
+            transition: none;
+        }
         code,
         pre {
         color: #080;
         font: 700 inherit inconsolata, consolas, 'courier new', mono;
+        }
+
+        pre {
+            background-color: #F3F3F3;
+            padding: 15px;
+            margin: 0;
         }
 
 
@@ -71,7 +106,7 @@
 </head>
 
 <body pa-scroll-container>
-    <section class="intro">
+    <section class="intro with-border">
         <h1>Scroll down to see some awesome animation</h1>
         <p>
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi
@@ -155,20 +190,17 @@
             </div>
         </div>
     </section>
-    <section>
+    <section class="with-border">
         <h1>Usage:</h1>
         <h2>Markup</h2>
-        <pre><code>
-&lt;div pa-router pa-active=&quot;sequence&quot; pa-undo=&quot;1&quot;&gt;
+
+<pre><code>&lt;div pa-router pa-active=&quot;sequence&quot; pa-undo=&quot;1&quot;&gt;
     &lt;div pa-class=&quot;animation-1&quot; class=&quot;animation-1&quot;&gt;&lt;/div&gt;
     &lt;div pa-delay=&quot;500&quot;&gt;&lt;/div&gt;
     &lt;div pa-class=&quot;animation-2&quot; class=&quot;animation-2&quot;&gt; &lt;/div&gt;
-&lt;/div&gt;
-        </code></pre>
+&lt;/div&gt;</code></pre>
         <h2>Style</h2>
-        <pre><code>
-
-.animation-1 {
+        <pre><code>.animation-1 {
     background-color: rgb(255, 181, 0);
     border-radius: 50px;
     height: 15px;
@@ -197,11 +229,49 @@
     transition: none;
     transform: scale3d(1, 0, 1);
 
-}
-
-        </code></pre>
+}</code></pre>
     </section>
+    <section pa-visible="nested">
+        <h1>Nested routers!</h1>
+        <div
+            pa-router
+            pa-active="nested"
+            pa-undo=1>
+            <div class="before-nested"
+                pa-class="before-nested">
+            </div>
+            <div pa-router>
+                <div
+                    pa-class="animation-1"
+                    class="animation-1"
+                >
+                </div>
+                <div pa-delay="500"></div>
+                <div
+                    pa-class="animation-2"
+                    class="animation-2"
+                >
+                </div>
+            </div>
+            <div class="after-nested"
+                pa-class="after-nested">
+            </div>
+        </div>
+    </section>
+    <section class="with-border">
+        <h1>Usage:</h1>
+        <h2>Markup</h2>
 
+<pre><code>&lt;div pa-router pa-active=&quot;nested&quot; pa-undo=1&gt;
+    &lt;div class=&quot;before-nested&quot;pa-class=&quot;before-nested&quot;&gt;&lt;/div&gt;
+    &lt;div pa-router&gt;
+        &lt;div pa-class=&quot;animation-1&quot;  class=&quot;animation-1&quot;&gt;&lt;/div&gt;
+        &lt;div pa-delay=&quot;500&quot;&gt;&lt;/div&gt;
+        &lt;div pa-class=&quot;animation-2&quot; class=&quot;animation-2&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;after-nested&quot; pa-class=&quot;after-nested&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+    </section>
 </body>
 
 </html>
