@@ -4,7 +4,7 @@ const mod = angular.module('pa.animations.class', []),
 mod.directive(directiveName, ($animate) => {
     return {
         restrict: 'A',
-        require: [directiveName, '^?paRouter'],
+        require: [directiveName, '^^?paRouter'],
         controller($q, $scope, $attrs, $element) {
             const className = $attrs[directiveName] || directiveName,
                 classNameStart = className + '--start',
@@ -27,6 +27,9 @@ mod.directive(directiveName, ($animate) => {
 
                 setUp = () => {
                     setStatus('READY');
+                    if (!$element.hasClass(className)) {
+                        $element.addClass(className);
+                    }
                     $element.addClass(classNameStart);
                 },
 
@@ -84,6 +87,7 @@ mod.directive(directiveName, ($animate) => {
             if (routerController) {
                 routerController.register(animationName, selfController);
             }
+
 
             selfController.setUp();
             if (attrs.paActive) {

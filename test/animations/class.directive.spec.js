@@ -19,12 +19,14 @@ describe('pa-class directive', () => {
                 return;
             }
         },
+        sandbox,
         timeout;
     beforeEach(angular.mock.module('pa.animations.class'));
     beforeEach(angular.mock.module('ngAnimateMock'));
 
     beforeEach(angular.mock.inject(($compile, $rootScope, $timeout, $animate) => {
         scope = $rootScope.$new();
+        sandbox = sinon.sandbox.create();
         animate = $animate;
         scope.visible = true;
         compile = () => {
@@ -37,9 +39,18 @@ describe('pa-class directive', () => {
         timeout =  $timeout;
     }));
 
+    afterEach(() => {
+        sandbox.restore();
+    });
+
     it('should add a class with --start suffix', () => {
         compile();
         element.hasClass('a-class-name--start').should.be.true;
+    });
+
+    it('should add the base class if not already specified', () => {
+        compile();
+        element.hasClass('a-class-name').should.be.true;
     });
 
     it('should set the status to READY if variable is binded', () => {
@@ -48,11 +59,34 @@ describe('pa-class directive', () => {
     });
 
     it('should register itself on the paRouter parent controller', () => {
-        sinon.spy(routerController, 'register');
+        sandbox.spy(routerController, 'register');
         compile();
         routerController.register.should.have.been.calledOnce;
         routerController.register.should.have.been.calledWith('animation-name', element.controller('paClass'));
     });
+
+    it('should register itself on the paRouter parent controller regardless of the nesting level', angular.mock.inject(($compile, $rootScope) => {
+        sandbox.spy(routerController, 'register');
+        let template = `
+            <div>
+                <div>
+                    <div
+                        pa-class="a-class-name"
+                        pa-active="visible"
+                        pa-status="status"
+                        pa-animation-name="animation-name"
+
+                    ></div>
+                </div>
+            </div>`,
+            parentElement = angular.element(template);
+
+        parentElement.data('$paRouterController', routerController);
+        $compile(parentElement)($rootScope.$new());
+        element = parentElement.children().children();
+        routerController.register.should.have.been.calledOnce;
+        routerController.register.should.have.been.calledWith('animation-name', element.controller('paClass'));
+    }));
 
     describe('active watch', () => {
         it('should remove the prefixed class', () => {
@@ -117,7 +151,7 @@ describe('pa-class directive', () => {
 
             it('should resolve the promise when done', () => {
                 let retval = controller.play(),
-                    spy = sinon.spy();
+                    spy = sandbox.spy();
 
                 retval.then(spy);
                 spy.should.not.have.been.called;
@@ -172,7 +206,7 @@ describe('pa-class directive', () => {
             });
 
             it('should resolve the promise when done (immediately)', () => {
-                let spy = sinon.spy();
+                let spy = sandbox.spy();
                 controller.clear().then(spy);
 
                 spy.should.not.have.been.called;
@@ -182,7 +216,7 @@ describe('pa-class directive', () => {
             });
 
             it('should resolve the "play" promise if still running', () => {
-                let spy = sinon.spy();
+                let spy = sandbox.spy();
                 controller.play().then(spy);
 
                 spy.should.not.have.been.called;
