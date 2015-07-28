@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Pa animations example page</title>
+    <script src="../angular/angular.js"></script>
+    <script src="../angular-animate/angular-animate.js"></script>
+    <script data-main="../main.js" src="../requirejs/require.js"></script>
+</head>
+
+<body>
+    <section>
+        <h1>Animation video example</h1>
+
+        <div pa-video pa-active="trigger" pa-status="status">
+            <video preload="auto">
+                <source src="http://sample-videos.com/video/mp4/720/big_buck_bunny_720p_1mb.mp4">
+            </video>
+        </div>
+
+        <button type="button" name="button" ng-click="trigger = !trigger">Toggle animation "active" binding to {{!trigger}}</button>
+        <ul class="values">
+            <li>Status: {{status}}</li>
+            <li>Active: {{trigger}}</li>
+        </ul>
+    </section>
+    <section>
+        <h1>Animation video with undo example</h1>
+
+        <div pa-video pa-active="triggerUndo" pa-status="statusUndo" pa-undo="1">
+            <video preload="auto">
+                <source src="http://sample-videos.com/video/mp4/720/big_buck_bunny_720p_1mb.mp4">
+            </video>
+        </div>
+        <button type="button" name="button" ng-click="triggerUndo = !triggerUndo">Toggle animation "active" binding to {{!triggerUndo}}</button>
+        <ul class="values">
+            <li>Status: {{statusUndo}}</li>
+            <li>Active: {{triggerUndo}}</li>
+        </ul>
+    </section>
+</body>
+
+</html>
