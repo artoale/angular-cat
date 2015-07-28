@@ -25,6 +25,10 @@
           height: 110vh;
 
         }
+        
+        .animation-container {
+            max-width: 800px;
+        }
 
         .with-border {
             border-left: solid 10px teal;
@@ -64,16 +68,23 @@
 
         .before-nested {
             background-color: #0303D2;
-            height: 30px;
+            height: 60px;
+            transform-origin: top center;
             margin-bottom: 30px;
-            transition: background-color .7s ease-in-out;
+            transition: background-color .95s ease-in-out, transform .95s ease-in-out;
             width: 100%;
         }
 
         .before-nested--start {
             background-color: violet;
             transition: none;
+            transform: scale3d(1, .5, 1);
         }
+
+        .video-big-buck {
+            width: 100%;
+        }
+
 
         .after-nested {
             background-color: violet;
@@ -173,6 +184,7 @@
     <section pa-visible="sequence">
         <h1>Two animation in sequence, with undo set</h1>
         <div
+            class="animation-container"
             pa-router
             pa-active="sequence"
             pa-undo=1
@@ -234,11 +246,17 @@
     <section pa-visible="nested">
         <h1>Nested routers!</h1>
         <div
+            class="animation-container"
             pa-router
             pa-active="nested"
             pa-undo=1>
             <div class="before-nested"
                 pa-class="before-nested">
+            </div>
+           <div pa-video>
+                <video class="video-big-buck" preload="auto" muted>
+                    <source src="sample-video.mp4">
+                </video>
             </div>
             <div pa-router>
                 <div
@@ -264,6 +282,11 @@
 
 <pre><code>&lt;div pa-router pa-active=&quot;nested&quot; pa-undo=1&gt;
     &lt;div class=&quot;before-nested&quot;pa-class=&quot;before-nested&quot;&gt;&lt;/div&gt;
+    &lt;div pa-video &gt;
+                &lt;video class=&quot;video-big-buck&quot; preload=&quot;auto&quot;&gt;
+                    &lt;source src=&quot;http://sample-videos.com/video/mp4/720/big_buck_bunny_720p_1mb.mp4&quot;&gt;
+                &lt;/video&gt;
+            &lt;/div&gt;
     &lt;div pa-router&gt;
         &lt;div pa-class=&quot;animation-1&quot;  class=&quot;animation-1&quot;&gt;&lt;/div&gt;
         &lt;div pa-delay=&quot;500&quot;&gt;&lt;/div&gt;
