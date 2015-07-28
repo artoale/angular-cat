@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Pa animations example page</title>
+    <script src="../angular/angular.js"></script>
+    <script src="../angular-animate/angular-animate.js"></script>
+    <script data-main="../main.js" src="../requirejs/require.js"></script>
+    <style media="screen">
+        .a-class-name {
+            background-color: red;
+            color: black;
+            transition: all 2s;
+        }
+
+        .a-class-name--start {
+            background-color: black;
+            color: red;
+            transition: none;
+        }
+    </style>
+</head>
+
+<body>
+    <section>
+        <h1>Delay directive example</h1>
+
+        <div
+            pa-delay="3000"
+            pa-active="trigger"
+            pa-status="status"
+        >
+            3 seconds delay
+        </div>
+        <button type="button" name="button" ng-click="trigger = !trigger">Toggle animation "active" binding to {{!trigger}}</button>
+        <ul class="values">
+            <li>Status: {{status}}</li>
+            <li>Active: {{trigger}}</li>
+        </ul>
+    </section>
+
+    <section>
+        <h1>Delay directive with undo example</h1>
+
+        <div
+            pa-delay="1000"
+            pa-active="triggerUndo"
+            pa-status="statusDelayed"
+            pa-undo="1"
+        >
+            1 seconds delay with undo
+        </div>
+        <button type="button" name="button" ng-click="triggerUndo = !triggerUndo">Toggle animation "active" binding to {{!triggerUndo}}</button>
+        <ul class="values">
+            <li>Status: {{statusDelayed}}</li>
+            <li>Active: {{triggerUndo}}</li>
+        </ul>
+    </section>
+
+</body>
+
+</html>

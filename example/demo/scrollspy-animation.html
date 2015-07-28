@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Scroll spy example page</title>
+    <script src="../angular/angular.js"></script>
+    <script src="../angular-animate/angular-animate.js"></script>
+    <script data-main="../main.js" src="../requirejs/require.js"></script>
+    <style media="screen">
+        body {
+          margin: 0;
+          padding: 0 50px 50px;
+          font-family: Roboto;
+        }
+
+        .info {
+          position: fixed;
+          top: 50px;
+          left: 25px;
+          background-color: white;
+        }
+
+        .intro {
+          height: 110vh;
+
+        }
+
+        .with-border {
+            border-left: solid 10px teal;
+            padding-left: 10px;
+        }
+
+        .animation-1 {
+            background-color: rgb(255, 181, 0);
+            border-radius: 50px;
+            height: 15px;
+            margin-bottom: 30px;
+            transform-origin: left center;
+            transition: transform 1s ease-in-out;
+            width: 100%;
+        }
+
+        .animation-1--start {
+            transition: none;
+            transform: scale3d(0, 1, 1);
+
+        }
+
+        .animation-2 {
+            background-color: rgb(206, 0, 0);
+            height: 100px;
+            margin-bottom: 30px;
+            transform-origin: top center;
+            transform: scale3d(1, 1, 1);
+            transition: transform 1s ease-in;
+        }
+
+        .animation-2--start {
+            transition: none;
+            transform: scale3d(1, 0, 1);
+
+        }
+
+        .before-nested {
+            background-color: #0303D2;
+            height: 30px;
+            margin-bottom: 30px;
+            transition: background-color .7s ease-in-out;
+            width: 100%;
+        }
+
+        .before-nested--start {
+            background-color: violet;
+            transition: none;
+        }
+
+        .after-nested {
+            background-color: violet;
+            height: 30px;
+            margin-bottom: 30px;
+            transition: background-color .7s ease-in-out;
+            width: 100%;
+        }
+
+        .after-nested--start {
+            background-color: #0303D2;
+            transition: none;
+        }
+        code,
+        pre {
+        color: #080;
+        font: 700 inherit inconsolata, consolas, 'courier new', mono;
+        }
+
+        pre {
+            background-color: #F3F3F3;
+            padding: 15px;
+            margin: 0;
+        }
+
+
+
+
+    </style>
+</head>
+
+<body pa-scroll-container>
+    <section class="intro with-border">
+        <h1>Scroll down to see some awesome animation</h1>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi
+            soluta delectus ducimus id, molestiae alias tempore molestias repellat
+            debitis sint ipsa, enim, iure animi doloribus modi? Dignissimos
+            possimus reiciendis inventore deleniti molestias velit neque quis,
+            dolorem sequi illo iste dolore voluptatem ipsa unde voluptate, ullam
+            deserunt odio aut, debitis! Aspernatur eligendi beatae assumenda,
+            asperiores ipsa doloremque! Porro temporibus cumque quis nulla,
+            delectus atque consequuntur. Eligendi maxime sequi, fugiat aspernatur
+            uo cum facere velit blanditiis, nulla natus nostrum animi delectus
+            rchitecto impedit neque ipsa sunt similique maiores, exercitationem
+            uae. Velit animi placeat quam beatae totam fugiat modi porro et,
+            fuga, eaque, commodi excepturi sequi? Perspiciatis officiis non
+            onsequuntur suscipit exercitationem itaque odio eaque, dicta quod
+        </p>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi
+            soluta delectus ducimus id, molestiae alias tempore molestias repellat
+            debitis sint ipsa, enim, iure animi doloribus modi? Dignissimos
+            possimus reiciendis inventore deleniti molestias velit neque quis,
+            dolorem sequi illo iste dolore voluptatem ipsa unde voluptate, ullam
+            deserunt odio aut, debitis! Aspernatur eligendi beatae assumenda,
+            asperiores ipsa doloremque! Porro temporibus cumque quis nulla,
+            delectus atque consequuntur. Eligendi maxime sequi, fugiat aspernatur
+            uo cum facere velit blanditiis, nulla natus nostrum animi delectus
+            rchitecto impedit neque ipsa sunt similique maiores, exercitationem
+            uae. Velit animi placeat quam beatae totam fugiat modi porro et,
+            fuga, eaque, commodi excepturi sequi? Perspiciatis officiis non
+            onsequuntur suscipit exercitationem itaque odio eaque, dicta quod
+        </p>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi
+            soluta delectus ducimus id, molestiae alias tempore molestias repellat
+            debitis sint ipsa, enim, iure animi doloribus modi? Dignissimos
+            possimus reiciendis inventore deleniti molestias velit neque quis,
+            dolorem sequi illo iste dolore voluptatem ipsa unde voluptate, ullam
+            deserunt odio aut, debitis! Aspernatur eligendi beatae assumenda,
+            asperiores ipsa doloremque! Porro temporibus cumque quis nulla,
+            delectus atque consequuntur. Eligendi maxime sequi, fugiat aspernatur
+            uo cum facere velit blanditiis, nulla natus nostrum animi delectus
+            rchitecto impedit neque ipsa sunt similique maiores, exercitationem
+            uae. Velit animi placeat quam beatae totam fugiat modi porro et,
+            fuga, eaque, commodi excepturi sequi? Perspiciatis officiis non
+            onsequuntur suscipit exercitationem itaque odio eaque, dicta quod
+        </p>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi
+            soluta delectus ducimus id, molestiae alias tempore molestias repellat
+            debitis sint ipsa, enim, iure animi doloribus modi? Dignissimos
+            possimus reiciendis inventore deleniti molestias velit neque quis,
+            dolorem sequi illo iste dolore voluptatem ipsa unde voluptate, ullam
+            deserunt odio aut, debitis! Aspernatur eligendi beatae assumenda,
+            asperiores ipsa doloremque! Porro temporibus cumque quis nulla,
+            delectus atque consequuntur. Eligendi maxime sequi, fugiat aspernatur
+            uo cum facere velit blanditiis, nulla natus nostrum animi delectus
+            rchitecto impedit neque ipsa sunt similique maiores, exercitationem
+            uae. Velit animi placeat quam beatae totam fugiat modi porro et,
+            fuga, eaque, commodi excepturi sequi? Perspiciatis officiis non
+            onsequuntur suscipit exercitationem itaque odio eaque, dicta quod
+        </p>
+    </section>
+
+    <section pa-visible="sequence">
+        <h1>Two animation in sequence, with undo set</h1>
+        <div
+            pa-router
+            pa-active="sequence"
+            pa-undo=1
+        >
+            <div
+                pa-class="animation-1"
+                class="animation-1"
+            >
+            </div>
+            <div pa-delay="500"></div>
+            <div
+                pa-class="animation-2"
+                class="animation-2"
+            >
+            </div>
+        </div>
+    </section>
+    <section class="with-border">
+        <h1>Usage:</h1>
+        <h2>Markup</h2>
+
+<pre><code>&lt;div pa-router pa-active=&quot;sequence&quot; pa-undo=&quot;1&quot;&gt;
+    &lt;div pa-class=&quot;animation-1&quot; class=&quot;animation-1&quot;&gt;&lt;/div&gt;
+    &lt;div pa-delay=&quot;500&quot;&gt;&lt;/div&gt;
+    &lt;div pa-class=&quot;animation-2&quot; class=&quot;animation-2&quot;&gt; &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        <h2>Style</h2>
+        <pre><code>.animation-1 {
+    background-color: rgb(255, 181, 0);
+    border-radius: 50px;
+    height: 15px;
+    margin-bottom: 30px;
+    transform-origin: left center;
+    transition: transform 1s ease-in-out;
+    width: 100%;
+}
+
+.animation-1--start {
+    transition: none;
+    transform: scale3d(0, 1, 1);
+
+}
+
+.animation-2 {
+    background-color: rgb(206, 0, 0);
+    height: 100px;
+    margin-bottom: 30px;
+    transform-origin: top center;
+    transform: scale3d(1, 1, 1);
+    transition: transform 1s ease-in;
+}
+
+.animation-2--start {
+    transition: none;
+    transform: scale3d(1, 0, 1);
+
+}</code></pre>
+    </section>
+    <section pa-visible="nested">
+        <h1>Nested routers!</h1>
+        <div
+            pa-router
+            pa-active="nested"
+            pa-undo=1>
+            <div class="before-nested"
+                pa-class="before-nested">
+            </div>
+            <div pa-router>
+                <div
+                    pa-class="animation-1"
+                    class="animation-1"
+                >
+                </div>
+                <div pa-delay="500"></div>
+                <div
+                    pa-class="animation-2"
+                    class="animation-2"
+                >
+                </div>
+            </div>
+            <div class="after-nested"
+                pa-class="after-nested">
+            </div>
+        </div>
+    </section>
+    <section class="with-border">
+        <h1>Usage:</h1>
+        <h2>Markup</h2>
+
+<pre><code>&lt;div pa-router pa-active=&quot;nested&quot; pa-undo=1&gt;
+    &lt;div class=&quot;before-nested&quot;pa-class=&quot;before-nested&quot;&gt;&lt;/div&gt;
+    &lt;div pa-router&gt;
+        &lt;div pa-class=&quot;animation-1&quot;  class=&quot;animation-1&quot;&gt;&lt;/div&gt;
+        &lt;div pa-delay=&quot;500&quot;&gt;&lt;/div&gt;
+        &lt;div pa-class=&quot;animation-2&quot; class=&quot;animation-2&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;after-nested&quot; pa-class=&quot;after-nested&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+    </section>
+</body>
+
+</html>
