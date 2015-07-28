@@ -24,7 +24,7 @@ mod.directive(directiveName, () => {
 
                 resolve = (...args) => {
                     if (status === 'RUNNING') {
-                        $scope.$apply(setStatus('FINISHED'));
+                        setStatus('FINISHED');
                     }
                     return deferred && deferred.resolve(args);
                 },
@@ -35,7 +35,6 @@ mod.directive(directiveName, () => {
 
                 checkReady = (duration, buffered) => {
                     if (Math.abs(duration - buffered) < 1) {
-                        console.log('it is ready');
                         $videoElement.off('progress');
                         $videoElement.off('loadedmetadata');
                         $timeout.cancel(periodicCheckPromise);
@@ -73,11 +72,11 @@ mod.directive(directiveName, () => {
                     $videoElement.on('loadedmetadata', checkReady.bind(null,
                         $videoElement[0].duration * 1000, buffered));
                     $videoElement.on('progress', function() {
-                        console.log('progress');
                         progressHandler();
                     });
                     $videoElement.on('ended', function() {
                         resolve();
+                        $scope.$apply();
                     });
 
                     $videoElement[0].preload = 'auto';
@@ -108,7 +107,6 @@ mod.directive(directiveName, () => {
                 runAnimation = () => {
                     setStatus('RUNNING');
                     ready().then(function() {
-                        console.log('play');
                         $videoElement[0].play();
                     });
                 },
