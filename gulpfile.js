@@ -2,22 +2,27 @@
 'use strict';
 
 var gulp = require('gulp'),
-    sourcemaps = require('gulp-sourcemaps'),
-    babel = require('gulp-babel'),
-    concat = require('gulp-concat'),
+    babelify = require('babelify'),
+    browserify = require('browserify'),
     connect = require('gulp-connect'),
     del = require('del'),
-    KarmaServer = require('karma').Server;
-var js = 'src/js/**/*.js';
+    source = require('vinyl-source-stream'),
+    exorcist   = require('exorcist'),
+    KarmaServer = require('karma').Server,
+    js = 'src/js/**/*.js';
+
 gulp.task('compilejs', function () {
-    return gulp.src(js)
-        .pipe(sourcemaps.init())
-        .pipe(babel({
-            modules: 'amd',
-            moduleRoot: './'
-        }))
-        .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest('dist'));
+    return browserify('src/js/paAnimations.js', {
+            debug: true
+        })
+        .transform(babelify)
+        .bundle()
+        .on("error", function(err) {
+            console.log("Error : " + err.message);
+        })
+        .pipe(exorcist('./dist/paAnimations.min.js.map'))
+        .pipe(source('paAnimations.min.js'))
+        .pipe(gulp.dest('dist/'));
 });
 
 gulp.task('karma', function (done) {
