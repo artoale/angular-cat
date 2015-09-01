@@ -1,11 +1,3 @@
-require.config({
-  // baseUrl: ".",
-  // paths: {
-  //     "some": "some/v1.0"
-  // }
-});
-
-require(['app'], function (myApp) {
-    console.log(`App ${myApp} is running`);
-    angular.bootstrap(document, [myApp]);
+var app = angular.module('example', ['paAnimations']).run(function () {
+    console.log('I am running');
 });
