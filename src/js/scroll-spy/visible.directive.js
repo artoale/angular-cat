@@ -8,17 +8,34 @@ mod.directive('paVisible', ($window) => {
             let rect = {},
                 scrollContainer,
                 api = {
-                    update() {
+                    updateClientRect() {
                         let clientRect = elem[0].getBoundingClientRect();
                         rect.top = clientRect.top + scrollContainer.scrollTop;
                         rect.left = clientRect.left + scrollContainer.scrollLeft;
                         rect.width = clientRect.width;
                         rect.height = clientRect.height;
                     },
-                    getRect() {
+                    update (viewportRect) {
+                        let isFullyVisible = (rect.top >= viewportRect.top && //Top border in viewport
+                            (rect.top + rect.height) <= (viewportRect.top + viewportRect.height)) || //Bottom border in viewport
+                            (rect.top < viewportRect.top && (rect.height) >= viewportRect.height), // Bigger than viewport
+
+                            isFullyHidden = !isFullyVisible &&
+                            rect.top > (viewportRect.top + viewportRect.height) || //Top border below viewport bottom
+                            (viewportRect.top + viewportRect.height) < viewportRect.top; //Bottom border above viewport top
+
+
+                        //Only change state when fully visible/hidden
+                        if (isFullyVisible) {
+                            api.setInView(true);
+                        } else if (isFullyHidden) {
+                            api.setInView(false);
+                        }
+                    },
+                    getRect () {
                         return rect;
                     },
-                    setInView(inView) {
+                    setInView (inView) {
                         if (scope[attrs.paVisible] !== inView) {
                             scope.$evalAsync(() => {
                                 scope[attrs.paVisible] = inView;
@@ -28,7 +45,7 @@ mod.directive('paVisible', ($window) => {
                 };
             scrollContainer = ctrl.getScrollContainer() || $window.document.body;
             ctrl.registerSpy(api);
-            api.update();
+            api.updateClientRect();
         }
     };
 });
