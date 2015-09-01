@@ -6,7 +6,8 @@
     <title>Scroll spy example page</title>
     <script src="../angular/angular.js"></script>
     <script src="../angular-animate/angular-animate.js"></script>
-    <script data-main="../main.js" src="../requirejs/require.js"></script>
+    <script src="/paAnimations.min.js"></script>
+    <script src="/main.js"></script>
     <style media="screen">
         body {
           margin: 0;
@@ -39,7 +40,7 @@
     </style>
 </head>
 
-<body pa-scroll-container>
+<body ng-app="example" pa-scroll-container>
     <div class="info">
       <dv ng-show='!greenVisible && !redVisible && !blueTitleVisible'> No spied element visible</dv>
       <div> Green section is visible: {{ greenVisible || 'false' }}</div>
