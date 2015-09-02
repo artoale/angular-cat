@@ -15,12 +15,19 @@ mod.directive('paScrollContainer', ($window, $timeout, paDebounce) => {
             };
         },
         link (scope, elem, attrs, selfCtrl) {
+            const afTimeout = 200;
             let vpHeight,
                 $aWindow = angular.element($window),
-                scroller = elem[0].tagName === 'BODY' ? $aWindow : elem;
+                scroller = elem[0].tagName === 'BODY' ? $aWindow : elem,
+                animationFrame,
+                lastScrollTimestamp = 0,
+                prevTimestamp = 0;
 
             function onScroll() {
-                $window.requestAnimationFrame(onAnimationFrame);
+                lastScrollTimestamp = $window.performance.now();
+                if (!animationFrame) {
+                    animationFrame = $window.requestAnimationFrame(onAnimationFrame);
+                }
             }
 
             function onResize() {
@@ -28,14 +35,25 @@ mod.directive('paScrollContainer', ($window, $timeout, paDebounce) => {
                 selfCtrl.spies.forEach((spy)=> {
                     spy.updateClientRect();
                 });
-                $window.requestAnimationFrame(onAnimationFrame);
+                onScroll();
             }
 
             function onAnimationFrame() {
-                const viewportRect = getViewportRect();
+                const viewportRect = getViewportRect(),
+                        timestamp = $window.performance.now();
+
                 selfCtrl.spies.forEach((spy)=> {
                     spy.update(viewportRect);
                 });
+
+                var delta = timestamp - prevTimestamp;
+
+                prevTimestamp = timestamp;
+                if (timestamp - timestamp < afTimeout) {
+                    queueAf();
+                } else {
+                    cancelAf();
+                }
 
             }
 
@@ -45,6 +63,15 @@ mod.directive('paScrollContainer', ($window, $timeout, paDebounce) => {
                     top: currentScroll,
                     height: vpHeight
                 };
+            }
+
+            function queueAf() {
+                animationFrame = $window.requestAnimationFrame(onAnimationFrame);
+            }
+
+            function cancelAf() {
+                $window.cancelAnimationFrame(animationFrame);
+                animationFrame = null;
             }
 
             $aWindow.on('resize', paDebounce(onResize, 300));
