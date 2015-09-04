@@ -9,6 +9,7 @@ mod.directive(directiveName, () => {
             const statusScopeVar = $attrs.paStatus;
 
             let animations = [],
+                animationsMap = {},
                 deferred = $q.defer(),
                 status = '',
                 register = (name, controller, order = 0) => {
@@ -18,6 +19,7 @@ mod.directive(directiveName, () => {
                         order,
                         pushOrder: animations.length
                     });
+                    animationsMap[name] = controller;
                 },
                 setStatus = newStatus => {
                     if (statusScopeVar) {
@@ -71,6 +73,9 @@ mod.directive(directiveName, () => {
                         runAnimation().then(deferred.resolve.bind(deferred));
                     }
                     return deferred.promise;
+                },
+                getAnimation = (animationName) => {
+                    return animationsMap[animationName];
                 };
 
             //APIs used by linking function
@@ -81,6 +86,8 @@ mod.directive(directiveName, () => {
             this.play = play;
             this.clear = clear;
             this.register = register;
+            this.getAnimation = getAnimation;
+            this.setStatus = setStatus;
 
         },
         link(scope, element, attrs, controllers) {
@@ -94,7 +101,7 @@ mod.directive(directiveName, () => {
 
             selfController.setUp();
 
-            if (attrs.paActive) {
+            if (attrs.paActive && !angular.isDefined(attrs.paCustomRouter)) {
                 scope.$watch(attrs.paActive, (newVal) => {
                     if (newVal) {
                         selfController.runAnimation();
@@ -103,7 +110,6 @@ mod.directive(directiveName, () => {
                     }
                 });
             }
-
         }
     };
 });

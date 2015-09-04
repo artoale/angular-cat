@@ -84,6 +84,40 @@
             <li>Active: {{triggerUndo}}</li>
         </ul>
     </section>
+    <section>
+        <h1>Router + custom-router</h1>
+
+        <div
+            pa-router
+            custom-router
+            pa-custom-animation
+            pa-status="statusCustom"
+            pa-undo="1"
+            pa-active="triggerCustom"
+        >
+            <div
+                class="a-class-name"
+                pa-class="a-class-name"
+                pa-animation-name="first"
+            >
+                Animation 1 content
+            </div>
+            <div
+                class="a-class-name"
+                pa-class="a-class-name"
+                pa-animation-name="second"
+            >
+                Animation 2 content
+            </div>
+        </div>
+        <button type="button" name="button" ng-click="triggerCustom = !triggerCustom">
+            Toggle animation "active" binding to {{!triggerCustom}}
+        </button>
+        <ul class="values">
+            <li>Status: {{statusCustom}}</li>
+            <li>Active: {{triggerCustom}}</li>
+        </ul>
+    </section>
 </body>
 
 </html>
