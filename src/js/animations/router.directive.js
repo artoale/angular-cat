@@ -5,10 +5,11 @@ mod.directive(directiveName, () => {
     return {
         restrict: 'A',
         require: [directiveName, '^^?paRouter'],
-        controller($q, $scope, $attrs) {
+        controller ($q, $scope, $attrs) {
             const statusScopeVar = $attrs.paStatus;
 
             let animations = [],
+                customAnimationQueue,
                 animationsMap = {},
                 deferred = $q.defer(),
                 status = '',
@@ -44,28 +45,37 @@ mod.directive(directiveName, () => {
                     setStatus('READY');
                 },
                 runAnimation = () => {
-                    let ordered = animations.slice()
-                        .sort((a, b) => {
-                            let delta = a.order - b.order;
-                            return delta ? delta : a.pushOrder - b.pushOrder;
-                        }),
+                    let animationPromise,
+                        ordered = animations.slice()
+                            .sort((a, b) => {
+                                let delta = a.order - b.order;
+                                return delta ? delta : a.pushOrder - b.pushOrder;
+                            }),
                         initDeferred = $q.defer();
 
-                    //Used for init purposes only.
-                    initDeferred.resolve();
 
                     setStatus('RUNNING');
 
+                    if (!customAnimationQueue) {
+                        //Used for init purposes only.
+                        initDeferred.resolve();
+                        animationPromise = ordered.reduce(
+                            (prev, curr) => prev.then(
+                                //Prevent animation to run if cleared
+                                () =>  status === 'RUNNING' ? curr.controller.play() : prev
+                            ),
+                            initDeferred.promise
+                        ).then(setStatus.bind(undefined, 'FINISHED'));
+                    } else {
+                        customAnimationQueue.trigger.resolve();
+                        animationPromise = customAnimationQueue.promise
+                                            .then(setStatus.bind(undefined, 'FINISHED'));
+                    }
 
-                    return ordered.reduce(
-                        (prev, curr) => prev.then(
-                            //Prevent animation to run if cleared
-                            () =>  status === 'RUNNING' ? curr.controller.play() : prev
-                        ),
-                        initDeferred.promise
-                    ).then(setStatus.bind(undefined, 'FINISHED'));
-
-
+                    return animationPromise;
+                },
+                setCustomAnimation = (animationQueue) => {
+                    customAnimationQueue =  animationQueue;
                 },
                 play = () => {
                     if (status === 'READY') {
@@ -87,10 +97,10 @@ mod.directive(directiveName, () => {
             this.clear = clear;
             this.register = register;
             this.getAnimation = getAnimation;
-            this.setStatus = setStatus;
+            this.setCustomAnimation = setCustomAnimation;
 
         },
-        link(scope, element, attrs, controllers) {
+        link (scope, element, attrs, controllers) {
             const selfController = controllers[0],
                 routerController = controllers[1],
                 animationName = attrs.paAnimationName || directiveName;
@@ -101,7 +111,7 @@ mod.directive(directiveName, () => {
 
             selfController.setUp();
 
-            if (attrs.paActive && !angular.isDefined(attrs.paCustomRouter)) {
+            if (attrs.paActive) {
                 scope.$watch(attrs.paActive, (newVal) => {
                     if (newVal) {
                         selfController.runAnimation();
