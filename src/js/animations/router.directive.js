@@ -1,7 +1,7 @@
 const mod = angular.module('pa.animations.router', []),
     directiveName = 'paRouter';
 
-mod.directive(directiveName, () => {
+mod.directive(directiveName, ($parse) => {
     return {
         restrict: 'A',
         require: [directiveName, '^^?paRouter'],
@@ -23,8 +23,10 @@ mod.directive(directiveName, () => {
                     animationsMap[name] = controller;
                 },
                 setStatus = newStatus => {
+                    let statusM;
                     if (statusScopeVar) {
-                        $scope[statusScopeVar] = newStatus;
+                        statusM = $parse(statusScopeVar);
+                        statusM.assign($scope, newStatus);
                     }
                     status = newStatus;
                 },

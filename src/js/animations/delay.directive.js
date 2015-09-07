@@ -1,7 +1,7 @@
 const mod = angular.module('pa.animations.delay', []),
     directiveName = 'paDelay';
 
-mod.directive(directiveName, (paDelayS) => {
+mod.directive(directiveName, ($parse, paDelayS) => {
     return {
         restrict: 'A',
         require: [directiveName, '^^?paRouter'],
@@ -18,8 +18,10 @@ mod.directive(directiveName, (paDelayS) => {
                 },
 
                 setStatus = newStatus => {
+                    let statusM;
                     if (statusScopeVar) {
-                        $scope[statusScopeVar] = newStatus;
+                        statusM = $parse(statusScopeVar);
+                        statusM.assign($scope, newStatus);
                     }
                     status = newStatus;
                 },
