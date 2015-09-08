@@ -57,10 +57,10 @@ mod.directive(directiveName, ($parse) => {
 
 
                     setStatus('RUNNING');
+                    initDeferred.resolve();
 
                     if (!customAnimationQueue) {
                         //Used for init purposes only.
-                        initDeferred.resolve();
                         animationPromise = ordered.reduce(
                             (prev, curr) => prev.then(
                                 //Prevent animation to run if cleared
@@ -69,9 +69,8 @@ mod.directive(directiveName, ($parse) => {
                             initDeferred.promise
                         ).then(setStatus.bind(undefined, 'FINISHED'));
                     } else {
-                        customAnimationQueue.trigger.resolve();
-                        animationPromise = customAnimationQueue.promise
-                                            .then(setStatus.bind(undefined, 'FINISHED'));
+                        animationPromise = customAnimationQueue(initDeferred)
+                                                .then(setStatus.bind(undefined, 'FINISHED'));
                     }
 
                     return animationPromise;

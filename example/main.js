@@ -9,18 +9,16 @@ app.directive('customAnimation', function($q, paDelayS) {
         link: function (scope, element, attrs, controller) {
             var first = controller.getAnimation('first');
             var second = controller.getAnimation('second');
-            var trigger = $q.defer();
-            var queue = trigger.promise
-                .then(function() {
-                    var queue = [];
-                    queue.push(first.play());
-                    queue.push(second.play());
-                    return $q.all(queue);
-                });
 
-            controller.setCustomAnimation({
-                trigger: trigger,
-                promise: queue
+
+            controller.setCustomAnimation(function(defer) {
+                return defer.promise
+                    .then(function() {
+                        var queue = [];
+                        queue.push(first.play());
+                        queue.push(second.play());
+                        return $q.all(queue);
+                    });
             });
         }
 
