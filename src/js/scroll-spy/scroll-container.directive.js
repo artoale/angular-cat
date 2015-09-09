@@ -1,7 +1,12 @@
 import debounce from '../utils/debounce.service';
-const mod = angular.module('pa.scrollSpy.scrollContainer', [debounce.name]);
+import windowScrollHelper from '../utils/window-scroll-helper.service';
 
-mod.directive('paScrollContainer', ($window, $timeout, paDebounce) => {
+const mod = angular.module('pa.scrollSpy.scrollContainer', [
+    debounce.name,
+    windowScrollHelper.name
+]);
+
+mod.directive('paScrollContainer', ($window, $timeout, paDebounce, windowScrollGetter) => {
     return {
         restrict: 'A',
         controller ($scope, $element) {
@@ -18,7 +23,9 @@ mod.directive('paScrollContainer', ($window, $timeout, paDebounce) => {
             const afTimeout = 200;
             let vpHeight,
                 $aWindow = angular.element($window),
-                scroller = elem[0].tagName === 'BODY' ? $aWindow : elem,
+                $scrollTopReference = elem[0].tagName === 'BODY' ? windowScrollGetter() : elem,
+                $scroller = elem[0].tagName === 'BODY' ?
+                    $aWindow : elem,
                 animationFrame,
                 lastScrollTimestamp = 0,
                 prevTimestamp = 0;
@@ -58,7 +65,7 @@ mod.directive('paScrollContainer', ($window, $timeout, paDebounce) => {
             }
 
             function getViewportRect() {
-                const currentScroll = elem[0].scrollTop;
+                const currentScroll = $scrollTopReference[0].scrollTop;
                 return {
                     top: currentScroll,
                     height: vpHeight
@@ -75,8 +82,8 @@ mod.directive('paScrollContainer', ($window, $timeout, paDebounce) => {
             }
 
             $aWindow.on('resize', paDebounce(onResize, 300));
-            scroller.on('scroll', onScroll);
-            onResize();
+            $scroller.on('scroll', onScroll);
+            $timeout(onResize);
         }
     };
 });
