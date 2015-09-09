@@ -47,16 +47,16 @@ mod.directive('paScrollContainer', ($window, $timeout, paDebounce, windowScrollG
 
             function onAnimationFrame() {
                 const viewportRect = getViewportRect(),
-                        timestamp = $window.performance.now();
+                        timestamp = $window.performance.now(),
+                        delta = timestamp - prevTimestamp;
 
                 selfCtrl.spies.forEach((spy)=> {
                     spy.update(viewportRect);
                 });
 
-                var delta = timestamp - prevTimestamp;
-
                 prevTimestamp = timestamp;
-                if (timestamp - timestamp < afTimeout) {
+                prevTimestamp = timestamp;
+                if (delta < afTimeout) {
                     queueAf();
                 } else {
                     cancelAf();
