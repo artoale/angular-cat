@@ -87,6 +87,9 @@ mod.directive(directiveName, ($parse) => {
                 },
                 getAnimation = (animationName) => {
                     return animationsMap[animationName];
+                },
+                getAllAnimations = () => {
+                    return animationsMap;
                 };
 
             //APIs used by linking function
@@ -98,6 +101,7 @@ mod.directive(directiveName, ($parse) => {
             this.clear = clear;
             this.register = register;
             this.getAnimation = getAnimation;
+            this.getAllAnimations = getAllAnimations;
             this.setCustomAnimation = setCustomAnimation;
 
         },
