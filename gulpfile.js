@@ -9,6 +9,8 @@ var gulp = require('gulp'),
     source = require('vinyl-source-stream'),
     exorcist   = require('exorcist'),
     KarmaServer = require('karma').Server,
+    uglify = require('gulp-uglify'),
+    streamify = require('gulp-streamify'),
     js = 'src/js/**/*.js';
 
 gulp.task('compilejs', function () {
@@ -24,6 +26,20 @@ gulp.task('compilejs', function () {
         .pipe(source('paAnimations.min.js'))
         .pipe(gulp.dest('dist/'));
 });
+
+gulp.task('build', function () {
+    return browserify('src/js/paAnimations.js')
+        .transform(babelify)
+        .bundle()
+        .on("error", function(err) {
+            console.log("Error : " + err.message);
+        })
+        .pipe(source('paAnimations.build.min.js'))
+        .pipe(streamify(uglify()))
+        .pipe(gulp.dest('dist/'));
+});
+
+
 
 gulp.task('karma', function (done) {
     new KarmaServer({
