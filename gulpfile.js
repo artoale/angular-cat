@@ -22,9 +22,9 @@ gulp.task('compilejs', function () {
         .on("error", function(err) {
             console.log("Error : " + err.message);
         })
-        .pipe(exorcist('./dist/paAnimations.min.js.map'))
-        .pipe(source('paAnimations.min.js'))
-        .pipe(gulp.dest('dist/'));
+        .pipe(exorcist('dist/src/paAnimations.js.map'))
+        .pipe(source('paAnimations.js'))
+        .pipe(gulp.dest('dist/src'));
 });
 
 gulp.task('build', function () {
@@ -34,9 +34,9 @@ gulp.task('build', function () {
         .on("error", function(err) {
             console.log("Error : " + err.message);
         })
-        .pipe(source('paAnimations.build.min.js'))
+        .pipe(source('paAnimations.min.js'))
         .pipe(streamify(uglify()))
-        .pipe(gulp.dest('dist/'));
+        .pipe(gulp.dest('dist/build'));
 });
 
 
