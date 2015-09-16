@@ -11,8 +11,8 @@ app.directive('customAnimation', function($q, paDelayS) {
             var second = controller.getAnimation('second');
 
 
-            controller.setCustomAnimation(function(defer) {
-                return defer.promise
+            controller.setCustomAnimation(function(promise) {
+                return promise
                     .then(function() {
                         var queue = [];
                         queue.push(first.play());

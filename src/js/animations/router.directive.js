@@ -69,7 +69,7 @@ mod.directive(directiveName, ['$parse', ($parse) => {
                             initDeferred.promise
                         ).then(setStatus.bind(undefined, 'FINISHED'));
                     } else {
-                        animationPromise = customAnimationQueue(initDeferred)
+                        animationPromise = customAnimationQueue(initDeferred.promise)
                                                 .then(setStatus.bind(undefined, 'FINISHED'));
                     }
 
