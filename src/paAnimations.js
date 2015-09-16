@@ -306,7 +306,7 @@ mod.directive(directiveName, ['$parse', function ($parse) {
                         });
                     }, initDeferred.promise).then(setStatus.bind(undefined, 'FINISHED'));
                 } else {
-                    animationPromise = customAnimationQueue(initDeferred).then(setStatus.bind(undefined, 'FINISHED'));
+                    animationPromise = customAnimationQueue(initDeferred.promise).then(setStatus.bind(undefined, 'FINISHED'));
                 }
 
                 return animationPromise;
@@ -675,4 +675,3 @@ exports['default'] = mod;
 module.exports = exports['default'];
 
 },{}]},{},[5])
-//# sourceMappingURL=paAnimations.js.map
