@@ -1,6 +1,6 @@
 const mod = angular.module('pa.scrollSpy.visible', []);
 
-mod.directive('paVisible', ($window) => {
+mod.directive('paVisible', ['$window', ($window) => {
     return {
         restrict: 'A',
         require: '^^paScrollContainer',
@@ -48,6 +48,6 @@ mod.directive('paVisible', ($window) => {
             api.updateClientRect();
         }
     };
-});
+}]);
 
 export default mod;

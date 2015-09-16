@@ -1,11 +1,11 @@
 const mod = angular.module('pa.animations.router', []),
     directiveName = 'paRouter';
 
-mod.directive(directiveName, ($parse) => {
+mod.directive(directiveName, ['$parse', ($parse) => {
     return {
         restrict: 'A',
         require: [directiveName, '^^?paRouter'],
-        controller ($q, $scope, $attrs) {
+        controller:  ['$q', '$scope', '$attrs', function ($q, $scope, $attrs) {
             const statusScopeVar = $attrs.paStatus;
 
             let animations = [],
@@ -104,7 +104,7 @@ mod.directive(directiveName, ($parse) => {
             this.getAllAnimations = getAllAnimations;
             this.setCustomAnimation = setCustomAnimation;
 
-        },
+        }],
         link (scope, element, attrs, controllers) {
             const selfController = controllers[0],
                 routerController = controllers[1],
@@ -127,6 +127,6 @@ mod.directive(directiveName, ($parse) => {
             }
         }
     };
-});
+}]);
 
 export default mod;

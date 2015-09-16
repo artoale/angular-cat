@@ -6,10 +6,10 @@ const mod = angular.module('pa.scrollSpy.scrollContainer', [
     windowScrollHelper.name
 ]);
 
-mod.directive('paScrollContainer', ($window, $timeout, paDebounce, windowScrollGetter) => {
+mod.directive('paScrollContainer', ['$window', '$timeout', 'paDebounce', 'windowScrollGetter', ($window, $timeout, paDebounce, windowScrollGetter) => {
     return {
         restrict: 'A',
-        controller ($scope, $element) {
+        controller: ['$scope', '$element', function ($scope, $element) {
             this.spies = [];
             this.registerSpy = (spy) => {
                 this.spies.push(spy);
@@ -18,7 +18,7 @@ mod.directive('paScrollContainer', ($window, $timeout, paDebounce, windowScrollG
             this.getScrollContainer = () => {
                 return $element[0];
             };
-        },
+        }],
         link (scope, elem, attrs, selfCtrl) {
             const afTimeout = 200;
             let vpHeight,
@@ -86,6 +86,6 @@ mod.directive('paScrollContainer', ($window, $timeout, paDebounce, windowScrollG
             $timeout(onResize);
         }
     };
-});
+}]);
 
 export default mod;

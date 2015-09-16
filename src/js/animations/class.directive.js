@@ -1,11 +1,11 @@
 const mod = angular.module('pa.animations.class', []),
     directiveName = 'paClass';
 
-mod.directive(directiveName, ($animate, $parse) => {
+mod.directive(directiveName, ['$animate', '$parse',($animate, $parse) => {
     return {
         restrict: 'A',
         require: [directiveName, '^?paRouter'],
-        controller($q, $scope, $attrs, $element) {
+        controller: ['$q', '$scope', '$attrs', '$element', function ($q, $scope, $attrs, $element) {
             const className = $attrs[directiveName] || directiveName,
                 classNameStart = className + '--start',
                 statusScopeVar = $attrs.paStatus;
@@ -77,7 +77,7 @@ mod.directive(directiveName, ($animate, $parse) => {
             this.play = play;
             this.clear = clear;
 
-        },
+        }],
         link(scope, element, attrs, controllers) {
             const selfController = controllers[0],
                 routerController = controllers[1],
@@ -100,6 +100,6 @@ mod.directive(directiveName, ($animate, $parse) => {
 
         }
     };
-});
+}]);
 
 export default mod;

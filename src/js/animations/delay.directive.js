@@ -1,11 +1,11 @@
 const mod = angular.module('pa.animations.delay', []),
     directiveName = 'paDelay';
 
-mod.directive(directiveName, ($parse, paDelayS) => {
+mod.directive(directiveName, ['$parse', 'paDelayS', ($parse, paDelayS) => {
     return {
         restrict: 'A',
         require: [directiveName, '^^?paRouter'],
-        controller($q, $scope, $attrs) {
+        controller: ['$q', '$scope', '$attrs', function ($q, $scope, $attrs) {
             const millis = parseInt($attrs[directiveName], 10) || 1000,
                 statusScopeVar = $attrs.paStatus;
 
@@ -68,7 +68,7 @@ mod.directive(directiveName, ($parse, paDelayS) => {
             this.play = play;
             this.clear = clear;
 
-        },
+        }],
         link(scope, element, attrs, controllers) {
             const selfController = controllers[0],
                 routerController = controllers[1],
@@ -91,6 +91,6 @@ mod.directive(directiveName, ($parse, paDelayS) => {
 
         }
     };
-});
+}]);
 
 export default mod;
