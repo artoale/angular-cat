@@ -19,8 +19,8 @@ gulp.task('compilejs', function () {
         })
         .transform(babelify)
         .bundle()
-        .on("error", function(err) {
-            console.log("Error : " + err.message);
+        .on('error', function (err) {
+            console.log('Error : ' + err.message);
         })
         .pipe(exorcist('dist/src/paAnimations.js.map'))
         .pipe(source('paAnimations.js'))
@@ -31,8 +31,8 @@ gulp.task('build', function () {
     return browserify('src/js/paAnimations.js')
         .transform(babelify)
         .bundle()
-        .on("error", function(err) {
-            console.log("Error : " + err.message);
+        .on('error', function (err) {
+            console.log('Error : ' + err.message);
         })
         .pipe(source('paAnimations.min.js'))
         .pipe(streamify(uglify()))
