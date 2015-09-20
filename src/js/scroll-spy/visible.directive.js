@@ -4,11 +4,11 @@ mod.directive('paVisible', ['$window', ($window) => {
     return {
         restrict: 'A',
         require: '^^paScrollContainer',
-        link(scope, elem, attrs, ctrl) {
+        link (scope, elem, attrs, ctrl) {
             let rect = {},
                 scrollContainer,
                 api = {
-                    updateClientRect() {
+                    updateClientRect () {
                         let clientRect = elem[0].getBoundingClientRect();
                         rect.top = clientRect.top + scrollContainer.scrollTop;
                         rect.left = clientRect.left + scrollContainer.scrollLeft;

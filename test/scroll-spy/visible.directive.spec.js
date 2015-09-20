@@ -59,9 +59,84 @@ describe('visible', () => {
                 api.update.should.be.a('function');
             });
 
+            it('should check if item is fully visible', () => {
+                document.body.appendChild(element[0]);
+                element.css({
+                    height: '100px',
+                    width: '300px',
+                    display: 'block',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    margin: 0,
+                    padding: 0
+                });
+                api.updateClientRect();
+                sinon.spy(api, 'setInView');
+                api.update({
+                    top: 0,
+                    left: 0,
+                    width: 1000,
+                    height: 1000
+                });
+                api.setInView.should.have.been.calledWith(true);
+            });
+
+            it('should check if item is fully hidden', () => {
+                document.body.appendChild(element[0]);
+                element.css({
+                    height: '100px',
+                    width: '300px',
+                    display: 'block',
+                    position: 'absolute',
+                    left: 0,
+                    margin: 0,
+                    top: '1001px',
+                    padding: 0
+                });
+                api.updateClientRect();
+                sinon.spy(api, 'setInView');
+                api.update({
+                    top: 0,
+                    left: 0,
+                    width: 1000,
+                    height: 1000
+                });
+                api.setInView.should.have.been.calledWith(false);
+            });
+
+            it('should not change status if in between', () => {
+                document.body.appendChild(element[0]);
+                element.css({
+                    height: '1000px',
+                    width: '300px',
+                    display: 'block',
+                    position: 'absolute',
+                    left: 0,
+                    margin: 0,
+                    top: '500px',
+                    padding: 0
+                });
+                api.updateClientRect();
+                sinon.spy(api, 'setInView');
+                api.update({
+                    top: 0,
+                    left: 0,
+                    width: 1000,
+                    height: 1000
+                });
+                api.setInView.should.not.have.been.called;
+            });
+        });
+
+        describe('updateClientRect', () => {
+            it('should be a function', () => {
+                api.updateClientRect.should.be.a('function');
+            });
+
             it('should update the rect object calling getBoundingClientRect', () => {
                 let updateRect = sinon.spy(element[0], 'getBoundingClientRect');
-                api.update();
+                api.updateClientRect();
                 updateRect.should.have.been.called;
             });
         });
