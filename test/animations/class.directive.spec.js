@@ -15,7 +15,7 @@ describe('pa-class directive', () => {
         compile,
         animate,
         routerController = {
-            register() {
+            register () {
                 return;
             }
         },
@@ -60,7 +60,7 @@ describe('pa-class directive', () => {
             scope.visible = true;
             scope.$apply();
             element.hasClass('a-class-name--start').should.be.false;
-            animate.triggerCallbacks();
+            animate.flush();
         });
 
         it('should set the status to "RUNNING", then to "FINISHED"', () => {
@@ -69,7 +69,7 @@ describe('pa-class directive', () => {
             scope.$apply();
             scope.status.should.equal('RUNNING');
 
-            animate.triggerCallbacks();
+            animate.flush();
             scope.status.should.equal('FINISHED');
         });
     });
@@ -103,7 +103,7 @@ describe('pa-class directive', () => {
                 scope.status.should.equal('RUNNING');
 
                 scope.$apply();
-                animate.triggerCallbacks();
+                animate.flush();
 
                 scope.status.should.equal('FINISHED');
 
@@ -125,7 +125,7 @@ describe('pa-class directive', () => {
                 scope.$apply();
                 spy.should.not.have.been.called;
 
-                animate.triggerCallbacks();
+                animate.flush();
                 spy.should.have.been.calledOnce;
             });
         });
@@ -149,7 +149,7 @@ describe('pa-class directive', () => {
             it('should update status correctly when animation finished', () => {
                 controller.play();
                 scope.$apply();
-                animate.triggerCallbacks();
+                animate.flush();
                 scope.status.should.equal('FINISHED');
 
                 controller.clear();
@@ -163,7 +163,7 @@ describe('pa-class directive', () => {
                 scope.status.should.equal('RUNNING');
 
                 controller.clear();
-                animate.triggerCallbacks();
+                animate.flush();
                 scope.status.should.equal('READY');
             });
 

@@ -78,7 +78,7 @@ mod.directive(directiveName, ['$animate', '$parse',($animate, $parse) => {
             this.clear = clear;
 
         }],
-        link(scope, element, attrs, controllers) {
+        link (scope, element, attrs, controllers) {
             const selfController = controllers[0],
                 routerController = controllers[1],
                 animationName = attrs.paAnimationName || directiveName;
