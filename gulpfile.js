@@ -49,7 +49,7 @@ gulp.task('karma', function (done) {
 
 gulp.task('server', function () {
     connect.server({
-        root: ['example', 'bower_components', 'dist']
+        root: ['example', 'bower_components', 'dist/build']
     });
 });
 
