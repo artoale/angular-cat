@@ -151,6 +151,104 @@
             <li>Active: {{customUndo}}</li>
         </ul>
     </section>
+    <section>
+        <h1>Router + is-disabled</h1>
+
+        <div
+            pa-router
+            pa-status="statusIsDisabledDemo"
+            pa-active="isDisabledDemo"
+            pa-disabled="true"
+        >
+            <div
+                class="a-class-name"
+                pa-class="a-class-name"
+                pa-animation-name="first"
+            >
+                Animation 1 content
+            </div>
+            <div
+                class="a-class-name"
+                pa-class="a-class-name"
+                pa-animation-name="second"
+            >
+                Animation 2 content
+            </div>
+        </div>
+        <button type="button" name="button" ng-click="isDisabledDemo = !isDisabledDemo">
+            Toggle animation "active" binding to {{!isDisabledDemo}}
+        </button>
+        <ul class="values">
+            <li>Status: {{statusIsDisabledDemo}}</li>
+            <li>Active: {{isDisabledDemo}}</li>
+        </ul>
+    </section>
+    <section>
+        <h1>Router + custom-animation + is-disabled</h1>
+
+        <div
+            pa-router
+            custom-animation
+            pa-status="statusIsDisabledCustomDemo"
+            pa-active="isDisabledCustomDemo"
+            pa-disabled="true"
+        >
+            <div
+                class="a-class-name"
+                pa-class="a-class-name"
+                pa-animation-name="first"
+            >
+                Animation 1 content
+            </div>
+            <div
+                class="a-class-name"
+                pa-class="a-class-name"
+                pa-animation-name="second"
+            >
+                Animation 2 content
+            </div>
+        </div>
+        <button type="button" name="button" ng-click="isDisabledCustomDemo = !isDisabledCustomDemo">
+            Toggle animation "active" binding to {{!isDisabledCustomDemo}}
+        </button>
+        <ul class="values">
+            <li>Status: {{statusIsDisabledCustomDemo}}</li>
+            <li>Active: {{isDisabledCustomDemo}}</li>
+        </ul>
+    </section>
+    <section>
+        <h1>Router + pa-undo + is-disabled</h1>
+
+        <div
+            pa-router
+            pa-undo="1"
+            pa-status="statusIsDisabledUndoDemo"
+            pa-active="isDisabledUndoDemo"
+            pa-disabled="true"
+        >
+            <div
+                class="a-class-name"
+                pa-class="a-class-name"
+                pa-animation-name="first"
+            >
+                Animation 1 content
+            </div>
+            <div
+                class="a-class-name"
+                pa-class="a-class-name"
+                pa-animation-name="second"
+            >
+                Animation 2 content
+            </div>
+        </div>
+        <button type="button" name="button" ng-click="isDisabledUndoDemo = !isDisabledUndoDemo">
+            Toggle animation "active" binding to {{!isDisabledUndoDemo}}
+        </button>
+        <ul class="values">
+            <li>Status: {{statusIsDisabledUndoDemo}}</li>
+            <li>Active: {{isDisabledUndoDemo}}</li>
+        </ul>
+    </section>
 </body>
 
 </html>

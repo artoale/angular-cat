@@ -7,6 +7,7 @@ mod.directive(directiveName, ['$parse', ($parse) => {
         require: [directiveName, '^^?paRouter'],
         controller:  ['$q', '$scope', '$attrs', function ($q, $scope, $attrs) {
             const statusScopeVar = $attrs.paStatus;
+            let isDisabled = true;
 
             let animations = [],
                 customAnimationQueue,
@@ -21,6 +22,7 @@ mod.directive(directiveName, ['$parse', ($parse) => {
                         pushOrder: animations.length
                     });
                     animationsMap[name] = controller;
+                    controller.setDisabled(isDisabled);
                 },
                 setStatus = newStatus => {
                     let statusM;
@@ -30,7 +32,7 @@ mod.directive(directiveName, ['$parse', ($parse) => {
                     }
                     status = newStatus;
                 },
-                clear = () => {
+                clear = (isDisabled) => {
                     if (status === 'RUNNING') {
                         deferred.resolve();
                     }
@@ -38,12 +40,12 @@ mod.directive(directiveName, ['$parse', ($parse) => {
                     setStatus('CLEARING');
 
                     return $q.all(
-                        animations.map(animation => animation.controller.clear())
+                        animations.map(animation => animation.controller.clear(isDisabled))
                     ).then(() => {
                         setStatus('READY');
                     });
                 },
-                setUp = () => {
+                setUp = (isDisabled) => {
                     setStatus('READY');
                 },
                 runAnimation = () => {
@@ -90,11 +92,20 @@ mod.directive(directiveName, ['$parse', ($parse) => {
                 },
                 getAllAnimations = () => {
                     return animationsMap;
+                },
+                setDisabled = (nVal) => {
+                    isDisabled = nVal;
+                    if (status === 'READY') {
+                        animations.forEach((animation) => {
+                            animation.controller.setDisabled(isDisabled);
+                        });
+                    }
                 };
 
             //APIs used by linking function
             this.setUp = setUp;
             this.runAnimation = runAnimation;
+            this.setDisabled = setDisabled;
 
             //Public APIs
             this.play = play;
@@ -108,7 +119,9 @@ mod.directive(directiveName, ['$parse', ($parse) => {
         link (scope, element, attrs, controllers) {
             const selfController = controllers[0],
                 routerController = controllers[1],
-                animationName = attrs.paAnimationName || directiveName;
+                animationName = attrs.paAnimationName || directiveName,
+                isDisabled = $parse(attrs.paDisabled)(scope);
+
 
             if (routerController) {
                 routerController.register(animationName, selfController);
@@ -116,12 +129,17 @@ mod.directive(directiveName, ['$parse', ($parse) => {
 
             selfController.setUp();
 
+
+            scope.$watch(attrs.paDisabled, (newVal, oldVal) => {
+                selfController.setDisabled(newVal);
+            });
+
             if (attrs.paActive) {
                 scope.$watch(attrs.paActive, (newVal) => {
                     if (newVal) {
                         selfController.runAnimation();
                     } else if (attrs.paUndo) {
-                        selfController.clear();
+                        selfController.clear(isDisabled);
                     }
                 });
             }

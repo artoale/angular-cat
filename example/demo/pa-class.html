@@ -52,6 +52,24 @@
             <li>Active: {{triggerUndo}}</li>
         </ul>
     </section>
+    <section>
+        <h1>Animation class with undo example</h1>
+
+        <div
+            class="a-class-name"
+            pa-class="a-class-name"
+            pa-active="triggerDisableDemo"
+            pa-status="statusDisable"
+            pa-disabled="true"
+        >
+            Animation content
+        </div>
+        <button type="button" name="button" ng-click="triggerDisableDemo = !triggerDisableDemo">Toggle animation "active" binding to {{!triggerDisableDemo}}</button>
+        <ul class="values">
+            <li>Status: {{statusDisable}}</li>
+            <li>Active: {{triggerDisableDemo}}</li>
+        </ul>
+    </section>
 </body>
 
 </html>

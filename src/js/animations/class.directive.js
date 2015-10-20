@@ -28,8 +28,18 @@ mod.directive(directiveName, ['$animate', '$parse',($animate, $parse) => {
                 },
 
                 setUp = () => {
+                    // FIXME: do we need to have a different state when an animation
+                    // is disabled?
                     setStatus('READY');
+                    $element.css({
+                        transition: 'none'
+                    });
+
                     $element.addClass(classNameStart);
+
+                    $element.css({
+                        transition: ''
+                    });
                 },
 
                 clear = () => {
@@ -66,14 +76,30 @@ mod.directive(directiveName, ['$animate', '$parse',($animate, $parse) => {
                         runAnimation();
                     }
                     return deferred.promise;
+                },
+                setDisabled = (isDisabled) => {
+                    if (status === 'READY') {
+                        $element.css({
+                            transition: 'none'
+                        });
+                        if (isDisabled) {
+                            $element.removeClass(classNameStart);
+                        } else {
+                            $element.addClass(classNameStart);
+                        }
+                        $element.css({
+                            transition: ''
+                        });
+                    }
                 };
 
             //APIs used by linking function
-            this.setUp = setUp;
             this.runAnimation = runAnimation;
             this.resolve = resolve;
 
             //Public APIs
+            this.setUp = setUp;
+            this.setDisabled = setDisabled;
             this.play = play;
             this.clear = clear;
 
@@ -81,13 +107,19 @@ mod.directive(directiveName, ['$animate', '$parse',($animate, $parse) => {
         link (scope, element, attrs, controllers) {
             const selfController = controllers[0],
                 routerController = controllers[1],
-                animationName = attrs.paAnimationName || directiveName;
+                animationName = attrs.paAnimationName || directiveName,
+                isDisabled = $parse(attrs.paDisabled)(scope);
 
             if (routerController) {
                 routerController.register(animationName, selfController);
             }
 
-            selfController.setUp();
+            selfController.setUp(isDisabled);
+
+            scope.$watch(attrs.paDisabled, (newVal, oldVal) => {
+                selfController.setDisabled(newVal);
+            });
+
             if (attrs.paActive) {
                 scope.$watch(attrs.paActive, (newVal) => {
                     if (newVal) {

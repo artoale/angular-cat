@@ -39,6 +39,7 @@ describe('pa-router directive', () => {
 
     it('should set the status to READY', () => {
         compile();
+        console.log(scope.status);
         scope.status.should.equal('READY');
     });
 
