@@ -29,4 +29,5 @@ node_modules
 bower_components/
 
 #Compiled files
-dist/
+#Let's commit this since we have a proper build workflow.
+#dist/
