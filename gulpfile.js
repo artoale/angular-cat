@@ -23,7 +23,7 @@ gulp.task('compilejs', function () {
             console.log('Error : ' + err.message);
         })
         .pipe(exorcist('dist/src/paAnimations.js.map'))
-        .pipe(source('paAnimations.js'))
+        .pipe(source('paAnimations.min.js'))
         .pipe(gulp.dest('dist/src'));
 });
 
@@ -49,7 +49,7 @@ gulp.task('karma', function (done) {
 
 gulp.task('server', function () {
     connect.server({
-        root: ['example', 'bower_components', 'dist/build']
+        root: ['example', 'bower_components', 'dist/src']
     });
 });
 
