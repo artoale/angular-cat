@@ -31,6 +31,9 @@ mod.directive(directiveName, ['$animate', '$parse',($animate, $parse) => {
                     // FIXME: do we need to have a different state when an animation
                     // is disabled?
                     setStatus('READY');
+                    if (!$element.hasClass(className)) {
+                        $element.addClass(className);
+                    }
                     $element.css({
                         transition: 'none'
                     });

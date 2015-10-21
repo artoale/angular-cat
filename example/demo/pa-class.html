@@ -35,6 +35,16 @@
         </ul>
     </section>
     <section>
+        <h1>Animation class example, no class set</h1>
+
+        <div pa-class="a-class-name" pa-active="triggerNoClass" pa-status="statusNoClass">Animation content</div>
+        <button type="button" name="button" ng-click="triggerNoClass = !triggerNoClass">Toggle animation "active" binding to {{!triggerNoClass}}</button>
+        <ul class="values">
+            <li>Status: {{statusNoClass}}</li>
+            <li>Active: {{trigger}}</li>
+        </ul>
+    </section>
+    <section>
         <h1>Animation class with undo example</h1>
 
         <div
