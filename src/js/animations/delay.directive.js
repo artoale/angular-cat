@@ -92,13 +92,15 @@ mod.directive(directiveName, ['$parse', 'paDelayS', ($parse, paDelayS) => {
 
             selfController.setUp();
 
-            scope.$watch(attrs.paDisabled, (newVal) => {
-                if (typeof newVal === 'boolean') {
-                    selfController.setDisabled(newVal);
-                }
-            });
+            if (angular.isDefined(attrs.paDisabled)) {
+                scope.$watch(attrs.paDisabled, (newVal) => {
+                    if (typeof newVal === 'boolean') {
+                        selfController.setDisabled(newVal);
+                    }
+                });
+            }
 
-            if (attrs.paActive) {
+            if (angular.isDefined(attrs.paActive)) {
                 scope.$watch(attrs.paActive, (newVal) => {
                     if (newVal) {
                         selfController.play();
