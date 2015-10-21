@@ -130,7 +130,7 @@ mod.directive(directiveName, ['$parse', ($parse) => {
             selfController.setUp();
 
 
-            scope.$watch(attrs.paDisabled, (newVal, oldVal) => {
+            scope.$watch(attrs.paDisabled, (newVal) => {
                 selfController.setDisabled(newVal);
             });
 

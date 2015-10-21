@@ -58,6 +58,23 @@
             <li>Active: {{triggerUndo}}</li>
         </ul>
     </section>
+    <section>
+        <h1>Delay directive with disabled example</h1>
+
+        <div
+            pa-delay="5000"
+            pa-active="triggerDisabledDeni"
+            pa-status="statusDisabledDemo"
+            pa-disabled="true"
+        >
+            1 seconds delay with undo
+        </div>
+        <button type="button" name="button" ng-click="triggerDisabledDeni = !triggerDisabledDeni">Toggle animation "active" binding to {{!triggerDisabledDeni}}</button>
+        <ul class="values">
+            <li>Status: {{statusDisabledDemo}}</li>
+            <li>Active: {{triggerDisabledDeni}}</li>
+        </ul>
+    </section>
 
 </body>
 

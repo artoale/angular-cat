@@ -116,7 +116,7 @@ mod.directive(directiveName, ['$animate', '$parse',($animate, $parse) => {
 
             selfController.setUp(isDisabled);
 
-            scope.$watch(attrs.paDisabled, (newVal, oldVal) => {
+            scope.$watch(attrs.paDisabled, (newVal) => {
                 selfController.setDisabled(newVal);
             });
 
