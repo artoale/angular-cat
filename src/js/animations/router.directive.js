@@ -131,7 +131,9 @@ mod.directive(directiveName, ['$parse', ($parse) => {
 
 
             scope.$watch(attrs.paDisabled, (newVal) => {
-                selfController.setDisabled(newVal);
+                if (typeof newVal === 'boolean') {
+                    selfController.setDisabled(newVal);
+                }
             });
 
             if (attrs.paActive) {

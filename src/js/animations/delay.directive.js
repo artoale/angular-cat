@@ -93,7 +93,9 @@ mod.directive(directiveName, ['$parse', 'paDelayS', ($parse, paDelayS) => {
             selfController.setUp();
 
             scope.$watch(attrs.paDisabled, (newVal) => {
-                selfController.setDisabled(newVal);
+                if (typeof newVal === 'boolean') {
+                    selfController.setDisabled(newVal);
+                }
             });
 
             if (attrs.paActive) {

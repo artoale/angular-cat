@@ -120,7 +120,9 @@ mod.directive(directiveName, ['$animate', '$parse',($animate, $parse) => {
             selfController.setUp(isDisabled);
 
             scope.$watch(attrs.paDisabled, (newVal) => {
-                selfController.setDisabled(newVal);
+                if (typeof newVal === 'boolean') {
+                    selfController.setDisabled(newVal);
+                }
             });
 
             if (attrs.paActive) {
