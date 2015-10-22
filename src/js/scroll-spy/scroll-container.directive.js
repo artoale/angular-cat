@@ -81,6 +81,16 @@ mod.directive('paScrollContainer', ['$window', '$timeout', 'paDebounce', 'window
                 animationFrame = null;
             }
 
+            if (angular.isDefined(attrs.triggerUpdate)) {
+                scope.$watch(attrs.triggerUpdate, function (newVal, oldVal) {
+                    if (newVal !== oldVal) {
+                        $timeout(function () {
+                            onResize();
+                        }, 0);
+                    }
+                });
+            }
+
             $aWindow.on('resize', paDebounce(onResize, 300));
             $scroller.on('scroll', onScroll);
             $timeout(onResize);

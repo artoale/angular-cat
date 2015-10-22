@@ -40,7 +40,7 @@
     </style>
 </head>
 
-<body ng-app="example" pa-scroll-container>
+<body ng-app="example" pa-scroll-container trigger-update="testUpdate">
     <div class="info">
       <dv ng-show='!spy.greenVisible && !spy.redVisible && !spy.blueTitleVisible'> No spied element visible</dv>
       <div> Green section is visible: {{ spy.greenVisible || 'false' }}</div>
