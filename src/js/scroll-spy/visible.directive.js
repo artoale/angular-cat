@@ -1,6 +1,6 @@
 const mod = angular.module('pa.scrollSpy.visible', []);
 
-mod.directive('paVisible', ['$window', ($window) => {
+mod.directive('paVisible', ['$window', '$parse', ($window, $parse) => {
     return {
         restrict: 'A',
         require: '^^paScrollContainer',
@@ -36,9 +36,10 @@ mod.directive('paVisible', ['$window', ($window) => {
                         return rect;
                     },
                     setInView (inView) {
-                        if (scope[attrs.paVisible] !== inView) {
+                        if ($parse(attrs.paVisible)(scope) !== inView) {
                             scope.$evalAsync(() => {
-                                scope[attrs.paVisible] = inView;
+                                const paVisibleSetter = $parse(attrs.paVisible);
+                                paVisibleSetter.assign(scope, inView);
                             });
                         }
                     }
