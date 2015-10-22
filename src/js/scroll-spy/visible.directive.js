@@ -18,11 +18,11 @@ mod.directive('paVisible', ['$window', '$parse', ($window, $parse) => {
                     update (viewportRect) {
                         let isFullyVisible = (rect.top >= viewportRect.top && //Top border in viewport
                             (rect.top + rect.height) <= (viewportRect.top + viewportRect.height)) || //Bottom border in viewport
-                            (rect.top < viewportRect.top && (rect.height) >= viewportRect.height), // Bigger than viewport
+                            (rect.top <= viewportRect.top && rect.top + rect.height >= viewportRect.top + viewportRect.height), // Bigger than viewport
 
                             isFullyHidden = !isFullyVisible &&
                             rect.top > (viewportRect.top + viewportRect.height) || //Top border below viewport bottom
-                            (viewportRect.top + viewportRect.height) < viewportRect.top; //Bottom border above viewport top
+                            (rect.top + rect.height) < viewportRect.top; //Bottom border above viewport top
 
 
                         //Only change state when fully visible/hidden

@@ -22,7 +22,7 @@ gulp.task('compilejs', function () {
         .on('error', function (err) {
             console.log('Error : ' + err.message);
         })
-        .pipe(exorcist('dist/src/paAnimations.js.map'))
+        .pipe(exorcist('dist/src/paAnimations.min.js.map'))
         .pipe(source('paAnimations.min.js'))
         .pipe(gulp.dest('dist/src'));
 });
@@ -63,4 +63,5 @@ gulp.task('del:dist', function (done) {
     ], done);
 });
 
+gulp.task('deploy', ['del:dist', 'compilejs', 'build']);
 gulp.task('default', ['del:dist', 'compilejs', 'server', 'watch']);
