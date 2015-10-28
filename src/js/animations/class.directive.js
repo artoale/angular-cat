@@ -80,19 +80,26 @@ mod.directive(directiveName, ['$animate', '$parse',($animate, $parse) => {
                     }
                     return deferred.promise;
                 },
+                seek = (progress) => {
+                    $element.css({
+                        transition: 'none'
+                    });
+                    if (progress === 'end') {
+                        $element.removeClass(classNameStart);
+                    } else if (progress === 'start') {
+                        $element.addClass(classNameStart);
+                    }
+                    $element.css({
+                        transition: ''
+                    });
+                },
                 setDisabled = (isDisabled) => {
                     if (status === 'READY') {
-                        $element.css({
-                            transition: 'none'
-                        });
                         if (isDisabled) {
-                            $element.removeClass(classNameStart);
+                            seek('end');
                         } else {
-                            $element.addClass(classNameStart);
+                            seek('start');
                         }
-                        $element.css({
-                            transition: ''
-                        });
                     }
                 };
 
@@ -105,6 +112,7 @@ mod.directive(directiveName, ['$animate', '$parse',($animate, $parse) => {
             this.setDisabled = setDisabled;
             this.play = play;
             this.clear = clear;
+            this.seek = seek;
 
         }],
         link (scope, element, attrs, controllers) {

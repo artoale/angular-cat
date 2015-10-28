@@ -23,6 +23,9 @@ mod.directive(directiveName, ['$parse', ($parse) => {
                     });
                     animationsMap[name] = controller;
                     controller.setDisabled(isDisabled);
+                    if (status && status !== 'READY') {
+                        controller.seek('end');
+                    }
                 },
                 setStatus = newStatus => {
                     let statusM;
@@ -100,6 +103,11 @@ mod.directive(directiveName, ['$parse', ($parse) => {
                             animation.controller.setDisabled(isDisabled);
                         });
                     }
+                },
+                seek = (progress) => {
+                    animations.forEach((animation) => {
+                        animation.controller.seek(progress);
+                    });
                 };
 
             //APIs used by linking function
@@ -110,6 +118,7 @@ mod.directive(directiveName, ['$parse', ($parse) => {
             //Public APIs
             this.play = play;
             this.clear = clear;
+            this.seek = seek;
             this.register = register;
             this.getAnimation = getAnimation;
             this.getAllAnimations = getAllAnimations;
