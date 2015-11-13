@@ -66,6 +66,7 @@ mod.directive(directiveName, ['$parse', 'paDelayS', ($parse, paDelayS) => {
                 },
                 setDisabled = (newIsDisabled) => {
                     isDisabled = newIsDisabled;
+                    setStatus('FINISHED');
                 };
 
             //APIs used by linking function

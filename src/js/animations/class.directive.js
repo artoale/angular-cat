@@ -97,6 +97,7 @@ mod.directive(directiveName, ['$animate', '$parse',($animate, $parse) => {
                     if (status === 'READY') {
                         if (isDisabled) {
                             seek('end');
+                            setStatus('FINISHED');
                         } else {
                             seek('start');
                         }

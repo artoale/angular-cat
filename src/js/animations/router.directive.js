@@ -7,7 +7,7 @@ mod.directive(directiveName, ['$parse', ($parse) => {
         require: [directiveName, '^^?paRouter'],
         controller:  ['$q', '$scope', '$attrs', function ($q, $scope, $attrs) {
             const statusScopeVar = $attrs.paStatus;
-            let isDisabled = true;
+            let isDisabled = false;
 
             let animations = [],
                 customAnimationQueue,
@@ -102,7 +102,11 @@ mod.directive(directiveName, ['$parse', ($parse) => {
                         animations.forEach((animation) => {
                             animation.controller.setDisabled(isDisabled);
                         });
+                        if (nVal) {
+                            setStatus('FINISHED');
+                        }
                     }
+
                 },
                 seek = (progress) => {
                     animations.forEach((animation) => {
@@ -149,7 +153,7 @@ mod.directive(directiveName, ['$parse', ($parse) => {
             if (angular.isDefined(attrs.paActive)) {
                 scope.$watch(attrs.paActive, (newVal) => {
                     if (newVal) {
-                        selfController.runAnimation();
+                        selfController.play();
                     } else if (attrs.paUndo) {
                         selfController.clear(isDisabled);
                     }
