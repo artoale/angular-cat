@@ -6,6 +6,7 @@ mod.directive('paVisible', ['$window', '$parse', '$timeout', ($window, $parse, $
         require: '^^paScrollContainer',
         link (scope, elem, attrs, ctrl) {
             let rect = {},
+                hidden = false,
                 scrollContainer,
                 api = {
                     updateClientRect () {
@@ -14,6 +15,7 @@ mod.directive('paVisible', ['$window', '$parse', '$timeout', ($window, $parse, $
                         rect.left = clientRect.left + scrollContainer.scrollLeft;
                         rect.width = clientRect.width;
                         rect.height = clientRect.height;
+                        hidden = elem[0].offsetParent === null;
                     },
                     update (viewportRect) {
                         let isFullyVisible = (rect.top >= viewportRect.top && //Top border in viewport
@@ -36,7 +38,7 @@ mod.directive('paVisible', ['$window', '$parse', '$timeout', ($window, $parse, $
                         return rect;
                     },
                     setInView (inView) {
-                        if ($parse(attrs.paVisible)(scope) !== inView) {
+                        if ($parse(attrs.paVisible)(scope) !== inView && !hidden) {
                             scope.$evalAsync(() => {
                                 const paVisibleSetter = $parse(attrs.paVisible);
                                 paVisibleSetter.assign(scope, inView);
