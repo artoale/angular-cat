@@ -81,6 +81,8 @@ mod.directive('paScrollContainer', ['$window', '$timeout', 'paDebounce', 'window
                 animationFrame = null;
             }
 
+            scope.$on('paScrollContainer:updateSpies', onResize);
+
             if (angular.isDefined(attrs.triggerUpdate)) {
                 scope.$watch(attrs.triggerUpdate, function (newVal, oldVal) {
                     if (newVal !== oldVal) {
