@@ -20,7 +20,7 @@ mod.directive('paScrollContainer', ['$window', '$timeout', 'paDebounce', 'window
             };
         }],
         link (scope, elem, attrs, selfCtrl) {
-            const afTimeout = 200;
+            const afTimeout = 400;
             let vpHeight,
                 $aWindow = angular.element($window),
                 $scrollTopReference = elem[0].tagName === 'BODY' ? windowScrollGetter() : elem,
@@ -28,13 +28,15 @@ mod.directive('paScrollContainer', ['$window', '$timeout', 'paDebounce', 'window
                     $aWindow : elem,
                 animationFrame,
                 lastScrollTimestamp = 0,
-                prevTimestamp = 0;
+                scrollPrevTimestamp = 0,
+                previousScrollTop = 0;
 
             function onScroll() {
                 lastScrollTimestamp = $window.performance.now();
                 if (!animationFrame) {
                     animationFrame = $window.requestAnimationFrame(onAnimationFrame);
                 }
+                scrollPrevTimestamp = $window.performance.now();
             }
 
             function onResize() {
@@ -48,20 +50,22 @@ mod.directive('paScrollContainer', ['$window', '$timeout', 'paDebounce', 'window
             function onAnimationFrame() {
                 const viewportRect = getViewportRect(),
                         timestamp = $window.performance.now(),
-                        delta = timestamp - prevTimestamp;
+                        delta = timestamp - scrollPrevTimestamp,
+                        scrollDelta = viewportRect.top - previousScrollTop,
+                        scrollDirection = scrollDelta === 0 ? 0 :
+                            scrollDelta / Math.abs(scrollDelta);
 
                 selfCtrl.spies.forEach((spy)=> {
-                    spy.update(viewportRect);
+                    spy.update(viewportRect, scrollDirection);
                 });
 
-                prevTimestamp = timestamp;
-                prevTimestamp = timestamp;
+                previousScrollTop = viewportRect.top;
+
                 if (delta < afTimeout) {
                     queueAf();
                 } else {
                     cancelAf();
                 }
-
             }
 
             function getViewportRect() {
