@@ -13,7 +13,7 @@ var gulp = require('gulp'),
     streamify = require('gulp-streamify'),
     js = 'src/js/**/*.js';
 
-gulp.task('compilejs', function () {
+gulp.task('compilejs', ['del:dist'], function () {
     return browserify('src/js/paAnimations.js', {
             debug: true
         })
@@ -40,7 +40,6 @@ gulp.task('build', function () {
 });
 
 
-
 gulp.task('karma', function (done) {
     new KarmaServer({
         configFile: __dirname + '/karma.conf.js'
@@ -54,7 +53,7 @@ gulp.task('server', function () {
 });
 
 gulp.task('watch', function () {
-    gulp.watch([js], ['del:dist', 'compilejs']);
+    gulp.watch([js], ['compilejs']);
 });
 
 gulp.task('del:dist', function (done) {
@@ -63,5 +62,5 @@ gulp.task('del:dist', function (done) {
     ], done);
 });
 
-gulp.task('deploy', ['del:dist', 'compilejs', 'build']);
-gulp.task('default', ['del:dist', 'compilejs', 'server', 'watch']);
+gulp.task('deploy', ['compilejs', 'build']);
+gulp.task('default', ['compilejs', 'server', 'watch']);
