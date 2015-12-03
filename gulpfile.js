@@ -11,20 +11,30 @@ var gulp = require('gulp'),
     KarmaServer = require('karma').Server,
     uglify = require('gulp-uglify'),
     streamify = require('gulp-streamify'),
-    js = 'src/js/**/*.js';
+    runSequence = require('run-sequence'),
+    js = 'src/js/**/*.js',
+
+    compileJs = function (dist) {
+        var dest = dist ? 'dist' : 'example';
+        return browserify('src/js/paAnimations.js', {
+                debug: true
+            })
+            .transform(babelify)
+            .bundle()
+            .on('error', function (err) {
+                console.log('Error : ' + err.message);
+            })
+            .pipe(exorcist(dest + '/paAnimations.js.map'))
+            .pipe(source('paAnimations.js'))
+            .pipe(gulp.dest(dest));
+    };
 
 gulp.task('compilejs', function () {
-    return browserify('src/js/paAnimations.js', {
-            debug: true
-        })
-        .transform(babelify)
-        .bundle()
-        .on('error', function (err) {
-            console.log('Error : ' + err.message);
-        })
-        .pipe(exorcist('dist/src/paAnimations.js.map'))
-        .pipe(source('paAnimations.js'))
-        .pipe(gulp.dest('dist/src'));
+    compileJs(true);
+});
+
+gulp.task('compilejs-dev', function () {
+    compileJs(false);
 });
 
 gulp.task('build', function () {
@@ -36,9 +46,8 @@ gulp.task('build', function () {
         })
         .pipe(source('paAnimations.min.js'))
         .pipe(streamify(uglify()))
-        .pipe(gulp.dest('dist/build'));
+        .pipe(gulp.dest('dist'));
 });
-
 
 gulp.task('karma', function (done) {
     new KarmaServer({
@@ -48,7 +57,7 @@ gulp.task('karma', function (done) {
 
 gulp.task('server', function () {
     connect.server({
-        root: ['example', 'bower_components', 'dist/src']
+        root: ['example', 'bower_components']
     });
 });
 
@@ -62,5 +71,8 @@ gulp.task('del:dist', function (done) {
     ], done);
 });
 
-gulp.task('deploy', ['compilejs', 'build']);
-gulp.task('default', ['compilejs', 'server', 'watch']);
+gulp.task('deploy', function (cb) {
+    runSequence('del:dist', 'compilejs', 'build', cb);
+});
+
+gulp.task('default', ['compilejs-dev', 'server', 'watch']);

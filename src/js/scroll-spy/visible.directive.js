@@ -26,7 +26,6 @@ mod.directive('paVisible', ['$window', '$parse', '$timeout', ($window, $parse, $
                             rect.top > (viewportRect.top + viewportRect.height) || //Top border below viewport bottom
                             (rect.top + rect.height) < viewportRect.top; //Bottom border above viewport top
 
-
                         //Only change state when fully visible/hidden
                         if (isFullyVisible) {
                             api.setInView(true);

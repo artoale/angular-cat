@@ -89,9 +89,9 @@ By default, the animations are run in sequence, and not repeated unless `pa-undo
 
 ```html
 <div pa-timeline pa-active="sequence" pa-undo="1">
-    <div pa-class="animation-1" class="animation-1"></div>
+    <div pa-class="animation-1"></div>
     <div pa-delay="500"></div>
-    <div pa-class="animation-2" class="animation-2"> </div>
+    <div pa-class="animation-2"> </div>
 </div>
 ```
 

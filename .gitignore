@@ -28,6 +28,5 @@ build/Release
 node_modules
 bower_components/
 
-#Compiled files
-#Let's commit this since we have a proper build workflow.
-#dist/
+# Ignore local "watched" js file
+example/paAnimations.js*
