@@ -1,6 +1,6 @@
 # CAT - CSS Animation Timeline
 
-[![Travis CI Build Status](https://travis-ci.org/artoale/animations.svg)](https://travis-ci.org/artoale/animations)
+[![Travis CI Build Status](https://travis-ci.org/artoale/ng-cat.svg)](https://travis-ci.org/artoale/ng-cat)
 
 Set of AngularJS directives to simplify development and composition of
 animations on static websites.

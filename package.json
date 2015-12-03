@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/artoale/animations.git"
+    "url": "https://github.com/artoale/ng-cat.git"
   },
   "keywords": [
     "angularjs",
@@ -19,9 +19,9 @@
   "author": "Alessandro Artoni <aartoni@google.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/artoale/animations/issues"
+    "url": "https://github.com/artoale/ng-cat/issues"
   },
-  "homepage": "https://github.com/artoale/animations",
+  "homepage": "https://github.com/artoale/ng-cat",
   "devDependencies": {
     "babelify": "^6.3.0",
     "browserify": "^11.0.1",
