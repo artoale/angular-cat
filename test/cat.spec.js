@@ -1,11 +1,11 @@
 import catAnimations from '../src/js/cat.js';
 
-describe('catAnimations', () => {
+describe('cat', () => {
     it('should be defined', () => {
         catAnimations.should.be.defined;
     });
 
     it('should be an angular module', () => {
-        catAnimations.name.should.equal('catAnimations');
+        catAnimations.name.should.equal('cat');
     });
 });
