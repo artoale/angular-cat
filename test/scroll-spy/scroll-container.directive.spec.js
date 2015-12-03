@@ -62,7 +62,7 @@ describe('scrollSpy', () => {
             });
 
             it('should return the scrollContainer DOM node', () => {
-                var node = controller.getScrollContainer();
+                let node = controller.getScrollContainer();
                 node.should.be.equal(element[0]);
             });
         });

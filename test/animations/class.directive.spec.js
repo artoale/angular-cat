@@ -21,6 +21,7 @@ describe('pa-class directive', () => {
         },
         sandbox,
         timeout;
+    beforeEach(angular.mock.module('pa.animations.animationLink'));
     beforeEach(angular.mock.module('pa.animations.class'));
     beforeEach(angular.mock.module('ngAnimateMock'));
 

@@ -20,6 +20,7 @@ describe('pa-delay directive', () => {
         },
         timeout;
     beforeEach(angular.mock.module('pa.utils.delay'));
+    beforeEach(angular.mock.module('pa.animations.animationLink'));
     beforeEach(angular.mock.module('pa.animations.delay'));
     beforeEach(angular.mock.module('ngAnimateMock'));
 

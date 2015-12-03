@@ -152,11 +152,21 @@ describe('visible', () => {
         });
 
         describe('setInView', () => {
+            beforeEach(() => {
+                document.body.appendChild(element[0]);
+                api.updateClientRect();
+            });
+
+            afterEach(() => {
+                document.body.removeChild(element[0]);
+            });
+
             it('should be a function', () => {
                 api.setInView.should.be.a('function');
             });
 
             it('should set visible to true', () => {
+
                 api.setInView(true);
                 scope.$apply();
                 scope.visible.should.be.true;
