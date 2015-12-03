@@ -1,11 +1,11 @@
-describe('pa-router directive', () => {
+describe('cat-timeline directive', () => {
     let scope = {},
         template = `
             <div>
-                <div    pa-router
-                        pa-active="visible"
-                        pa-status="status"
-                        pa-animation-name="animation-name"
+                <div    cat-timeline
+                        cat-active="visible"
+                        cat-status="status"
+                        cat-animation-name="animation-name"
                     ></div>
                 </div>
             </div>
@@ -13,13 +13,15 @@ describe('pa-router directive', () => {
         compile,
         animate,
         element,
-        routerController = {
-            register() {
+        timelineController = {
+            register () {
                 return;
             }
         },
         timeout;
-    beforeEach(angular.mock.module('pa.animations.router'));
+
+    beforeEach(angular.mock.module('cat.animations.animationLink'));
+    beforeEach(angular.mock.module('cat.animations.timeline'));
     beforeEach(angular.mock.module('ngAnimateMock'));
 
     beforeEach(angular.mock.inject(($compile, $rootScope, $timeout, $animate) => {
@@ -28,10 +30,10 @@ describe('pa-router directive', () => {
         scope.visible = false;
         compile = () => {
             let parentElement = angular.element(template);
-            parentElement.data('$paRouterController', routerController);
+            parentElement.data('$catTimelineController', timelineController);
             $compile(parentElement)(scope);
             element = parentElement.children();
-            return element.controller('paRouter');
+            return element.controller('catTimeline');
         };
 
         timeout =  $timeout;
@@ -39,15 +41,16 @@ describe('pa-router directive', () => {
 
     it('should set the status to READY', () => {
         compile();
+        console.log(scope.status);
         scope.status.should.equal('READY');
     });
 
-    it('should register itself on the paRouter parent controller', () => {
-        sinon.spy(routerController, 'register');
+    it('should register itself on the catTimeline parent controller', () => {
+        sinon.spy(timelineController, 'register');
         let controller = compile();
 
-        routerController.register.should.have.been.calledOnce;
-        routerController.register.should.have.been.calledWith('animation-name', controller);
+        timelineController.register.should.have.been.calledOnce;
+        timelineController.register.should.have.been.calledWith('animation-name', controller);
     });
 
     describe('active watch', () => {
@@ -55,7 +58,8 @@ describe('pa-router directive', () => {
             let controller = compile(),
                 deferred = $q.defer(),
                 mockAnimation = {
-                    play: () => deferred.promise
+                    play: () => deferred.promise,
+                    setDisabled: sinon.spy()
                 };
 
             sinon.spy(mockAnimation, 'play');
@@ -70,7 +74,8 @@ describe('pa-router directive', () => {
             let controller = compile(),
                 deferred = $q.defer(),
                 mockAnimation = {
-                    play: () => deferred.promise
+                    play: () => deferred.promise,
+                    setDisabled: sinon.spy()
                 };
 
             controller.register('a-name', mockAnimation);
@@ -97,16 +102,17 @@ describe('pa-router directive', () => {
                     play: () => deferred.promise,
                     clear: () => {
                         return deferred2.promise;
-                    }
+                    },
+                    setDisabled: sinon.spy()
                 };
 
             template = `
                <div>
-                   <div    pa-router
-                           pa-active="visible"
-                           pa-status="status"
-                           pa-animation-name="animation-name"
-                           pa-undo="1"
+                   <div    cat-timeline
+                           cat-active="visible"
+                           cat-status="status"
+                           cat-animation-name="animation-name"
+                           cat-undo="1"
                        ></div>
                    </div>
                </div>
@@ -144,10 +150,12 @@ describe('pa-router directive', () => {
                     deferred1 = $q.defer(),
                     deferred2 = $q.defer(),
                     mockAnimation1 = {
-                        play: () => deferred1.promise
+                        play: () => deferred1.promise,
+                        setDisabled: sinon.spy()
                     },
                     mockAnimation2 = {
-                        play: () => deferred2.promise
+                        play: () => deferred2.promise,
+                        setDisabled: sinon.spy()
                     };
 
                 sinon.spy(mockAnimation1, 'play');
@@ -169,10 +177,12 @@ describe('pa-router directive', () => {
                     deferred1 = $q.defer(),
                     deferred2 = $q.defer(),
                     mockAnimation1 = {
-                        play: () => deferred1.promise
+                        play: () => deferred1.promise,
+                        setDisabled: sinon.spy()
                     },
                     mockAnimation2 = {
-                        play: () => deferred2.promise
+                        play: () => deferred2.promise,
+                        setDisabled: sinon.spy()
                     };
 
                 sinon.spy(mockAnimation1, 'play');
@@ -189,6 +199,30 @@ describe('pa-router directive', () => {
                 scope.$apply();
                 mockAnimation1.play.should.have.been.calledOnce;
             }));
+
+            it('should set the disable status correctly', () => {
+                let controller = compile(),
+                    mockAnimation = {
+                        setDisabled: sinon.spy(),
+                        seek: sinon.spy()
+                    };
+
+                controller.setDisabled(true);
+                controller.register('a-name', mockAnimation, 2);
+                mockAnimation.setDisabled.should.have.been.calledWith(true);
+            });
+
+            it('should seek to end if disabled', () => {
+                let controller = compile(),
+                    mockAnimation = {
+                        setDisabled: sinon.spy(),
+                        seek: sinon.spy()
+                    };
+                // Disable forces the status to FINISHED
+                controller.setDisabled(true);
+                controller.register('a-name', mockAnimation);
+                mockAnimation.seek.should.have.been.calledWith('end');
+            });
         });
 
         describe('#play', () => {
@@ -197,10 +231,12 @@ describe('pa-router directive', () => {
                     deferred1 = $q.defer(),
                     deferred2 = $q.defer(),
                     mockAnimation1 = {
-                        play: () => deferred1.promise
+                        play: () => deferred1.promise,
+                        setDisabled: sinon.spy()
                     },
                     mockAnimation2 = {
-                        play: () => deferred2.promise
+                        play: () => deferred2.promise,
+                        setDisabled: sinon.spy()
                     };
 
                 sinon.spy(mockAnimation1, 'play');
@@ -222,10 +258,12 @@ describe('pa-router directive', () => {
                     deferred1 = $q.defer(),
                     deferred2 = $q.defer(),
                     mockAnimation1 = {
-                        play: () => deferred1.promise
+                        play: () => deferred1.promise,
+                        setDisabled: sinon.spy()
                     },
                     mockAnimation2 = {
-                        play: () => deferred2.promise
+                        play: () => deferred2.promise,
+                        setDisabled: sinon.spy()
                     };
 
                 sinon.spy(mockAnimation1, 'play');
@@ -248,10 +286,12 @@ describe('pa-router directive', () => {
                     deferred1 = $q.defer(),
                     deferred2 = $q.defer(),
                     mockAnimation1 = {
-                        play: () => deferred1.promise
+                        play: () => deferred1.promise,
+                        setDisabled: sinon.spy()
                     },
                     mockAnimation2 = {
-                        play: () => deferred2.promise
+                        play: () => deferred2.promise,
+                        setDisabled: sinon.spy()
                     },
                     playPromise,
                     spy = sinon.spy();
@@ -279,10 +319,12 @@ describe('pa-router directive', () => {
                     deferred1 = $q.defer(),
                     deferred2 = $q.defer(),
                     mockAnimation1 = {
-                        play: () => deferred1.promise
+                        play: () => deferred1.promise,
+                        setDisabled: sinon.spy()
                     },
                     mockAnimation2 = {
-                        play: () => deferred2.promise
+                        play: () => deferred2.promise,
+                        setDisabled: sinon.spy()
                     };
 
                 controller.register('a-name', mockAnimation1);
@@ -312,10 +354,12 @@ describe('pa-router directive', () => {
                     deferred1 = $q.defer(),
                     deferred2 = $q.defer(),
                     mockAnimation1 = {
-                        clear: () => deferred1.promise
+                        clear: () => deferred1.promise,
+                        setDisabled: sinon.spy()
                     },
                     mockAnimation2 = {
-                        clear: () => deferred2.promise
+                        clear: () => deferred2.promise,
+                        setDisabled: sinon.spy()
                     };
 
                 sinon.spy(mockAnimation1, 'clear');
@@ -334,10 +378,14 @@ describe('pa-router directive', () => {
                     deferred1 = $q.defer(),
                     deferred2 = $q.defer(),
                     mockAnimation1 = {
-                        clear: () => deferred1.promise
+                        clear: () => deferred1.promise,
+                        setDisabled: sinon.spy(),
+                        seek: sinon.spy()
                     },
                     mockAnimation2 = {
-                        clear: () => deferred2.promise
+                        clear: () => deferred2.promise,
+                        setDisabled: sinon.spy(),
+                        seek: sinon.spy()
                     };
 
                 sinon.spy(mockAnimation1, 'clear');
@@ -364,7 +412,8 @@ describe('pa-router directive', () => {
                     deferred2 = $q.defer(),
                     mockAnimation1 = {
                         clear: () => deferred1.promise,
-                        play: () => deferred2.promise
+                        play: () => deferred2.promise,
+                        setDisabled: sinon.spy()
                     },
                     playPromise,
                     promiseSpy = sinon.spy();
@@ -388,6 +437,44 @@ describe('pa-router directive', () => {
 
             }));
 
+        });
+
+        describe('#seek', () => {
+            it('should seek registered animation', () => {
+                let controller = compile(),
+                    mockAnimation = {
+                        setDisabled: sinon.spy(),
+                        seek: sinon.spy()
+                    };
+                // Disable forces the status to FINISHED
+                controller.register('a-name', mockAnimation);
+                controller.seek('toSomething');
+                mockAnimation.seek.should.have.been.calledWith('toSomething');
+            });
+        });
+
+        describe('customAnimationQueue', () => {
+            it('should call the custom queue and wait on the promise', angular.mock.inject(($q) => {
+                let controller = compile(),
+                    deferred = $q.defer(),
+                    customAnimation = sinon.spy(() => {
+                        return deferred.promise;
+                    }),
+                    promiseSpy = sinon.spy(),
+                    promise;
+
+                controller.setCustomAnimation(customAnimation);
+                customAnimation.should.not.have.been.called;
+                promise = controller.play().then(promiseSpy);
+
+                customAnimation.should.have.been.calledOnce;
+                scope.$digest();
+                promiseSpy.should.not.have.been.called;
+
+                deferred.resolve();
+                scope.$digest();
+                promiseSpy.should.have.been.called;
+            }));
         });
 
     });

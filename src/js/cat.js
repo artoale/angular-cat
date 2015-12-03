@@ -2,7 +2,7 @@ import scrollSpy from './scroll-spy/scroll-spy.module';
 import animations from './animations/animations.module';
 import delay from './utils/delay.service';
 
-const module = angular.module('paAnimations', [
+const module = angular.module('cat', [
     'ngAnimate',
     animations.name,
     delay.name,

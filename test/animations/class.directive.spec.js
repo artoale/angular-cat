@@ -1,35 +1,38 @@
-describe('pa-class directive', () => {
+describe('cat-class directive', () => {
     let element,
         scope = {},
         template = `
             <div>
                 <div
-                    pa-class="a-class-name"
-                    pa-active="visible"
-                    pa-status="status"
-                    pa-animation-name="animation-name"
+                    cat-class="a-class-name"
+                    cat-active="visible"
+                    cat-status="status"
+                    cat-animation-name="animation-name"
 
                 ></div>
             </div>
             `,
         compile,
         animate,
-        routerController = {
-            register() {
+        timelineController = {
+            register () {
                 return;
             }
         },
+        sandbox,
         timeout;
-    beforeEach(angular.mock.module('pa.animations.class'));
+    beforeEach(angular.mock.module('cat.animations.animationLink'));
+    beforeEach(angular.mock.module('cat.animations.class'));
     beforeEach(angular.mock.module('ngAnimateMock'));
 
     beforeEach(angular.mock.inject(($compile, $rootScope, $timeout, $animate) => {
         scope = $rootScope.$new();
+        sandbox = sinon.sandbox.create();
         animate = $animate;
         scope.visible = true;
         compile = () => {
             let parentElement = angular.element(template);
-            parentElement.data('$paRouterController', routerController);
+            parentElement.data('$catTimelineController', timelineController);
             $compile(parentElement)(scope);
             element = parentElement.children();
         };
@@ -37,9 +40,18 @@ describe('pa-class directive', () => {
         timeout =  $timeout;
     }));
 
+    afterEach(() => {
+        sandbox.restore();
+    });
+
     it('should add a class with --start suffix', () => {
         compile();
         element.hasClass('a-class-name--start').should.be.true;
+    });
+
+    it('should add the base class if not already specified', () => {
+        compile();
+        element.hasClass('a-class-name').should.be.true;
     });
 
     it('should set the status to READY if variable is binded', () => {
@@ -47,12 +59,35 @@ describe('pa-class directive', () => {
         scope.status.should.equal('READY');
     });
 
-    it('should register itself on the paRouter parent controller', () => {
-        sinon.spy(routerController, 'register');
+    it('should register itself on the catTimeline parent controller', () => {
+        sandbox.spy(timelineController, 'register');
         compile();
-        routerController.register.should.have.been.calledOnce;
-        routerController.register.should.have.been.calledWith('animation-name', element.controller('paClass'));
+        timelineController.register.should.have.been.calledOnce;
+        timelineController.register.should.have.been.calledWith('animation-name', element.controller('catClass'));
     });
+
+    it('should register itself on the catTimeline parent controller regardless of the nesting level', angular.mock.inject(($compile, $rootScope) => {
+        sandbox.spy(timelineController, 'register');
+        let template = `
+            <div>
+                <div>
+                    <div
+                        cat-class="a-class-name"
+                        cat-active="visible"
+                        cat-status="status"
+                        cat-animation-name="animation-name"
+
+                    ></div>
+                </div>
+            </div>`,
+            parentElement = angular.element(template);
+
+        parentElement.data('$catTimelineController', timelineController);
+        $compile(parentElement)($rootScope.$new());
+        element = parentElement.children().children();
+        timelineController.register.should.have.been.calledOnce;
+        timelineController.register.should.have.been.calledWith('animation-name', element.controller('catClass'));
+    }));
 
     describe('active watch', () => {
         it('should remove the prefixed class', () => {
@@ -60,7 +95,7 @@ describe('pa-class directive', () => {
             scope.visible = true;
             scope.$apply();
             element.hasClass('a-class-name--start').should.be.false;
-            animate.triggerCallbacks();
+            animate.flush();
         });
 
         it('should set the status to "RUNNING", then to "FINISHED"', () => {
@@ -69,7 +104,7 @@ describe('pa-class directive', () => {
             scope.$apply();
             scope.status.should.equal('RUNNING');
 
-            animate.triggerCallbacks();
+            animate.flush();
             scope.status.should.equal('FINISHED');
         });
     });
@@ -79,7 +114,7 @@ describe('pa-class directive', () => {
 
         beforeEach(() => {
             compile();
-            controller = element.controller('paClass');
+            controller = element.controller('catClass');
         });
 
         describe('#play', () => {
@@ -103,7 +138,7 @@ describe('pa-class directive', () => {
                 scope.status.should.equal('RUNNING');
 
                 scope.$apply();
-                animate.triggerCallbacks();
+                animate.flush();
 
                 scope.status.should.equal('FINISHED');
 
@@ -117,7 +152,7 @@ describe('pa-class directive', () => {
 
             it('should resolve the promise when done', () => {
                 let retval = controller.play(),
-                    spy = sinon.spy();
+                    spy = sandbox.spy();
 
                 retval.then(spy);
                 spy.should.not.have.been.called;
@@ -125,7 +160,7 @@ describe('pa-class directive', () => {
                 scope.$apply();
                 spy.should.not.have.been.called;
 
-                animate.triggerCallbacks();
+                animate.flush();
                 spy.should.have.been.calledOnce;
             });
         });
@@ -149,7 +184,7 @@ describe('pa-class directive', () => {
             it('should update status correctly when animation finished', () => {
                 controller.play();
                 scope.$apply();
-                animate.triggerCallbacks();
+                animate.flush();
                 scope.status.should.equal('FINISHED');
 
                 controller.clear();
@@ -163,7 +198,7 @@ describe('pa-class directive', () => {
                 scope.status.should.equal('RUNNING');
 
                 controller.clear();
-                animate.triggerCallbacks();
+                animate.flush();
                 scope.status.should.equal('READY');
             });
 
@@ -172,7 +207,7 @@ describe('pa-class directive', () => {
             });
 
             it('should resolve the promise when done (immediately)', () => {
-                let spy = sinon.spy();
+                let spy = sandbox.spy();
                 controller.clear().then(spy);
 
                 spy.should.not.have.been.called;
@@ -182,7 +217,7 @@ describe('pa-class directive', () => {
             });
 
             it('should resolve the "play" promise if still running', () => {
-                let spy = sinon.spy();
+                let spy = sandbox.spy();
                 controller.play().then(spy);
 
                 spy.should.not.have.been.called;

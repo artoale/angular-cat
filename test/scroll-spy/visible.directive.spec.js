@@ -9,12 +9,12 @@ describe('visible', () => {
         api,
         scrollContainerController,
         template = `
-            <div pa-fake-scroller>
-                <p pa-visible="visible"></p>
+            <div cat-fake-scroller>
+                <p cat-visible="visible"></p>
             </div>
         `;
 
-    beforeEach(angular.mock.module('pa.scrollSpy.visible'));
+    beforeEach(angular.mock.module('cat.scrollSpy.visible'));
     beforeEach(() => {
         scrollContainerController = {
             registerSpy: sinon.spy(),
@@ -24,7 +24,7 @@ describe('visible', () => {
 
     beforeEach(angular.mock.inject(($compile, $rootScope, $timeout, $window) => {
         parentElement = angular.element(template);
-        parentElement.data('$paScrollContainerController', scrollContainerController);
+        parentElement.data('$catScrollContainerController', scrollContainerController);
         rootScope = $rootScope;
         scope = $rootScope.$new();
         $compile(parentElement)(scope);
@@ -38,7 +38,7 @@ describe('visible', () => {
     });
 
     it('should be an angular module', () => {
-        visible.name.should.equal('pa.scrollSpy.visible');
+        visible.name.should.equal('cat.scrollSpy.visible');
     });
 
     it('should get the scrollContainer DOM element', () => {
@@ -59,9 +59,84 @@ describe('visible', () => {
                 api.update.should.be.a('function');
             });
 
+            it('should check if item is fully visible', () => {
+                document.body.appendChild(element[0]);
+                element.css({
+                    height: '100px',
+                    width: '300px',
+                    display: 'block',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    margin: 0,
+                    padding: 0
+                });
+                api.updateClientRect();
+                sinon.spy(api, 'setInView');
+                api.update({
+                    top: 0,
+                    left: 0,
+                    width: 1000,
+                    height: 1000
+                });
+                api.setInView.should.have.been.calledWith(true);
+            });
+
+            it('should check if item is fully hidden', () => {
+                document.body.appendChild(element[0]);
+                element.css({
+                    height: '100px',
+                    width: '300px',
+                    display: 'block',
+                    position: 'absolute',
+                    left: 0,
+                    margin: 0,
+                    top: '1001px',
+                    padding: 0
+                });
+                api.updateClientRect();
+                sinon.spy(api, 'setInView');
+                api.update({
+                    top: 0,
+                    left: 0,
+                    width: 1000,
+                    height: 1000
+                });
+                api.setInView.should.have.been.calledWith(false);
+            });
+
+            it('should not change status if in between', () => {
+                document.body.appendChild(element[0]);
+                element.css({
+                    height: '1000px',
+                    width: '300px',
+                    display: 'block',
+                    position: 'absolute',
+                    left: 0,
+                    margin: 0,
+                    top: '500px',
+                    padding: 0
+                });
+                api.updateClientRect();
+                sinon.spy(api, 'setInView');
+                api.update({
+                    top: 0,
+                    left: 0,
+                    width: 1000,
+                    height: 1000
+                });
+                api.setInView.should.not.have.been.called;
+            });
+        });
+
+        describe('updateClientRect', () => {
+            it('should be a function', () => {
+                api.updateClientRect.should.be.a('function');
+            });
+
             it('should update the rect object calling getBoundingClientRect', () => {
                 let updateRect = sinon.spy(element[0], 'getBoundingClientRect');
-                api.update();
+                api.updateClientRect();
                 updateRect.should.have.been.called;
             });
         });
@@ -77,11 +152,21 @@ describe('visible', () => {
         });
 
         describe('setInView', () => {
+            beforeEach(() => {
+                document.body.appendChild(element[0]);
+                api.updateClientRect();
+            });
+
+            afterEach(() => {
+                document.body.removeChild(element[0]);
+            });
+
             it('should be a function', () => {
                 api.setInView.should.be.a('function');
             });
 
             it('should set visible to true', () => {
+
                 api.setInView(true);
                 scope.$apply();
                 scope.visible.should.be.true;

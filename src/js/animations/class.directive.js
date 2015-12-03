@@ -1,17 +1,17 @@
-const mod = angular.module('pa.animations.class', []),
-    directiveName = 'paClass';
+const mod = angular.module('cat.animations.class', []),
+    directiveName = 'catClass';
 
-mod.directive(directiveName, ($animate) => {
+mod.directive(directiveName, ['$animate', '$parse', 'catAnimationLink', ($animate, $parse, catAnimationLink) => {
     return {
         restrict: 'A',
-        require: [directiveName, '^?paRouter'],
-        controller($q, $scope, $attrs, $element) {
+        require: [directiveName, '^?catTimeline'],
+        controller: ['$q', '$scope', '$attrs', '$element', function ($q, $scope, $attrs, $element) {
             const className = $attrs[directiveName] || directiveName,
                 classNameStart = className + '--start',
-                statusScopeVar = $attrs.paStatus;
+                statusScopeVar = $attrs.catStatus;
 
             let status = '',
-                deferred,
+                deferred = $q.defer(),
 
 
                 resolve = (...args) => {
@@ -19,15 +19,30 @@ mod.directive(directiveName, ($animate) => {
                 },
 
                 setStatus = newStatus => {
+                    let statusM;
                     if (statusScopeVar) {
-                        $scope[statusScopeVar] = newStatus;
+                        statusM = $parse(statusScopeVar);
+                        statusM.assign($scope, newStatus);
                     }
                     status = newStatus;
                 },
 
                 setUp = () => {
+                    // FIXME: do we need to have a different state when an animation
+                    // is disabled?
                     setStatus('READY');
-                    $element.addClass(classNameStart);
+                    if (!$element.hasClass(className)) {
+                        $element.addClass(className);
+                    }
+                    $element.css({
+                        transition: 'none'
+                    });
+
+                    $element[0].classList.add(classNameStart);
+
+                    setTimeout(() => $element.css({
+                        transition: ''
+                    }), 0);
                 },
 
                 clear = () => {
@@ -64,40 +79,45 @@ mod.directive(directiveName, ($animate) => {
                         runAnimation();
                     }
                     return deferred.promise;
+                },
+                seek = (progress) => {
+                    $element.css({
+                        transition: 'none'
+                    });
+                    if (progress === 'end') {
+                        $element.removeClass(classNameStart);
+                    } else if (progress === 'start') {
+                        $element.addClass(classNameStart);
+                    }
+                    $element.css({
+                        transition: ''
+                    });
+                },
+                setDisabled = (isDisabled) => {
+                    if (status === 'READY') {
+                        if (isDisabled) {
+                            seek('end');
+                            setStatus('FINISHED');
+                        } else {
+                            seek('start');
+                        }
+                    }
                 };
 
             //APIs used by linking function
-            this.setUp = setUp;
             this.runAnimation = runAnimation;
             this.resolve = resolve;
 
             //Public APIs
+            this.setUp = setUp;
+            this.setDisabled = setDisabled;
             this.play = play;
             this.clear = clear;
+            this.seek = seek;
 
-        },
-        link(scope, element, attrs, controllers) {
-            const selfController = controllers[0],
-                routerController = controllers[1],
-                animationName = attrs.paAnimationName || directiveName;
-
-            if (routerController) {
-                routerController.register(animationName, selfController);
-            }
-
-            selfController.setUp();
-            if (attrs.paActive) {
-                scope.$watch(attrs.paActive, (newVal) => {
-                    if (newVal) {
-                        selfController.runAnimation();
-                    } else if (attrs.paUndo) {
-                        selfController.setUp();
-                    }
-                });
-            }
-
-        }
+        }],
+        link: (...args) => catAnimationLink(...args)
     };
-});
+}]);
 
 export default mod;

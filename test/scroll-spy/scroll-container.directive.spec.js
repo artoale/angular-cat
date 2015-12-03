@@ -9,10 +9,10 @@ describe('scrollSpy', () => {
         element,
         controller,
         template = `
-            <div pa-scroll-container>
+            <div cat-scroll-container>
         `;
 
-    beforeEach(angular.mock.module('pa.scrollSpy.scrollContainer'));
+    beforeEach(angular.mock.module('cat.scrollSpy.scrollContainer'));
     beforeEach(angular.mock.inject(($compile, $rootScope, $timeout, $window) => {
         compile = $compile;
         window = $window;
@@ -20,7 +20,7 @@ describe('scrollSpy', () => {
         scope = $rootScope.$new();
         timeout = $timeout;
         element = compile(template)(scope);
-        controller = element.controller('paScrollContainer');
+        controller = element.controller('catScrollContainer');
     }));
 
     it('should be defined', () => {
@@ -28,7 +28,7 @@ describe('scrollSpy', () => {
     });
 
     it('should be an angular module', () => {
-        scrollSpy.name.should.equal('pa.scrollSpy.scrollContainer');
+        scrollSpy.name.should.equal('cat.scrollSpy.scrollContainer');
     });
 
     describe('controller', () => {
@@ -62,7 +62,7 @@ describe('scrollSpy', () => {
             });
 
             it('should return the scrollContainer DOM node', () => {
-                var node = controller.getScrollContainer();
+                let node = controller.getScrollContainer();
                 node.should.be.equal(element[0]);
             });
         });

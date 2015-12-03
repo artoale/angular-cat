@@ -6,7 +6,8 @@
     <title>Scroll spy example page</title>
     <script src="../angular/angular.js"></script>
     <script src="../angular-animate/angular-animate.js"></script>
-    <script data-main="../main.js" src="../requirejs/require.js"></script>
+    <script src="/cat.js"></script>
+    <script src="/main.js"></script>
     <style media="screen">
         body {
           margin: 0;
@@ -39,19 +40,19 @@
     </style>
 </head>
 
-<body pa-scroll-container>
+<body ng-app="example" cat-scroll-container trigger-update="testUpdate">
     <div class="info">
-      <dv ng-show='!greenVisible && !redVisible && !blueTitleVisible'> No spied element visible</dv>
-      <div> Green section is visible: {{ greenVisible || 'false' }}</div>
-      <div> Red section is visible: {{ redVisible || 'false' }}</div>
-      <div> Blu section title is visible: {{ blueTitleVisible || 'false' }}</div>
+      <dv ng-show='!spy.greenVisible && !spy.redVisible && !spy.blueTitleVisible'> No spied element visible</dv>
+      <div> Green section is visible: {{ spy.greenVisible || 'false' }}</div>
+      <div> Red section is visible: {{ spy.redVisible || 'false' }}</div>
+      <div> Blu section title is visible: {{ spy.blueTitleVisible || 'false' }}</div>
     </div>
     <section class="intro">
     </section>
-    <section class="green" pa-visible="greenVisible"></section>
-    <section class="red" pa-visible="redVisible"></section>
+    <section class="green" cat-visible="spy.greenVisible"></section>
+    <section class="red" cat-visible="spy.redVisible"></section>
     <section class="blue">
-      <h1 pa-visible="blueTitleVisible">I'm red</h1>
+      <h1 cat-visible="spy.blueTitleVisible">I'm red</h1>
     </section>
 </body>
 

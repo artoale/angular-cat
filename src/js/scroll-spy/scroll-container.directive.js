@@ -1,10 +1,15 @@
 import debounce from '../utils/debounce.service';
-const mod = angular.module('pa.scrollSpy.scrollContainer', [debounce.name]);
+import windowScrollHelper from '../utils/window-scroll-helper.service';
 
-mod.directive('paScrollContainer', ($window, $timeout, paDebounce) => {
+const mod = angular.module('cat.scrollSpy.scrollContainer', [
+    debounce.name,
+    windowScrollHelper.name
+]);
+
+mod.directive('catScrollContainer', ['$window', '$timeout', 'catDebounce', 'windowScrollGetter', ($window, $timeout, catDebounce, windowScrollGetter) => {
     return {
         restrict: 'A',
-        controller($scope, $element) {
+        controller: ['$scope', '$element', function ($scope, $element) {
             this.spies = [];
             this.registerSpy = (spy) => {
                 this.spies.push(spy);
@@ -13,56 +18,90 @@ mod.directive('paScrollContainer', ($window, $timeout, paDebounce) => {
             this.getScrollContainer = () => {
                 return $element[0];
             };
-        },
-        link(scope, elem, attrs, selfCtrl) {
+        }],
+        link (scope, elem, attrs, selfCtrl) {
+            const afTimeout = 400;
             let vpHeight,
                 $aWindow = angular.element($window),
-                scroller = elem[0].tagName === 'BODY' ? $aWindow : elem;
+                $scrollTopReference = elem[0].tagName === 'BODY' ? windowScrollGetter() : elem,
+                $scroller = elem[0].tagName === 'BODY' ?
+                    $aWindow : elem,
+                animationFrame,
+                lastScrollTimestamp = 0,
+                scrollPrevTimestamp = 0,
+                previousScrollTop = 0;
 
             function onScroll() {
-                $window.requestAnimationFrame(onAnimationFrame);
+                lastScrollTimestamp = $window.performance.now();
+                if (!animationFrame) {
+                    animationFrame = $window.requestAnimationFrame(onAnimationFrame);
+                }
+                scrollPrevTimestamp = $window.performance.now();
             }
 
             function onResize() {
                 vpHeight = Math.max($window.document.documentElement.clientHeight, window.innerHeight || 0);
                 selfCtrl.spies.forEach((spy)=> {
-                    spy.update();
+                    spy.updateClientRect();
                 });
-                $window.requestAnimationFrame(onAnimationFrame);
+                onScroll();
             }
 
             function onAnimationFrame() {
-                const currentScroll = elem[0].scrollTop,
-                    viewportRect = {
-                        top: currentScroll,
-                        height: vpHeight
-                    };
+                const viewportRect = getViewportRect(),
+                        timestamp = $window.performance.now(),
+                        delta = timestamp - scrollPrevTimestamp,
+                        scrollDelta = viewportRect.top - previousScrollTop,
+                        scrollDirection = scrollDelta === 0 ? 0 :
+                            scrollDelta / Math.abs(scrollDelta);
 
                 selfCtrl.spies.forEach((spy)=> {
-                    let spyRect = spy.getRect(),
-                        isFullyVisible = (spyRect.top >= viewportRect.top && //Top border in viewport
-                            (spyRect.top + spyRect.height) <= (viewportRect.top + viewportRect.height)) || //Bottom border in viewport
-                            (spyRect.top < viewportRect.top && (spyRect.height) >= vpHeight), // Bigger than viewport
-                        isFullyHidden = !isFullyVisible &&
-                            spyRect.top > (viewportRect.top + viewportRect.height) || //Top border below viewport bottom
-                            (spyRect.top + spyRect.height) < viewportRect.top; //Bottom border above viewport top
-
-
-                    //Only change state when fully visible/hidden
-                    if (isFullyVisible) {
-                        spy.setInView(true);
-                    } else if (isFullyHidden) {
-                        spy.setInView(false);
-                    }
+                    spy.update(viewportRect, scrollDirection);
                 });
 
+                previousScrollTop = viewportRect.top;
+
+                if (delta < afTimeout) {
+                    queueAf();
+                } else {
+                    cancelAf();
+                }
             }
 
-            $aWindow.on('resize', paDebounce(onResize, 300));
-            scroller.on('scroll', onScroll);
-            onResize();
+            function getViewportRect() {
+                const currentScroll = $scrollTopReference[0].scrollTop;
+                return {
+                    top: currentScroll,
+                    height: vpHeight
+                };
+            }
+
+            function queueAf() {
+                animationFrame = $window.requestAnimationFrame(onAnimationFrame);
+            }
+
+            function cancelAf() {
+                $window.cancelAnimationFrame(animationFrame);
+                animationFrame = null;
+            }
+
+            scope.$on('catScrollContainer:updateSpies', onResize);
+
+            if (angular.isDefined(attrs.triggerUpdate)) {
+                scope.$watch(attrs.triggerUpdate, function (newVal, oldVal) {
+                    if (newVal !== oldVal) {
+                        $timeout(function () {
+                            onResize();
+                        }, 0);
+                    }
+                });
+            }
+
+            $aWindow.on('resize', catDebounce(onResize, 300));
+            $scroller.on('scroll', onScroll);
+            $timeout(onResize);
         }
     };
-});
+}]);
 
 export default mod;

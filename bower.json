@@ -1,15 +1,22 @@
 {
-  "name": "animations",
-  "version": "0.0.0",
-  "homepage": "https://github.com/artoale/animations",
+  "name": "ng-cat",
+  "homepage": "https://github.com/artoale/ng-cat",
   "authors": [
     "Alessandro Artoni <aartoni@google.com>",
     "Paolo Chillari <killer.paolo@gmail.com>"
   ],
-  "description": "Set of angularjs directives to simplify development of animations on static websites",
+  "main": "dist/cat.min.js",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "description": "CSS Animation Timeline. Set of angularjs directives to simplify development of animations on static websites",
   "keywords": [
     "angularjs",
-    "animations"
+    "animations",
+    "cat",
+    "ng-cat"
   ],
   "license": "MIT",
   "ignore": [
@@ -17,12 +24,14 @@
     "node_modules",
     "bower_components",
     "test",
-    "tests"
+    "example",
+    "src"
   ],
   "dependencies": {
     "angular": "~1.4.3",
-    "angular-animate": "~1.4.3",
-    "angular-mocks": "~1.4.3",
-    "requirejs": "~2.1.19"
+    "angular-animate": "~1.4.3"
+  },
+  "devDependencies": {
+    "angular-mocks": "~1.4.3"
   }
 }

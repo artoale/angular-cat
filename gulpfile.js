@@ -2,21 +2,50 @@
 'use strict';
 
 var gulp = require('gulp'),
-    sourcemaps = require('gulp-sourcemaps'),
-    babel = require('gulp-babel'),
-    concat = require('gulp-concat'),
+    babelify = require('babelify'),
+    browserify = require('browserify'),
     connect = require('gulp-connect'),
     del = require('del'),
-    KarmaServer = require('karma').Server;
-var js = 'src/js/**/*.js';
+    source = require('vinyl-source-stream'),
+    exorcist   = require('exorcist'),
+    KarmaServer = require('karma').Server,
+    uglify = require('gulp-uglify'),
+    streamify = require('gulp-streamify'),
+    runSequence = require('run-sequence'),
+    js = 'src/js/**/*.js',
+
+    compileJs = function (dist) {
+        var dest = dist ? 'dist' : 'example';
+        return browserify('src/js/cat.js', {
+                debug: true
+            })
+            .transform(babelify)
+            .bundle()
+            .on('error', function (err) {
+                console.log('Error : ' + err.message);
+            })
+            .pipe(exorcist(dest + '/cat.js.map'))
+            .pipe(source('cat.js'))
+            .pipe(gulp.dest(dest));
+    };
+
 gulp.task('compilejs', function () {
-    return gulp.src(js)
-        .pipe(sourcemaps.init())
-        .pipe(babel({
-            modules: 'amd',
-            moduleRoot: './'
-        }))
-        .pipe(sourcemaps.write('.'))
+    compileJs(true);
+});
+
+gulp.task('compilejs-dev', function () {
+    compileJs(false);
+});
+
+gulp.task('build', function () {
+    return browserify('src/js/cat.js')
+        .transform(babelify)
+        .bundle()
+        .on('error', function (err) {
+            console.log('Error : ' + err.message);
+        })
+        .pipe(source('cat.min.js'))
+        .pipe(streamify(uglify()))
         .pipe(gulp.dest('dist'));
 });
 
@@ -28,12 +57,12 @@ gulp.task('karma', function (done) {
 
 gulp.task('server', function () {
     connect.server({
-        root: ['example', 'bower_components', 'dist']
+        root: ['example', 'bower_components']
     });
 });
 
 gulp.task('watch', function () {
-    gulp.watch([js], ['del:dist', 'compilejs']);
+    gulp.watch([js], ['compilejs']);
 });
 
 gulp.task('del:dist', function (done) {
@@ -42,4 +71,8 @@ gulp.task('del:dist', function (done) {
     ], done);
 });
 
-gulp.task('default', ['del:dist', 'compilejs', 'server', 'watch']);
+gulp.task('deploy', function (cb) {
+    runSequence('del:dist', 'compilejs', 'build', cb);
+});
+
+gulp.task('default', ['compilejs-dev', 'server', 'watch']);

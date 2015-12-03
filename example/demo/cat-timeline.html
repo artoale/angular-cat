@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Pa animations example page</title>
+    <script src="../angular/angular.js"></script>
+    <script src="../angular-animate/angular-animate.js"></script>
+    <script src="/cat.js"></script>
+    <script src="/main.js"></script>
+    <style media="screen">
+        .a-class-name {
+            background-color: red;
+            color: black;
+            transition: all 2s;
+        }
+
+        .a-class-name--start {
+            background-color: black;
+            color: red;
+            transition: none;
+        }
+    </style>
+</head>
+
+<body ng-app="example">
+
+    <section>
+        <h1>Timeline + class directive example</h1>
+
+        <div
+            cat-timeline
+            cat-active="trigger"
+            cat-status="status"
+        >
+            <div
+                class="a-class-name"
+                cat-class="a-class-name"
+            >
+                Animation 1 content
+            </div>
+            <div
+                cat-delay="3000"
+                cat-status="statusDelayed"
+            ></div>
+            <div
+                class="a-class-name"
+                cat-class="a-class-name"
+            >
+                Animation 2 content
+            </div>
+        </div>
+        <button type="button" name="button" ng-click="trigger = !trigger">
+            Toggle animation "active" binding to {{!trigger}}
+        </button>
+        <ul class="values">
+            <li>Status: {{status}}</li>
+            <li>Active: {{trigger}}</li>
+        </ul>
+    </section>
+    <section>
+        <h1>Timeline + class + undo directive example</h1>
+
+        <div
+            cat-timeline
+            cat-active="triggerUndo"
+            cat-status="statusUndo"
+            cat-undo="1"
+        >
+            <div
+                class="a-class-name"
+                cat-class="a-class-name"
+            >
+                Animation 1 content
+            </div>
+            <div
+                class="a-class-name"
+                cat-class="a-class-name"
+            >
+                Animation 2 content
+            </div>
+        </div>
+        <button type="button" name="button" ng-click="triggerUndo = !triggerUndo">
+            Toggle animation "active" binding to {{!triggerUndo}}
+        </button>
+        <ul class="values">
+            <li>Status: {{statusUndo}}</li>
+            <li>Active: {{triggerUndo}}</li>
+        </ul>
+    </section>
+    <section>
+        <h1>Timeline + custom-timeline</h1>
+
+        <div
+            cat-timeline
+            custom-timeline
+            custom-animation
+            cat-status="statusCustom"
+            cat-active="triggerCustom"
+        >
+            <div
+                class="a-class-name"
+                cat-class="a-class-name"
+                cat-animation-name="first"
+            >
+                Animation 1 content
+            </div>
+            <div
+                class="a-class-name"
+                cat-class="a-class-name"
+                cat-animation-name="second"
+            >
+                Animation 2 content
+            </div>
+        </div>
+        <button type="button" name="button" ng-click="triggerCustom = !triggerCustom">
+            Toggle animation "active" binding to {{!triggerCustom}}
+        </button>
+        <ul class="values">
+            <li>Status: {{statusCustom}}</li>
+            <li>Active: {{triggerCustom}}</li>
+        </ul>
+    </section>
+    <section>
+        <h1>Timeline + custom-timeline + cat-undo</h1>
+
+        <div
+            cat-timeline
+            custom-timeline
+            custom-animation
+            cat-undo="1"
+            cat-status="statusCustomUndo"
+            cat-active="customUndo"
+        >
+            <div
+                class="a-class-name"
+                cat-class="a-class-name"
+                cat-animation-name="first"
+            >
+                Animation 1 content
+            </div>
+            <div
+                class="a-class-name"
+                cat-class="a-class-name"
+                cat-animation-name="second"
+            >
+                Animation 2 content
+            </div>
+        </div>
+        <button type="button" name="button" ng-click="customUndo = !customUndo">
+            Toggle animation "active" binding to {{!customUndo}}
+        </button>
+        <ul class="values">
+            <li>Status: {{statusCustomUndo}}</li>
+            <li>Active: {{customUndo}}</li>
+        </ul>
+    </section>
+    <section>
+        <h1>Timeline + is-disabled</h1>
+
+        <div
+            cat-timeline
+            cat-status="statusIsDisabledDemo"
+            cat-active="isDisabledDemo"
+            cat-disabled="true"
+        >
+            <div
+                class="a-class-name"
+                cat-class="a-class-name"
+                cat-animation-name="first"
+            >
+                Animation 1 content
+            </div>
+            <div
+                class="a-class-name"
+                cat-class="a-class-name"
+                cat-animation-name="second"
+            >
+                Animation 2 content
+            </div>
+        </div>
+        <button type="button" name="button" ng-click="isDisabledDemo = !isDisabledDemo">
+            Toggle animation "active" binding to {{!isDisabledDemo}}
+        </button>
+        <ul class="values">
+            <li>Status: {{statusIsDisabledDemo}}</li>
+            <li>Active: {{isDisabledDemo}}</li>
+        </ul>
+    </section>
+    <section>
+        <h1>Timeline + custom-animation + is-disabled</h1>
+
+        <div
+            cat-timeline
+            custom-animation
+            cat-status="statusIsDisabledCustomDemo"
+            cat-active="isDisabledCustomDemo"
+            cat-disabled="true"
+        >
+            <div
+                class="a-class-name"
+                cat-class="a-class-name"
+                cat-animation-name="first"
+            >
+                Animation 1 content
+            </div>
+            <div
+                cat-delay="3000"
+                cat-active="triggerUndo"
+                cat-status="statusDelayed"
+                cat-undo="1"
+            >
+            <div
+                class="a-class-name"
+                cat-class="a-class-name"
+                cat-animation-name="second"
+            >
+                Animation 2 content
+            </div>
+        </div>
+        <button type="button" name="button" ng-click="isDisabledCustomDemo = !isDisabledCustomDemo">
+            Toggle animation "active" binding to {{!isDisabledCustomDemo}}
+        </button>
+        <ul class="values">
+            <li>Status: {{statusIsDisabledCustomDemo}}</li>
+            <li>Active: {{isDisabledCustomDemo}}</li>
+        </ul>
+    </section>
+    <section>
+        <h1>Timeline + cat-undo + is-disabled</h1>
+
+        <div
+            cat-timeline
+            cat-undo="1"
+            cat-status="statusIsDisabledUndoDemo"
+            cat-active="isDisabledUndoDemo"
+            cat-disabled="true"
+        >
+            <div
+                class="a-class-name"
+                cat-class="a-class-name"
+                cat-animation-name="first"
+            >
+                Animation 1 content
+            </div>
+            <div
+                class="a-class-name"
+                cat-class="a-class-name"
+                cat-animation-name="second"
+            >
+                Animation 2 content
+            </div>
+        </div>
+        <button type="button" name="button" ng-click="isDisabledUndoDemo = !isDisabledUndoDemo">
+            Toggle animation "active" binding to {{!isDisabledUndoDemo}}
+        </button>
+        <ul class="values">
+            <li>Status: {{statusIsDisabledUndoDemo}}</li>
+            <li>Active: {{isDisabledUndoDemo}}</li>
+        </ul>
+    </section>
+</body>
+
+</html>

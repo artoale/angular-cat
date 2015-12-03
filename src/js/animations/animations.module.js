@@ -1,12 +1,14 @@
 import classDirective from './class.directive';
 import delayDirective from './delay.directive';
-import routerDirective from './router.directive';
+import timelineDirective from './timeline.directive';
+import animationLink from './animation-link.factory';
 
-const module = angular.module('pa.animations', [
+const module = angular.module('cat.animations', [
     'ngAnimate',
     classDirective.name,
     delayDirective.name,
-    routerDirective.name
+    timelineDirective.name,
+    animationLink.name
 ]);
 
 export default module;

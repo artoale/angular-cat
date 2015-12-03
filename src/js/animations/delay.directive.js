@@ -1,16 +1,17 @@
-const mod = angular.module('pa.animations.delay', []),
-    directiveName = 'paDelay';
+const mod = angular.module('cat.animations.delay', []),
+    directiveName = 'catDelay';
 
-mod.directive(directiveName, (paDelayS) => {
+mod.directive(directiveName, ['$parse', 'catDelayS', 'catAnimationLink', ($parse, catDelayS, catAnimationLink) => {
     return {
         restrict: 'A',
-        require: [directiveName, '^^?paRouter'],
-        controller($q, $scope, $attrs) {
+        require: [directiveName, '^^?catTimeline'],
+        controller: ['$q', '$scope', '$attrs', function ($q, $scope, $attrs) {
             const millis = parseInt($attrs[directiveName], 10) || 1000,
-                statusScopeVar = $attrs.paStatus;
+                statusScopeVar = $attrs.catStatus;
+            let isDisabled = false;
 
             let status = '',
-                deferred,
+                deferred = $q.defer(),
 
 
                 resolve = (...args) => {
@@ -18,8 +19,10 @@ mod.directive(directiveName, (paDelayS) => {
                 },
 
                 setStatus = newStatus => {
+                    let statusM;
                     if (statusScopeVar) {
-                        $scope[statusScopeVar] = newStatus;
+                        statusM = $parse(statusScopeVar);
+                        statusM.assign($scope, newStatus);
                     }
                     status = newStatus;
                 },
@@ -42,7 +45,7 @@ mod.directive(directiveName, (paDelayS) => {
 
                 runAnimation = () => {
                     setStatus('RUNNING');
-                    return paDelayS(millis).then(() => {
+                    return catDelayS(millis).then(() => {
                         if (status === 'RUNNING') {
                             setStatus('FINISHED');
                             resolve();
@@ -52,43 +55,34 @@ mod.directive(directiveName, (paDelayS) => {
                 play = () => {
                     if (status === 'READY') {
                         deferred = $q.defer();
-                        runAnimation();
+                        if (isDisabled) {
+                            setStatus('FINISHED');
+                            resolve();
+                        } else {
+                            runAnimation();
+                        }
                     }
                     return deferred.promise;
+                },
+                setDisabled = (newIsDisabled) => {
+                    isDisabled = newIsDisabled;
+                    setStatus('FINISHED');
                 };
 
             //APIs used by linking function
+            this.setUp = setUp;
             this.setUp = setUp;
             this.runAnimation = runAnimation;
             this.resolve = resolve;
 
             //Public APIs
             this.play = play;
+            this.setDisabled = setDisabled;
             this.clear = clear;
 
-        },
-        link(scope, element, attrs, controllers) {
-            const selfController = controllers[0],
-                routerController = controllers[1],
-                animationName = attrs.paAnimationName || directiveName;
-
-            if (routerController) {
-                routerController.register(animationName, selfController);
-            }
-
-            selfController.setUp();
-            if (attrs.paActive) {
-                scope.$watch(attrs.paActive, (newVal) => {
-                    if (newVal) {
-                        selfController.play();
-                    } else if (attrs.paUndo) {
-                        selfController.setUp();
-                    }
-                });
-            }
-
-        }
+        }],
+        link: (...args) => catAnimationLink(...args)
     };
-});
+}]);
 
 export default mod;

@@ -6,6 +6,6 @@ describe('scrollSpyModule', () => {
     });
 
     it('should be an angular module', () => {
-        scrollSpyModule.name.should.equal('pa.scrollSpy');
+        scrollSpyModule.name.should.equal('cat.scrollSpy');
     });
 });
