@@ -1,7 +1,7 @@
 const mod = angular.module('pa.animations.delay', []),
     directiveName = 'paDelay';
 
-mod.directive(directiveName, ['$parse', 'paDelayS', ($parse, paDelayS) => {
+mod.directive(directiveName, ['$parse', 'paDelayS', 'paAnimationLink', ($parse, paDelayS, paAnimationLink) => {
     return {
         restrict: 'A',
         require: [directiveName, '^^?paRouter'],
@@ -11,7 +11,7 @@ mod.directive(directiveName, ['$parse', 'paDelayS', ($parse, paDelayS) => {
             let isDisabled = false;
 
             let status = '',
-                deferred,
+                deferred = $q.defer(),
 
 
                 resolve = (...args) => {
@@ -81,37 +81,7 @@ mod.directive(directiveName, ['$parse', 'paDelayS', ($parse, paDelayS) => {
             this.clear = clear;
 
         }],
-        link(scope, element, attrs, controllers) {
-            const selfController = controllers[0],
-                routerController = controllers[1],
-                animationName = attrs.paAnimationName || directiveName,
-                isDisabled = $parse(attrs.paDisabled)(scope);
-
-            if (routerController) {
-                routerController.register(animationName, selfController);
-            }
-
-            selfController.setUp();
-
-            if (angular.isDefined(attrs.paDisabled)) {
-                scope.$watch(attrs.paDisabled, (newVal) => {
-                    if (typeof newVal === 'boolean') {
-                        selfController.setDisabled(newVal);
-                    }
-                });
-            }
-
-            if (angular.isDefined(attrs.paActive)) {
-                scope.$watch(attrs.paActive, (newVal) => {
-                    if (newVal) {
-                        selfController.play();
-                    } else if (attrs.paUndo) {
-                        selfController.setUp();
-                    }
-                });
-            }
-
-        }
+        link: (...args) => paAnimationLink(...args)
     };
 }]);
 

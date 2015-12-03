@@ -1,7 +1,7 @@
 const mod = angular.module('pa.animations.router', []),
     directiveName = 'paRouter';
 
-mod.directive(directiveName, ['$parse', ($parse) => {
+mod.directive(directiveName, ['$parse', 'paAnimationLink', ($parse, paAnimationLink) => {
     return {
         restrict: 'A',
         require: [directiveName, '^^?paRouter'],
@@ -35,7 +35,7 @@ mod.directive(directiveName, ['$parse', ($parse) => {
                     }
                     status = newStatus;
                 },
-                clear = (isDisabled) => {
+                clear = () => {
                     if (status === 'RUNNING') {
                         deferred.resolve();
                     }
@@ -43,12 +43,12 @@ mod.directive(directiveName, ['$parse', ($parse) => {
                     setStatus('CLEARING');
 
                     return $q.all(
-                        animations.map(animation => animation.controller.clear(isDisabled))
+                        animations.map(animation => animation.controller.clear())
                     ).then(() => {
                         setStatus('READY');
                     });
                 },
-                setUp = (isDisabled) => {
+                setUp = () => {
                     setStatus('READY');
                 },
                 runAnimation = () => {
@@ -129,37 +129,7 @@ mod.directive(directiveName, ['$parse', ($parse) => {
             this.setCustomAnimation = setCustomAnimation;
 
         }],
-        link (scope, element, attrs, controllers) {
-            const selfController = controllers[0],
-                routerController = controllers[1],
-                animationName = attrs.paAnimationName || directiveName,
-                isDisabled = $parse(attrs.paDisabled)(scope);
-
-
-            if (routerController) {
-                routerController.register(animationName, selfController);
-            }
-
-            selfController.setUp();
-
-            if (angular.isDefined(attrs.paDisabled)) {
-                scope.$watch(attrs.paDisabled, (newVal) => {
-                    if (typeof newVal === 'boolean') {
-                        selfController.setDisabled(newVal);
-                    }
-                });
-            }
-
-            if (angular.isDefined(attrs.paActive)) {
-                scope.$watch(attrs.paActive, (newVal) => {
-                    if (newVal) {
-                        selfController.play();
-                    } else if (attrs.paUndo) {
-                        selfController.clear(isDisabled);
-                    }
-                });
-            }
-        }
+        link: (...args) => paAnimationLink(...args)
     };
 }]);
 
