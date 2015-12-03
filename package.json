@@ -1,6 +1,6 @@
 {
   "name": "ng-cat",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "CSS Animation Timeline. Set of angularjs directives to simplify development of animations on static websites",
   "main": "dist/cat.js",
   "scripts": {
