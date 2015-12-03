@@ -1,10 +1,10 @@
-const mod = angular.module('pa.animations.animationLink', []);
+const mod = angular.module('cat.animations.animationLink', []);
 
-mod.factory('paAnimationLink', () => {
+mod.factory('catAnimationLink', () => {
     return (scope, element, attrs, controllers) => {
         let selfController = controllers[0],
             timelineController = controllers[1],
-            animationName = attrs.paAnimationName;
+            animationName = attrs.catAnimationName;
 
         if (timelineController) {
             timelineController.register(animationName, selfController);
@@ -12,19 +12,19 @@ mod.factory('paAnimationLink', () => {
 
         selfController.setUp();
 
-        if (angular.isDefined(attrs.paDisabled)) {
-            scope.$watch(attrs.paDisabled, (newVal) => {
+        if (angular.isDefined(attrs.catDisabled)) {
+            scope.$watch(attrs.catDisabled, (newVal) => {
                 if (typeof newVal === 'boolean') {
                     selfController.setDisabled(newVal);
                 }
             });
         }
 
-        if (angular.isDefined(attrs.paActive)) {
-            scope.$watch(attrs.paActive, (newVal) => {
+        if (angular.isDefined(attrs.catActive)) {
+            scope.$watch(attrs.catActive, (newVal) => {
                 if (newVal) {
                     selfController.play();
-                } else if (attrs.paUndo) {
+                } else if (attrs.catUndo) {
                     selfController.clear();
                 }
             });

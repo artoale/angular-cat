@@ -4,13 +4,13 @@
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
-var mod = angular.module('pa.animations.animationLink', []);
+var mod = angular.module('cat.animations.animationLink', []);
 
-mod.factory('paAnimationLink', function () {
+mod.factory('catAnimationLink', function () {
     return function (scope, element, attrs, controllers) {
         var selfController = controllers[0],
             timelineController = controllers[1],
-            animationName = attrs.paAnimationName;
+            animationName = attrs.catAnimationName;
 
         if (timelineController) {
             timelineController.register(animationName, selfController);
@@ -18,19 +18,19 @@ mod.factory('paAnimationLink', function () {
 
         selfController.setUp();
 
-        if (angular.isDefined(attrs.paDisabled)) {
-            scope.$watch(attrs.paDisabled, function (newVal) {
+        if (angular.isDefined(attrs.catDisabled)) {
+            scope.$watch(attrs.catDisabled, function (newVal) {
                 if (typeof newVal === 'boolean') {
                     selfController.setDisabled(newVal);
                 }
             });
         }
 
-        if (angular.isDefined(attrs.paActive)) {
-            scope.$watch(attrs.paActive, function (newVal) {
+        if (angular.isDefined(attrs.catActive)) {
+            scope.$watch(attrs.catActive, function (newVal) {
                 if (newVal) {
                     selfController.play();
-                } else if (attrs.paUndo) {
+                } else if (attrs.catUndo) {
                     selfController.clear();
                 }
             });
@@ -66,7 +66,7 @@ var _animationLinkFactory = require('./animation-link.factory');
 
 var _animationLinkFactory2 = _interopRequireDefault(_animationLinkFactory);
 
-var _module = angular.module('pa.animations', ['ngAnimate', _classDirective2['default'].name, _delayDirective2['default'].name, _timelineDirective2['default'].name, _animationLinkFactory2['default'].name]);
+var _module = angular.module('cat.animations', ['ngAnimate', _classDirective2['default'].name, _delayDirective2['default'].name, _timelineDirective2['default'].name, _animationLinkFactory2['default'].name]);
 
 exports['default'] = _module;
 module.exports = exports['default'];
@@ -77,17 +77,17 @@ module.exports = exports['default'];
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
-var mod = angular.module('pa.animations.class', []),
-    directiveName = 'paClass';
+var mod = angular.module('cat.animations.class', []),
+    directiveName = 'catClass';
 
-mod.directive(directiveName, ['$animate', '$parse', 'paAnimationLink', function ($animate, $parse, paAnimationLink) {
+mod.directive(directiveName, ['$animate', '$parse', 'catAnimationLink', function ($animate, $parse, catAnimationLink) {
     return {
         restrict: 'A',
-        require: [directiveName, '^?paTimeline'],
+        require: [directiveName, '^?catTimeline'],
         controller: ['$q', '$scope', '$attrs', '$element', function ($q, $scope, $attrs, $element) {
             var className = $attrs[directiveName] || directiveName,
                 classNameStart = className + '--start',
-                statusScopeVar = $attrs.paStatus;
+                statusScopeVar = $attrs.catStatus;
 
             var status = '',
                 deferred = $q.defer(),
@@ -191,7 +191,7 @@ mod.directive(directiveName, ['$animate', '$parse', 'paAnimationLink', function 
             this.seek = seek;
         }],
         link: function link() {
-            return paAnimationLink.apply(undefined, arguments);
+            return catAnimationLink.apply(undefined, arguments);
         }
     };
 }]);
@@ -205,16 +205,16 @@ module.exports = exports['default'];
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
-var mod = angular.module('pa.animations.delay', []),
-    directiveName = 'paDelay';
+var mod = angular.module('cat.animations.delay', []),
+    directiveName = 'catDelay';
 
-mod.directive(directiveName, ['$parse', 'paDelayS', 'paAnimationLink', function ($parse, paDelayS, paAnimationLink) {
+mod.directive(directiveName, ['$parse', 'catDelayS', 'catAnimationLink', function ($parse, catDelayS, catAnimationLink) {
     return {
         restrict: 'A',
-        require: [directiveName, '^^?paTimeline'],
+        require: [directiveName, '^^?catTimeline'],
         controller: ['$q', '$scope', '$attrs', function ($q, $scope, $attrs) {
             var millis = parseInt($attrs[directiveName], 10) || 1000,
-                statusScopeVar = $attrs.paStatus;
+                statusScopeVar = $attrs.catStatus;
             var isDisabled = false;
 
             var status = '',
@@ -250,7 +250,7 @@ mod.directive(directiveName, ['$parse', 'paDelayS', 'paAnimationLink', function 
             },
                 runAnimation = function runAnimation() {
                 setStatus('RUNNING');
-                return paDelayS(millis).then(function () {
+                return catDelayS(millis).then(function () {
                     if (status === 'RUNNING') {
                         setStatus('FINISHED');
                         resolve();
@@ -286,7 +286,7 @@ mod.directive(directiveName, ['$parse', 'paDelayS', 'paAnimationLink', function 
             this.clear = clear;
         }],
         link: function link() {
-            return paAnimationLink.apply(undefined, arguments);
+            return catAnimationLink.apply(undefined, arguments);
         }
     };
 }]);
@@ -300,15 +300,15 @@ module.exports = exports['default'];
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
-var mod = angular.module('pa.animations.timeline', []),
-    directiveName = 'paTimeline';
+var mod = angular.module('cat.animations.timeline', []),
+    directiveName = 'catTimeline';
 
-mod.directive(directiveName, ['$parse', 'paAnimationLink', function ($parse, paAnimationLink) {
+mod.directive(directiveName, ['$parse', 'catAnimationLink', function ($parse, catAnimationLink) {
     return {
         restrict: 'A',
-        require: [directiveName, '^^?paTimeline'],
+        require: [directiveName, '^^?catTimeline'],
         controller: ['$q', '$scope', '$attrs', function ($q, $scope, $attrs) {
-            var statusScopeVar = $attrs.paStatus;
+            var statusScopeVar = $attrs.catStatus;
             var isDisabled = false;
 
             var animations = [],
@@ -429,7 +429,7 @@ mod.directive(directiveName, ['$parse', 'paAnimationLink', function ($parse, paA
             this.setCustomAnimation = setCustomAnimation;
         }],
         link: function link() {
-            return paAnimationLink.apply(undefined, arguments);
+            return catAnimationLink.apply(undefined, arguments);
         }
     };
 }]);
@@ -458,7 +458,7 @@ var _utilsDelayService = require('./utils/delay.service');
 
 var _utilsDelayService2 = _interopRequireDefault(_utilsDelayService);
 
-var _module = angular.module('paAnimations', ['ngAnimate', _animationsAnimationsModule2['default'].name, _utilsDelayService2['default'].name, _scrollSpyScrollSpyModule2['default'].name]);
+var _module = angular.module('cat', ['ngAnimate', _animationsAnimationsModule2['default'].name, _utilsDelayService2['default'].name, _scrollSpyScrollSpyModule2['default'].name]);
 
 exports['default'] = _module;
 module.exports = exports['default'];
@@ -480,9 +480,9 @@ var _utilsWindowScrollHelperService = require('../utils/window-scroll-helper.ser
 
 var _utilsWindowScrollHelperService2 = _interopRequireDefault(_utilsWindowScrollHelperService);
 
-var mod = angular.module('pa.scrollSpy.scrollContainer', [_utilsDebounceService2['default'].name, _utilsWindowScrollHelperService2['default'].name]);
+var mod = angular.module('cat.scrollSpy.scrollContainer', [_utilsDebounceService2['default'].name, _utilsWindowScrollHelperService2['default'].name]);
 
-mod.directive('paScrollContainer', ['$window', '$timeout', 'paDebounce', 'windowScrollGetter', function ($window, $timeout, paDebounce, windowScrollGetter) {
+mod.directive('catScrollContainer', ['$window', '$timeout', 'catDebounce', 'windowScrollGetter', function ($window, $timeout, catDebounce, windowScrollGetter) {
     return {
         restrict: 'A',
         controller: ['$scope', '$element', function ($scope, $element) {
@@ -561,7 +561,7 @@ mod.directive('paScrollContainer', ['$window', '$timeout', 'paDebounce', 'window
                 animationFrame = null;
             }
 
-            scope.$on('paScrollContainer:updateSpies', onResize);
+            scope.$on('catScrollContainer:updateSpies', onResize);
 
             if (angular.isDefined(attrs.triggerUpdate)) {
                 scope.$watch(attrs.triggerUpdate, function (newVal, oldVal) {
@@ -573,7 +573,7 @@ mod.directive('paScrollContainer', ['$window', '$timeout', 'paDebounce', 'window
                 });
             }
 
-            $aWindow.on('resize', paDebounce(onResize, 300));
+            $aWindow.on('resize', catDebounce(onResize, 300));
             $scroller.on('scroll', onScroll);
             $timeout(onResize);
         }
@@ -600,7 +600,7 @@ var _visibleDirective = require('./visible.directive');
 
 var _visibleDirective2 = _interopRequireDefault(_visibleDirective);
 
-var mod = angular.module('pa.scrollSpy', [_scrollContainerDirective2['default'].name, _visibleDirective2['default'].name]);
+var mod = angular.module('cat.scrollSpy', [_scrollContainerDirective2['default'].name, _visibleDirective2['default'].name]);
 
 //TODO: The current implementation works for scroll spies on the
 // body element and for scroll divs when no parents are scrollable.
@@ -615,12 +615,12 @@ module.exports = exports['default'];
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
-var mod = angular.module('pa.scrollSpy.visible', []);
+var mod = angular.module('cat.scrollSpy.visible', []);
 
-mod.directive('paVisible', ['$window', '$parse', '$timeout', function ($window, $parse, $timeout) {
+mod.directive('catVisible', ['$window', '$parse', '$timeout', function ($window, $parse, $timeout) {
     return {
         restrict: 'A',
-        require: '^^paScrollContainer',
+        require: '^^catScrollContainer',
         link: function link(scope, elem, attrs, ctrl) {
             var rect = {},
                 hidden = false,
@@ -654,10 +654,10 @@ mod.directive('paVisible', ['$window', '$parse', '$timeout', function ($window, 
                     return rect;
                 },
                 setInView: function setInView(inView) {
-                    if ($parse(attrs.paVisible)(scope) !== inView && !hidden) {
+                    if ($parse(attrs.catVisible)(scope) !== inView && !hidden) {
                         scope.$evalAsync(function () {
-                            var paVisibleSetter = $parse(attrs.paVisible);
-                            paVisibleSetter.assign(scope, inView);
+                            var catVisibleSetter = $parse(attrs.catVisible);
+                            catVisibleSetter.assign(scope, inView);
                         });
                     }
                 }
@@ -689,9 +689,9 @@ module.exports = exports['default'];
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
-var mod = angular.module('pa.utils.debounce', []);
+var mod = angular.module('cat.utils.debounce', []);
 
-mod.factory('paDebounce', ['$timeout', '$q', function ($timeout, $q) {
+mod.factory('catDebounce', ['$timeout', '$q', function ($timeout, $q) {
     return function (func, wait, immediate) {
         var timeout = undefined,
             deferred = $q.defer();
@@ -732,9 +732,9 @@ module.exports = exports['default'];
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
-var mod = angular.module('pa.utils.delay', []);
+var mod = angular.module('cat.utils.delay', []);
 
-mod.factory('paDelayS', ['$timeout', '$q', function ($timeout, $q) {
+mod.factory('catDelayS', ['$timeout', '$q', function ($timeout, $q) {
     return function (millis) {
         var deferred = $q.defer();
         $timeout(deferred.resolve.bind(deferred, millis), millis);
@@ -751,7 +751,7 @@ module.exports = exports['default'];
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
-var mod = angular.module('pa.utils.windowScrollHelper', []);
+var mod = angular.module('cat.utils.windowScrollHelper', []);
 
 mod.factory('windowScrollGetter', ['$window', function ($window) {
     return function () {
@@ -775,4 +775,4 @@ exports['default'] = mod;
 module.exports = exports['default'];
 
 },{}]},{},[6])
-//# sourceMappingURL=paAnimations.js.map
+//# sourceMappingURL=cat.js.map

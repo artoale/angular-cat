@@ -1,12 +1,12 @@
-const mod = angular.module('pa.animations.timeline', []),
-    directiveName = 'paTimeline';
+const mod = angular.module('cat.animations.timeline', []),
+    directiveName = 'catTimeline';
 
-mod.directive(directiveName, ['$parse', 'paAnimationLink', ($parse, paAnimationLink) => {
+mod.directive(directiveName, ['$parse', 'catAnimationLink', ($parse, catAnimationLink) => {
     return {
         restrict: 'A',
-        require: [directiveName, '^^?paTimeline'],
+        require: [directiveName, '^^?catTimeline'],
         controller:  ['$q', '$scope', '$attrs', function ($q, $scope, $attrs) {
-            const statusScopeVar = $attrs.paStatus;
+            const statusScopeVar = $attrs.catStatus;
             let isDisabled = false;
 
             let animations = [],
@@ -129,7 +129,7 @@ mod.directive(directiveName, ['$parse', 'paAnimationLink', ($parse, paAnimationL
             this.setCustomAnimation = setCustomAnimation;
 
         }],
-        link: (...args) => paAnimationLink(...args)
+        link: (...args) => catAnimationLink(...args)
     };
 }]);
 

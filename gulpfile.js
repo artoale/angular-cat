@@ -16,7 +16,7 @@ var gulp = require('gulp'),
 
     compileJs = function (dist) {
         var dest = dist ? 'dist' : 'example';
-        return browserify('src/js/paAnimations.js', {
+        return browserify('src/js/cat.js', {
                 debug: true
             })
             .transform(babelify)
@@ -24,8 +24,8 @@ var gulp = require('gulp'),
             .on('error', function (err) {
                 console.log('Error : ' + err.message);
             })
-            .pipe(exorcist(dest + '/paAnimations.js.map'))
-            .pipe(source('paAnimations.js'))
+            .pipe(exorcist(dest + '/cat.js.map'))
+            .pipe(source('cat.js'))
             .pipe(gulp.dest(dest));
     };
 
@@ -38,13 +38,13 @@ gulp.task('compilejs-dev', function () {
 });
 
 gulp.task('build', function () {
-    return browserify('src/js/paAnimations.js')
+    return browserify('src/js/cat.js')
         .transform(babelify)
         .bundle()
         .on('error', function (err) {
             console.log('Error : ' + err.message);
         })
-        .pipe(source('paAnimations.min.js'))
+        .pipe(source('cat.min.js'))
         .pipe(streamify(uglify()))
         .pipe(gulp.dest('dist'));
 });

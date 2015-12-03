@@ -1,7 +1,7 @@
 import scrollSpy from './scroll-container.directive';
 import spy from './visible.directive';
 
-var mod = angular.module('pa.scrollSpy', [
+var mod = angular.module('cat.scrollSpy', [
     scrollSpy.name,
     spy.name
 ]);

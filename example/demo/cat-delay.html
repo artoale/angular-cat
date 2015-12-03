@@ -6,7 +6,7 @@
     <title>Pa animations example page</title>
     <script src="../angular/angular.js"></script>
     <script src="../angular-animate/angular-animate.js"></script>
-    <script src="/paAnimations.js"></script>
+    <script src="/cat.js"></script>
     <script src="/main.js"></script>
     <style media="screen">
         .a-class-name {
@@ -28,9 +28,9 @@
         <h1>Delay directive example</h1>
 
         <div
-            pa-delay="3000"
-            pa-active="trigger"
-            pa-status="status"
+            cat-delay="3000"
+            cat-active="trigger"
+            cat-status="status"
         >
             3 seconds delay
         </div>
@@ -45,10 +45,10 @@
         <h1>Delay directive with undo example</h1>
 
         <div
-            pa-delay="1000"
-            pa-active="triggerUndo"
-            pa-status="statusDelayed"
-            pa-undo="1"
+            cat-delay="1000"
+            cat-active="triggerUndo"
+            cat-status="statusDelayed"
+            cat-undo="1"
         >
             1 seconds delay with undo
         </div>
@@ -62,10 +62,10 @@
         <h1>Delay directive with disabled example</h1>
 
         <div
-            pa-delay="5000"
-            pa-active="triggerDisabledDeni"
-            pa-status="statusDisabledDemo"
-            pa-disabled="true"
+            cat-delay="5000"
+            cat-active="triggerDisabledDeni"
+            cat-status="statusDisabledDemo"
+            cat-disabled="true"
         >
             1 seconds delay with undo
         </div>

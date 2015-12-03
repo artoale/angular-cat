@@ -1,12 +1,12 @@
 import debounce from '../utils/debounce.service';
 import windowScrollHelper from '../utils/window-scroll-helper.service';
 
-const mod = angular.module('pa.scrollSpy.scrollContainer', [
+const mod = angular.module('cat.scrollSpy.scrollContainer', [
     debounce.name,
     windowScrollHelper.name
 ]);
 
-mod.directive('paScrollContainer', ['$window', '$timeout', 'paDebounce', 'windowScrollGetter', ($window, $timeout, paDebounce, windowScrollGetter) => {
+mod.directive('catScrollContainer', ['$window', '$timeout', 'catDebounce', 'windowScrollGetter', ($window, $timeout, catDebounce, windowScrollGetter) => {
     return {
         restrict: 'A',
         controller: ['$scope', '$element', function ($scope, $element) {
@@ -85,7 +85,7 @@ mod.directive('paScrollContainer', ['$window', '$timeout', 'paDebounce', 'window
                 animationFrame = null;
             }
 
-            scope.$on('paScrollContainer:updateSpies', onResize);
+            scope.$on('catScrollContainer:updateSpies', onResize);
 
             if (angular.isDefined(attrs.triggerUpdate)) {
                 scope.$watch(attrs.triggerUpdate, function (newVal, oldVal) {
@@ -97,7 +97,7 @@ mod.directive('paScrollContainer', ['$window', '$timeout', 'paDebounce', 'window
                 });
             }
 
-            $aWindow.on('resize', paDebounce(onResize, 300));
+            $aWindow.on('resize', catDebounce(onResize, 300));
             $scroller.on('scroll', onScroll);
             $timeout(onResize);
         }

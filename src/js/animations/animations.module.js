@@ -3,7 +3,7 @@ import delayDirective from './delay.directive';
 import timelineDirective from './timeline.directive';
 import animationLink from './animation-link.factory';
 
-const module = angular.module('pa.animations', [
+const module = angular.module('cat.animations', [
     'ngAnimate',
     classDirective.name,
     delayDirective.name,

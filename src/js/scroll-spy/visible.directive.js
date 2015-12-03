@@ -1,9 +1,9 @@
-const mod = angular.module('pa.scrollSpy.visible', []);
+const mod = angular.module('cat.scrollSpy.visible', []);
 
-mod.directive('paVisible', ['$window', '$parse', '$timeout', ($window, $parse, $timeout) => {
+mod.directive('catVisible', ['$window', '$parse', '$timeout', ($window, $parse, $timeout) => {
     return {
         restrict: 'A',
-        require: '^^paScrollContainer',
+        require: '^^catScrollContainer',
         link (scope, elem, attrs, ctrl) {
             let rect = {},
                 hidden = false,
@@ -37,10 +37,10 @@ mod.directive('paVisible', ['$window', '$parse', '$timeout', ($window, $parse, $
                         return rect;
                     },
                     setInView (inView) {
-                        if ($parse(attrs.paVisible)(scope) !== inView && !hidden) {
+                        if ($parse(attrs.catVisible)(scope) !== inView && !hidden) {
                             scope.$evalAsync(() => {
-                                const paVisibleSetter = $parse(attrs.paVisible);
-                                paVisibleSetter.assign(scope, inView);
+                                const catVisibleSetter = $parse(attrs.catVisible);
+                                catVisibleSetter.assign(scope, inView);
                             });
                         }
                     }

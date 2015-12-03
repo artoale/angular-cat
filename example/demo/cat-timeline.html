@@ -6,7 +6,7 @@
     <title>Pa animations example page</title>
     <script src="../angular/angular.js"></script>
     <script src="../angular-animate/angular-animate.js"></script>
-    <script src="/paAnimations.js"></script>
+    <script src="/cat.js"></script>
     <script src="/main.js"></script>
     <style media="screen">
         .a-class-name {
@@ -29,23 +29,23 @@
         <h1>Timeline + class directive example</h1>
 
         <div
-            pa-timeline
-            pa-active="trigger"
-            pa-status="status"
+            cat-timeline
+            cat-active="trigger"
+            cat-status="status"
         >
             <div
                 class="a-class-name"
-                pa-class="a-class-name"
+                cat-class="a-class-name"
             >
                 Animation 1 content
             </div>
             <div
-                pa-delay="3000"
-                pa-status="statusDelayed"
+                cat-delay="3000"
+                cat-status="statusDelayed"
             ></div>
             <div
                 class="a-class-name"
-                pa-class="a-class-name"
+                cat-class="a-class-name"
             >
                 Animation 2 content
             </div>
@@ -62,20 +62,20 @@
         <h1>Timeline + class + undo directive example</h1>
 
         <div
-            pa-timeline
-            pa-active="triggerUndo"
-            pa-status="statusUndo"
-            pa-undo="1"
+            cat-timeline
+            cat-active="triggerUndo"
+            cat-status="statusUndo"
+            cat-undo="1"
         >
             <div
                 class="a-class-name"
-                pa-class="a-class-name"
+                cat-class="a-class-name"
             >
                 Animation 1 content
             </div>
             <div
                 class="a-class-name"
-                pa-class="a-class-name"
+                cat-class="a-class-name"
             >
                 Animation 2 content
             </div>
@@ -92,23 +92,23 @@
         <h1>Timeline + custom-timeline</h1>
 
         <div
-            pa-timeline
+            cat-timeline
             custom-timeline
             custom-animation
-            pa-status="statusCustom"
-            pa-active="triggerCustom"
+            cat-status="statusCustom"
+            cat-active="triggerCustom"
         >
             <div
                 class="a-class-name"
-                pa-class="a-class-name"
-                pa-animation-name="first"
+                cat-class="a-class-name"
+                cat-animation-name="first"
             >
                 Animation 1 content
             </div>
             <div
                 class="a-class-name"
-                pa-class="a-class-name"
-                pa-animation-name="second"
+                cat-class="a-class-name"
+                cat-animation-name="second"
             >
                 Animation 2 content
             </div>
@@ -122,27 +122,27 @@
         </ul>
     </section>
     <section>
-        <h1>Timeline + custom-timeline + pa-undo</h1>
+        <h1>Timeline + custom-timeline + cat-undo</h1>
 
         <div
-            pa-timeline
+            cat-timeline
             custom-timeline
             custom-animation
-            pa-undo="1"
-            pa-status="statusCustomUndo"
-            pa-active="customUndo"
+            cat-undo="1"
+            cat-status="statusCustomUndo"
+            cat-active="customUndo"
         >
             <div
                 class="a-class-name"
-                pa-class="a-class-name"
-                pa-animation-name="first"
+                cat-class="a-class-name"
+                cat-animation-name="first"
             >
                 Animation 1 content
             </div>
             <div
                 class="a-class-name"
-                pa-class="a-class-name"
-                pa-animation-name="second"
+                cat-class="a-class-name"
+                cat-animation-name="second"
             >
                 Animation 2 content
             </div>
@@ -159,22 +159,22 @@
         <h1>Timeline + is-disabled</h1>
 
         <div
-            pa-timeline
-            pa-status="statusIsDisabledDemo"
-            pa-active="isDisabledDemo"
-            pa-disabled="true"
+            cat-timeline
+            cat-status="statusIsDisabledDemo"
+            cat-active="isDisabledDemo"
+            cat-disabled="true"
         >
             <div
                 class="a-class-name"
-                pa-class="a-class-name"
-                pa-animation-name="first"
+                cat-class="a-class-name"
+                cat-animation-name="first"
             >
                 Animation 1 content
             </div>
             <div
                 class="a-class-name"
-                pa-class="a-class-name"
-                pa-animation-name="second"
+                cat-class="a-class-name"
+                cat-animation-name="second"
             >
                 Animation 2 content
             </div>
@@ -191,29 +191,29 @@
         <h1>Timeline + custom-animation + is-disabled</h1>
 
         <div
-            pa-timeline
+            cat-timeline
             custom-animation
-            pa-status="statusIsDisabledCustomDemo"
-            pa-active="isDisabledCustomDemo"
-            pa-disabled="true"
+            cat-status="statusIsDisabledCustomDemo"
+            cat-active="isDisabledCustomDemo"
+            cat-disabled="true"
         >
             <div
                 class="a-class-name"
-                pa-class="a-class-name"
-                pa-animation-name="first"
+                cat-class="a-class-name"
+                cat-animation-name="first"
             >
                 Animation 1 content
             </div>
             <div
-                pa-delay="3000"
-                pa-active="triggerUndo"
-                pa-status="statusDelayed"
-                pa-undo="1"
+                cat-delay="3000"
+                cat-active="triggerUndo"
+                cat-status="statusDelayed"
+                cat-undo="1"
             >
             <div
                 class="a-class-name"
-                pa-class="a-class-name"
-                pa-animation-name="second"
+                cat-class="a-class-name"
+                cat-animation-name="second"
             >
                 Animation 2 content
             </div>
@@ -227,26 +227,26 @@
         </ul>
     </section>
     <section>
-        <h1>Timeline + pa-undo + is-disabled</h1>
+        <h1>Timeline + cat-undo + is-disabled</h1>
 
         <div
-            pa-timeline
-            pa-undo="1"
-            pa-status="statusIsDisabledUndoDemo"
-            pa-active="isDisabledUndoDemo"
-            pa-disabled="true"
+            cat-timeline
+            cat-undo="1"
+            cat-status="statusIsDisabledUndoDemo"
+            cat-active="isDisabledUndoDemo"
+            cat-disabled="true"
         >
             <div
                 class="a-class-name"
-                pa-class="a-class-name"
-                pa-animation-name="first"
+                cat-class="a-class-name"
+                cat-animation-name="first"
             >
                 Animation 1 content
             </div>
             <div
                 class="a-class-name"
-                pa-class="a-class-name"
-                pa-animation-name="second"
+                cat-class="a-class-name"
+                cat-animation-name="second"
             >
                 Animation 2 content
             </div>

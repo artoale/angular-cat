@@ -6,7 +6,7 @@
     <title>Scroll spy example page</title>
     <script src="../angular/angular.js"></script>
     <script src="../angular-animate/angular-animate.js"></script>
-    <script src="/paAnimations.js"></script>
+    <script src="/cat.js"></script>
     <script src="/main.js"></script>
     <style media="screen">
         body {
@@ -106,7 +106,7 @@
     </style>
 </head>
 
-<body ng-app="example" pa-scroll-container>
+<body ng-app="example" cat-scroll-container>
     <section class="intro with-border">
         <h1>Scroll down to see some awesome animation</h1>
         <p>
@@ -171,21 +171,21 @@
         </p>
     </section>
 
-    <section pa-visible="sequence">
+    <section cat-visible="sequence">
         <h1>Two animation in sequence, with undo set</h1>
         <div
-            pa-timeline
-            pa-active="sequence"
-            pa-undo=1
+            cat-timeline
+            cat-active="sequence"
+            cat-undo=1
         >
             <div
-                pa-class="animation-1"
+                cat-class="animation-1"
                 class="animation-1"
             >
             </div>
-            <div pa-delay="500"></div>
+            <div cat-delay="500"></div>
             <div
-                pa-class="animation-2"
+                cat-class="animation-2"
                 class="animation-2"
             >
             </div>
@@ -195,10 +195,10 @@
         <h1>Usage:</h1>
         <h2>Markup</h2>
 
-<pre><code>&lt;div pa-timeline pa-active=&quot;sequence&quot; pa-undo=&quot;1&quot;&gt;
-    &lt;div pa-class=&quot;animation-1&quot; class=&quot;animation-1&quot;&gt;&lt;/div&gt;
-    &lt;div pa-delay=&quot;500&quot;&gt;&lt;/div&gt;
-    &lt;div pa-class=&quot;animation-2&quot; class=&quot;animation-2&quot;&gt; &lt;/div&gt;
+<pre><code>&lt;div cat-timeline cat-active=&quot;sequence&quot; cat-undo=&quot;1&quot;&gt;
+    &lt;div cat-class=&quot;animation-1&quot; class=&quot;animation-1&quot;&gt;&lt;/div&gt;
+    &lt;div cat-delay=&quot;500&quot;&gt;&lt;/div&gt;
+    &lt;div cat-class=&quot;animation-2&quot; class=&quot;animation-2&quot;&gt; &lt;/div&gt;
 &lt;/div&gt;</code></pre>
         <h2>Style</h2>
         <pre><code>.animation-1 {
@@ -232,32 +232,32 @@
 
 }</code></pre>
     </section>
-    <section pa-visible="nested">
+    <section cat-visible="nested">
         <h1>Nested timelines!</h1>
         <div
-            pa-timeline
-            pa-disabled="true"
-            pa-active="nested"
-            pa-undo=1>
+            cat-timeline
+            cat-disabled="true"
+            cat-active="nested"
+            cat-undo=1>
             <div class="before-nested"
-                pa-class="before-nested">
+                cat-class="before-nested">
             </div>
-            <div pa-timeline
-                pa-animation-name="nestedTimeline">
+            <div cat-timeline
+                cat-animation-name="nestedTimeline">
                 <div
-                    pa-class="animation-1"
+                    cat-class="animation-1"
                     class="animation-1"
                 >
                 </div>
-                <div pa-delay="500"></div>
+                <div cat-delay="500"></div>
                 <div
-                    pa-class="animation-2"
+                    cat-class="animation-2"
                     class="animation-2"
                 >
                 </div>
             </div>
             <div class="after-nested"
-                pa-class="after-nested">
+                cat-class="after-nested">
             </div>
         </div>
     </section>
@@ -265,14 +265,14 @@
         <h1>Usage:</h1>
         <h2>Markup</h2>
 
-<pre><code>&lt;div pa-timeline pa-active=&quot;nested&quot; pa-undo=1&gt;
-    &lt;div class=&quot;before-nested&quot;pa-class=&quot;before-nested&quot;&gt;&lt;/div&gt;
-    &lt;div pa-timeline&gt;
-        &lt;div pa-class=&quot;animation-1&quot;  class=&quot;animation-1&quot;&gt;&lt;/div&gt;
-        &lt;div pa-delay=&quot;500&quot;&gt;&lt;/div&gt;
-        &lt;div pa-class=&quot;animation-2&quot; class=&quot;animation-2&quot;&gt;&lt;/div&gt;
+<pre><code>&lt;div cat-timeline cat-active=&quot;nested&quot; cat-undo=1&gt;
+    &lt;div class=&quot;before-nested&quot;cat-class=&quot;before-nested&quot;&gt;&lt;/div&gt;
+    &lt;div cat-timeline&gt;
+        &lt;div cat-class=&quot;animation-1&quot;  class=&quot;animation-1&quot;&gt;&lt;/div&gt;
+        &lt;div cat-delay=&quot;500&quot;&gt;&lt;/div&gt;
+        &lt;div cat-class=&quot;animation-2&quot; class=&quot;animation-2&quot;&gt;&lt;/div&gt;
     &lt;/div&gt;
-    &lt;div class=&quot;after-nested&quot; pa-class=&quot;after-nested&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;after-nested&quot; cat-class=&quot;after-nested&quot;&gt;&lt;/div&gt;
 &lt;/div&gt;</code></pre>
     </section>
 </body>

@@ -1,13 +1,13 @@
-describe('pa-class directive', () => {
+describe('cat-class directive', () => {
     let element,
         scope = {},
         template = `
             <div>
                 <div
-                    pa-class="a-class-name"
-                    pa-active="visible"
-                    pa-status="status"
-                    pa-animation-name="animation-name"
+                    cat-class="a-class-name"
+                    cat-active="visible"
+                    cat-status="status"
+                    cat-animation-name="animation-name"
 
                 ></div>
             </div>
@@ -21,8 +21,8 @@ describe('pa-class directive', () => {
         },
         sandbox,
         timeout;
-    beforeEach(angular.mock.module('pa.animations.animationLink'));
-    beforeEach(angular.mock.module('pa.animations.class'));
+    beforeEach(angular.mock.module('cat.animations.animationLink'));
+    beforeEach(angular.mock.module('cat.animations.class'));
     beforeEach(angular.mock.module('ngAnimateMock'));
 
     beforeEach(angular.mock.inject(($compile, $rootScope, $timeout, $animate) => {
@@ -32,7 +32,7 @@ describe('pa-class directive', () => {
         scope.visible = true;
         compile = () => {
             let parentElement = angular.element(template);
-            parentElement.data('$paTimelineController', timelineController);
+            parentElement.data('$catTimelineController', timelineController);
             $compile(parentElement)(scope);
             element = parentElement.children();
         };
@@ -59,34 +59,34 @@ describe('pa-class directive', () => {
         scope.status.should.equal('READY');
     });
 
-    it('should register itself on the paTimeline parent controller', () => {
+    it('should register itself on the catTimeline parent controller', () => {
         sandbox.spy(timelineController, 'register');
         compile();
         timelineController.register.should.have.been.calledOnce;
-        timelineController.register.should.have.been.calledWith('animation-name', element.controller('paClass'));
+        timelineController.register.should.have.been.calledWith('animation-name', element.controller('catClass'));
     });
 
-    it('should register itself on the paTimeline parent controller regardless of the nesting level', angular.mock.inject(($compile, $rootScope) => {
+    it('should register itself on the catTimeline parent controller regardless of the nesting level', angular.mock.inject(($compile, $rootScope) => {
         sandbox.spy(timelineController, 'register');
         let template = `
             <div>
                 <div>
                     <div
-                        pa-class="a-class-name"
-                        pa-active="visible"
-                        pa-status="status"
-                        pa-animation-name="animation-name"
+                        cat-class="a-class-name"
+                        cat-active="visible"
+                        cat-status="status"
+                        cat-animation-name="animation-name"
 
                     ></div>
                 </div>
             </div>`,
             parentElement = angular.element(template);
 
-        parentElement.data('$paTimelineController', timelineController);
+        parentElement.data('$catTimelineController', timelineController);
         $compile(parentElement)($rootScope.$new());
         element = parentElement.children().children();
         timelineController.register.should.have.been.calledOnce;
-        timelineController.register.should.have.been.calledWith('animation-name', element.controller('paClass'));
+        timelineController.register.should.have.been.calledWith('animation-name', element.controller('catClass'));
     }));
 
     describe('active watch', () => {
@@ -114,7 +114,7 @@ describe('pa-class directive', () => {
 
         beforeEach(() => {
             compile();
-            controller = element.controller('paClass');
+            controller = element.controller('catClass');
         });
 
         describe('#play', () => {

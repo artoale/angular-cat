@@ -9,12 +9,12 @@ describe('visible', () => {
         api,
         scrollContainerController,
         template = `
-            <div pa-fake-scroller>
-                <p pa-visible="visible"></p>
+            <div cat-fake-scroller>
+                <p cat-visible="visible"></p>
             </div>
         `;
 
-    beforeEach(angular.mock.module('pa.scrollSpy.visible'));
+    beforeEach(angular.mock.module('cat.scrollSpy.visible'));
     beforeEach(() => {
         scrollContainerController = {
             registerSpy: sinon.spy(),
@@ -24,7 +24,7 @@ describe('visible', () => {
 
     beforeEach(angular.mock.inject(($compile, $rootScope, $timeout, $window) => {
         parentElement = angular.element(template);
-        parentElement.data('$paScrollContainerController', scrollContainerController);
+        parentElement.data('$catScrollContainerController', scrollContainerController);
         rootScope = $rootScope;
         scope = $rootScope.$new();
         $compile(parentElement)(scope);
@@ -38,7 +38,7 @@ describe('visible', () => {
     });
 
     it('should be an angular module', () => {
-        visible.name.should.equal('pa.scrollSpy.visible');
+        visible.name.should.equal('cat.scrollSpy.visible');
     });
 
     it('should get the scrollContainer DOM element', () => {

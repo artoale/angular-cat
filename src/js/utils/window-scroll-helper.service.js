@@ -1,4 +1,4 @@
-const mod = angular.module('pa.utils.windowScrollHelper', []);
+const mod = angular.module('cat.utils.windowScrollHelper', []);
 
 mod.factory('windowScrollGetter', ['$window', ($window) => {
     return () => {

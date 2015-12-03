@@ -1,13 +1,13 @@
-describe('pa-delay directive', () => {
+describe('cat-delay directive', () => {
     let element,
         scope = {},
         template = `
             <div>
                 <div
-                    pa-delay="300"
-                    pa-active="visible"
-                    pa-status="status"
-                    pa-animation-name="animation-name"
+                    cat-delay="300"
+                    cat-active="visible"
+                    cat-status="status"
+                    cat-animation-name="animation-name"
                 ></div>
             </div>
             `,
@@ -19,9 +19,9 @@ describe('pa-delay directive', () => {
             }
         },
         timeout;
-    beforeEach(angular.mock.module('pa.utils.delay'));
-    beforeEach(angular.mock.module('pa.animations.animationLink'));
-    beforeEach(angular.mock.module('pa.animations.delay'));
+    beforeEach(angular.mock.module('cat.utils.delay'));
+    beforeEach(angular.mock.module('cat.animations.animationLink'));
+    beforeEach(angular.mock.module('cat.animations.delay'));
     beforeEach(angular.mock.module('ngAnimateMock'));
 
     beforeEach(angular.mock.inject(($compile, $rootScope, $timeout, $animate) => {
@@ -30,7 +30,7 @@ describe('pa-delay directive', () => {
         scope.visible = false;
         compile = () => {
             let parentElement = angular.element(template);
-            parentElement.data('$paTimelineController', timelineController);
+            parentElement.data('$catTimelineController', timelineController);
             $compile(parentElement)(scope);
             element = parentElement.children();
         };
@@ -44,11 +44,11 @@ describe('pa-delay directive', () => {
         scope.status.should.equal('READY');
     });
 
-    it('should register itself on the paTimeline parent controller', () => {
+    it('should register itself on the catTimeline parent controller', () => {
         sinon.spy(timelineController, 'register');
         compile();
         timelineController.register.should.have.been.calledOnce;
-        timelineController.register.should.have.been.calledWith('animation-name', element.controller('paDelay'));
+        timelineController.register.should.have.been.calledWith('animation-name', element.controller('catDelay'));
     });
 
     describe('active watch', () => {
@@ -69,10 +69,10 @@ describe('pa-delay directive', () => {
             template = `
                 <div>
                     <div
-                        pa-delay="300"
-                        pa-active="visible"
-                        pa-status="status"
-                        pa-undo=1
+                        cat-delay="300"
+                        cat-active="visible"
+                        cat-status="status"
+                        cat-undo=1
                     ></div>
                 </div>
                 `;
@@ -105,7 +105,7 @@ describe('pa-delay directive', () => {
 
         beforeEach(() => {
             compile();
-            controller = element.controller('paDelay');
+            controller = element.controller('catDelay');
         });
 
         describe('#play', () => {

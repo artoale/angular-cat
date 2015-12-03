@@ -1,6 +1,6 @@
-const mod = angular.module('pa.utils.delay', []);
+const mod = angular.module('cat.utils.delay', []);
 
-mod.factory('paDelayS', ['$timeout', '$q', ($timeout, $q) => {
+mod.factory('catDelayS', ['$timeout', '$q', ($timeout, $q) => {
     return (millis) => {
         let deferred = $q.defer();
         $timeout(deferred.resolve.bind(deferred, millis), millis);

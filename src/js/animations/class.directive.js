@@ -1,14 +1,14 @@
-const mod = angular.module('pa.animations.class', []),
-    directiveName = 'paClass';
+const mod = angular.module('cat.animations.class', []),
+    directiveName = 'catClass';
 
-mod.directive(directiveName, ['$animate', '$parse', 'paAnimationLink', ($animate, $parse, paAnimationLink) => {
+mod.directive(directiveName, ['$animate', '$parse', 'catAnimationLink', ($animate, $parse, catAnimationLink) => {
     return {
         restrict: 'A',
-        require: [directiveName, '^?paTimeline'],
+        require: [directiveName, '^?catTimeline'],
         controller: ['$q', '$scope', '$attrs', '$element', function ($q, $scope, $attrs, $element) {
             const className = $attrs[directiveName] || directiveName,
                 classNameStart = className + '--start',
-                statusScopeVar = $attrs.paStatus;
+                statusScopeVar = $attrs.catStatus;
 
             let status = '',
                 deferred = $q.defer(),
@@ -116,7 +116,7 @@ mod.directive(directiveName, ['$animate', '$parse', 'paAnimationLink', ($animate
             this.seek = seek;
 
         }],
-        link: (...args) => paAnimationLink(...args)
+        link: (...args) => catAnimationLink(...args)
     };
 }]);
 

@@ -1,10 +1,10 @@
-describe('paDelay service', () => {
+describe('catDelay service', () => {
     let timeout,
         delay;
-    beforeEach(angular.mock.module('pa.utils.delay'));
+    beforeEach(angular.mock.module('cat.utils.delay'));
 
-    beforeEach(angular.mock.inject((paDelayS, $timeout) => {
-        delay = paDelayS;
+    beforeEach(angular.mock.inject((catDelayS, $timeout) => {
+        delay = catDelayS;
         timeout =  $timeout;
     }));
 

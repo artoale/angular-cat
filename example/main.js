@@ -1,11 +1,11 @@
-var app = angular.module('example', ['paAnimations']).run(function() {
+var app = angular.module('example', ['cat']).run(function() {
     console.log('I am running');
 });
 
-app.directive('customAnimation', function($q, paDelayS) {
+app.directive('customAnimation', function($q, catDelayS) {
     return {
         restrict: 'A',
-        require: 'paTimeline',
+        require: 'catTimeline',
         link: function (scope, element, attrs, controller) {
             var first = controller.getAnimation('first');
             var second = controller.getAnimation('second');
@@ -21,6 +21,5 @@ app.directive('customAnimation', function($q, paDelayS) {
                     });
             });
         }
-
     };
 });

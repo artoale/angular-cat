@@ -1,6 +1,6 @@
-const mod = angular.module('pa.utils.debounce', []);
+const mod = angular.module('cat.utils.debounce', []);
 
-mod.factory('paDebounce', ['$timeout', '$q', ($timeout, $q) => {
+mod.factory('catDebounce', ['$timeout', '$q', ($timeout, $q) => {
     return (func, wait, immediate) => {
         let timeout,
             deferred = $q.defer();

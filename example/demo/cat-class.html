@@ -6,7 +6,7 @@
     <title>Pa animations example page</title>
     <script src="../angular/angular.js"></script>
     <script src="../angular-animate/angular-animate.js"></script>
-    <script src="/paAnimations.js"></script>
+    <script src="/cat.js"></script>
     <script src="/main.js"></script>
     <style media="screen">
         .a-class-name {
@@ -27,7 +27,7 @@
     <section>
         <h1>Animation class example</h1>
 
-        <div class="a-class-name" pa-class="a-class-name" pa-active="trigger" pa-status="status">Animation content</div>
+        <div class="a-class-name" cat-class="a-class-name" cat-active="trigger" cat-status="status">Animation content</div>
         <button type="button" name="button" ng-click="trigger = !trigger">Toggle animation "active" binding to {{!trigger}}</button>
         <ul class="values">
             <li>Status: {{status}}</li>
@@ -37,7 +37,7 @@
     <section>
         <h1>Animation class example, no class set</h1>
 
-        <div pa-class="a-class-name" pa-active="triggerNoClass" pa-status="statusNoClass">Animation content</div>
+        <div cat-class="a-class-name" cat-active="triggerNoClass" cat-status="statusNoClass">Animation content</div>
         <button type="button" name="button" ng-click="triggerNoClass = !triggerNoClass">Toggle animation "active" binding to {{!triggerNoClass}}</button>
         <ul class="values">
             <li>Status: {{statusNoClass}}</li>
@@ -49,10 +49,10 @@
 
         <div
             class="a-class-name"
-            pa-class="a-class-name"
-            pa-active="triggerUndo"
-            pa-status="statusUndo"
-            pa-undo="1"
+            cat-class="a-class-name"
+            cat-active="triggerUndo"
+            cat-status="statusUndo"
+            cat-undo="1"
         >
             Animation content
         </div>
@@ -67,10 +67,10 @@
 
         <div
             class="a-class-name"
-            pa-class="a-class-name"
-            pa-active="triggerDisableDemo"
-            pa-status="statusDisable"
-            pa-disabled="true"
+            cat-class="a-class-name"
+            cat-active="triggerDisableDemo"
+            cat-status="statusDisable"
+            cat-disabled="true"
         >
             Animation content
         </div>

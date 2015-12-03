@@ -1,13 +1,13 @@
-const mod = angular.module('pa.animations.delay', []),
-    directiveName = 'paDelay';
+const mod = angular.module('cat.animations.delay', []),
+    directiveName = 'catDelay';
 
-mod.directive(directiveName, ['$parse', 'paDelayS', 'paAnimationLink', ($parse, paDelayS, paAnimationLink) => {
+mod.directive(directiveName, ['$parse', 'catDelayS', 'catAnimationLink', ($parse, catDelayS, catAnimationLink) => {
     return {
         restrict: 'A',
-        require: [directiveName, '^^?paTimeline'],
+        require: [directiveName, '^^?catTimeline'],
         controller: ['$q', '$scope', '$attrs', function ($q, $scope, $attrs) {
             const millis = parseInt($attrs[directiveName], 10) || 1000,
-                statusScopeVar = $attrs.paStatus;
+                statusScopeVar = $attrs.catStatus;
             let isDisabled = false;
 
             let status = '',
@@ -45,7 +45,7 @@ mod.directive(directiveName, ['$parse', 'paDelayS', 'paAnimationLink', ($parse, 
 
                 runAnimation = () => {
                     setStatus('RUNNING');
-                    return paDelayS(millis).then(() => {
+                    return catDelayS(millis).then(() => {
                         if (status === 'RUNNING') {
                             setStatus('FINISHED');
                             resolve();
@@ -81,7 +81,7 @@ mod.directive(directiveName, ['$parse', 'paDelayS', 'paAnimationLink', ($parse, 
             this.clear = clear;
 
         }],
-        link: (...args) => paAnimationLink(...args)
+        link: (...args) => catAnimationLink(...args)
     };
 }]);
 

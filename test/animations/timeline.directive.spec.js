@@ -1,11 +1,11 @@
-describe('pa-timeline directive', () => {
+describe('cat-timeline directive', () => {
     let scope = {},
         template = `
             <div>
-                <div    pa-timeline
-                        pa-active="visible"
-                        pa-status="status"
-                        pa-animation-name="animation-name"
+                <div    cat-timeline
+                        cat-active="visible"
+                        cat-status="status"
+                        cat-animation-name="animation-name"
                     ></div>
                 </div>
             </div>
@@ -20,8 +20,8 @@ describe('pa-timeline directive', () => {
         },
         timeout;
 
-    beforeEach(angular.mock.module('pa.animations.animationLink'));
-    beforeEach(angular.mock.module('pa.animations.timeline'));
+    beforeEach(angular.mock.module('cat.animations.animationLink'));
+    beforeEach(angular.mock.module('cat.animations.timeline'));
     beforeEach(angular.mock.module('ngAnimateMock'));
 
     beforeEach(angular.mock.inject(($compile, $rootScope, $timeout, $animate) => {
@@ -30,10 +30,10 @@ describe('pa-timeline directive', () => {
         scope.visible = false;
         compile = () => {
             let parentElement = angular.element(template);
-            parentElement.data('$paTimelineController', timelineController);
+            parentElement.data('$catTimelineController', timelineController);
             $compile(parentElement)(scope);
             element = parentElement.children();
-            return element.controller('paTimeline');
+            return element.controller('catTimeline');
         };
 
         timeout =  $timeout;
@@ -45,7 +45,7 @@ describe('pa-timeline directive', () => {
         scope.status.should.equal('READY');
     });
 
-    it('should register itself on the paTimeline parent controller', () => {
+    it('should register itself on the catTimeline parent controller', () => {
         sinon.spy(timelineController, 'register');
         let controller = compile();
 
@@ -108,11 +108,11 @@ describe('pa-timeline directive', () => {
 
             template = `
                <div>
-                   <div    pa-timeline
-                           pa-active="visible"
-                           pa-status="status"
-                           pa-animation-name="animation-name"
-                           pa-undo="1"
+                   <div    cat-timeline
+                           cat-active="visible"
+                           cat-status="status"
+                           cat-animation-name="animation-name"
+                           cat-undo="1"
                        ></div>
                    </div>
                </div>
