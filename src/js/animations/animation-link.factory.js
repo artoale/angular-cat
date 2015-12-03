@@ -3,11 +3,11 @@ const mod = angular.module('pa.animations.animationLink', []);
 mod.factory('paAnimationLink', () => {
     return (scope, element, attrs, controllers) => {
         let selfController = controllers[0],
-            routerController = controllers[1],
+            timelineController = controllers[1],
             animationName = attrs.paAnimationName;
 
-        if (routerController) {
-            routerController.register(animationName, selfController);
+        if (timelineController) {
+            timelineController.register(animationName, selfController);
         }
 
         selfController.setUp();

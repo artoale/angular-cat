@@ -13,7 +13,7 @@ describe('pa-delay directive', () => {
             `,
         compile,
         animate,
-        routerController = {
+        timelineController = {
             register() {
                 return;
             }
@@ -30,7 +30,7 @@ describe('pa-delay directive', () => {
         scope.visible = false;
         compile = () => {
             let parentElement = angular.element(template);
-            parentElement.data('$paRouterController', routerController);
+            parentElement.data('$paTimelineController', timelineController);
             $compile(parentElement)(scope);
             element = parentElement.children();
         };
@@ -44,11 +44,11 @@ describe('pa-delay directive', () => {
         scope.status.should.equal('READY');
     });
 
-    it('should register itself on the paRouter parent controller', () => {
-        sinon.spy(routerController, 'register');
+    it('should register itself on the paTimeline parent controller', () => {
+        sinon.spy(timelineController, 'register');
         compile();
-        routerController.register.should.have.been.calledOnce;
-        routerController.register.should.have.been.calledWith('animation-name', element.controller('paDelay'));
+        timelineController.register.should.have.been.calledOnce;
+        timelineController.register.should.have.been.calledWith('animation-name', element.controller('paDelay'));
     });
 
     describe('active watch', () => {

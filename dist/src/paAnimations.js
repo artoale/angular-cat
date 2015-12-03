@@ -9,11 +9,11 @@ var mod = angular.module('pa.animations.animationLink', []);
 mod.factory('paAnimationLink', function () {
     return function (scope, element, attrs, controllers) {
         var selfController = controllers[0],
-            routerController = controllers[1],
+            timelineController = controllers[1],
             animationName = attrs.paAnimationName;
 
-        if (routerController) {
-            routerController.register(animationName, selfController);
+        if (timelineController) {
+            timelineController.register(animationName, selfController);
         }
 
         selfController.setUp();
@@ -58,20 +58,20 @@ var _delayDirective = require('./delay.directive');
 
 var _delayDirective2 = _interopRequireDefault(_delayDirective);
 
-var _routerDirective = require('./router.directive');
+var _timelineDirective = require('./timeline.directive');
 
-var _routerDirective2 = _interopRequireDefault(_routerDirective);
+var _timelineDirective2 = _interopRequireDefault(_timelineDirective);
 
 var _animationLinkFactory = require('./animation-link.factory');
 
 var _animationLinkFactory2 = _interopRequireDefault(_animationLinkFactory);
 
-var _module = angular.module('pa.animations', ['ngAnimate', _classDirective2['default'].name, _delayDirective2['default'].name, _routerDirective2['default'].name, _animationLinkFactory2['default'].name]);
+var _module = angular.module('pa.animations', ['ngAnimate', _classDirective2['default'].name, _delayDirective2['default'].name, _timelineDirective2['default'].name, _animationLinkFactory2['default'].name]);
 
 exports['default'] = _module;
 module.exports = exports['default'];
 
-},{"./animation-link.factory":1,"./class.directive":3,"./delay.directive":4,"./router.directive":5}],3:[function(require,module,exports){
+},{"./animation-link.factory":1,"./class.directive":3,"./delay.directive":4,"./timeline.directive":5}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -83,7 +83,7 @@ var mod = angular.module('pa.animations.class', []),
 mod.directive(directiveName, ['$animate', '$parse', 'paAnimationLink', function ($animate, $parse, paAnimationLink) {
     return {
         restrict: 'A',
-        require: [directiveName, '^?paRouter'],
+        require: [directiveName, '^?paTimeline'],
         controller: ['$q', '$scope', '$attrs', '$element', function ($q, $scope, $attrs, $element) {
             var className = $attrs[directiveName] || directiveName,
                 classNameStart = className + '--start',
@@ -211,7 +211,7 @@ var mod = angular.module('pa.animations.delay', []),
 mod.directive(directiveName, ['$parse', 'paDelayS', 'paAnimationLink', function ($parse, paDelayS, paAnimationLink) {
     return {
         restrict: 'A',
-        require: [directiveName, '^^?paRouter'],
+        require: [directiveName, '^^?paTimeline'],
         controller: ['$q', '$scope', '$attrs', function ($q, $scope, $attrs) {
             var millis = parseInt($attrs[directiveName], 10) || 1000,
                 statusScopeVar = $attrs.paStatus;
@@ -300,13 +300,13 @@ module.exports = exports['default'];
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
-var mod = angular.module('pa.animations.router', []),
-    directiveName = 'paRouter';
+var mod = angular.module('pa.animations.timeline', []),
+    directiveName = 'paTimeline';
 
 mod.directive(directiveName, ['$parse', 'paAnimationLink', function ($parse, paAnimationLink) {
     return {
         restrict: 'A',
-        require: [directiveName, '^^?paRouter'],
+        require: [directiveName, '^^?paTimeline'],
         controller: ['$q', '$scope', '$attrs', function ($q, $scope, $attrs) {
             var statusScopeVar = $attrs.paStatus;
             var isDisabled = false;
@@ -775,4 +775,4 @@ exports['default'] = mod;
 module.exports = exports['default'];
 
 },{}]},{},[6])
-//# sourceMappingURL=paAnimations.min.js.map
+//# sourceMappingURL=paAnimations.js.map

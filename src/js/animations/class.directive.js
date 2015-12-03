@@ -4,7 +4,7 @@ const mod = angular.module('pa.animations.class', []),
 mod.directive(directiveName, ['$animate', '$parse', 'paAnimationLink', ($animate, $parse, paAnimationLink) => {
     return {
         restrict: 'A',
-        require: [directiveName, '^?paRouter'],
+        require: [directiveName, '^?paTimeline'],
         controller: ['$q', '$scope', '$attrs', '$element', function ($q, $scope, $attrs, $element) {
             const className = $attrs[directiveName] || directiveName,
                 classNameStart = className + '--start',

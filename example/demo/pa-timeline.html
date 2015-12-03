@@ -6,7 +6,7 @@
     <title>Pa animations example page</title>
     <script src="../angular/angular.js"></script>
     <script src="../angular-animate/angular-animate.js"></script>
-    <script src="/paAnimations.min.js"></script>
+    <script src="/paAnimations.js"></script>
     <script src="/main.js"></script>
     <style media="screen">
         .a-class-name {
@@ -26,10 +26,10 @@
 <body ng-app="example">
 
     <section>
-        <h1>Router + class directive example</h1>
+        <h1>Timeline + class directive example</h1>
 
         <div
-            pa-router
+            pa-timeline
             pa-active="trigger"
             pa-status="status"
         >
@@ -59,10 +59,10 @@
         </ul>
     </section>
     <section>
-        <h1>Router + class + undo directive example</h1>
+        <h1>Timeline + class + undo directive example</h1>
 
         <div
-            pa-router
+            pa-timeline
             pa-active="triggerUndo"
             pa-status="statusUndo"
             pa-undo="1"
@@ -89,11 +89,11 @@
         </ul>
     </section>
     <section>
-        <h1>Router + custom-router</h1>
+        <h1>Timeline + custom-timeline</h1>
 
         <div
-            pa-router
-            custom-router
+            pa-timeline
+            custom-timeline
             custom-animation
             pa-status="statusCustom"
             pa-active="triggerCustom"
@@ -122,11 +122,11 @@
         </ul>
     </section>
     <section>
-        <h1>Router + custom-router + pa-undo</h1>
+        <h1>Timeline + custom-timeline + pa-undo</h1>
 
         <div
-            pa-router
-            custom-router
+            pa-timeline
+            custom-timeline
             custom-animation
             pa-undo="1"
             pa-status="statusCustomUndo"
@@ -156,10 +156,10 @@
         </ul>
     </section>
     <section>
-        <h1>Router + is-disabled</h1>
+        <h1>Timeline + is-disabled</h1>
 
         <div
-            pa-router
+            pa-timeline
             pa-status="statusIsDisabledDemo"
             pa-active="isDisabledDemo"
             pa-disabled="true"
@@ -188,10 +188,10 @@
         </ul>
     </section>
     <section>
-        <h1>Router + custom-animation + is-disabled</h1>
+        <h1>Timeline + custom-animation + is-disabled</h1>
 
         <div
-            pa-router
+            pa-timeline
             custom-animation
             pa-status="statusIsDisabledCustomDemo"
             pa-active="isDisabledCustomDemo"
@@ -227,10 +227,10 @@
         </ul>
     </section>
     <section>
-        <h1>Router + pa-undo + is-disabled</h1>
+        <h1>Timeline + pa-undo + is-disabled</h1>
 
         <div
-            pa-router
+            pa-timeline
             pa-undo="1"
             pa-status="statusIsDisabledUndoDemo"
             pa-active="isDisabledUndoDemo"

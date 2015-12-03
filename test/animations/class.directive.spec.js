@@ -14,7 +14,7 @@ describe('pa-class directive', () => {
             `,
         compile,
         animate,
-        routerController = {
+        timelineController = {
             register () {
                 return;
             }
@@ -32,7 +32,7 @@ describe('pa-class directive', () => {
         scope.visible = true;
         compile = () => {
             let parentElement = angular.element(template);
-            parentElement.data('$paRouterController', routerController);
+            parentElement.data('$paTimelineController', timelineController);
             $compile(parentElement)(scope);
             element = parentElement.children();
         };
@@ -59,15 +59,15 @@ describe('pa-class directive', () => {
         scope.status.should.equal('READY');
     });
 
-    it('should register itself on the paRouter parent controller', () => {
-        sandbox.spy(routerController, 'register');
+    it('should register itself on the paTimeline parent controller', () => {
+        sandbox.spy(timelineController, 'register');
         compile();
-        routerController.register.should.have.been.calledOnce;
-        routerController.register.should.have.been.calledWith('animation-name', element.controller('paClass'));
+        timelineController.register.should.have.been.calledOnce;
+        timelineController.register.should.have.been.calledWith('animation-name', element.controller('paClass'));
     });
 
-    it('should register itself on the paRouter parent controller regardless of the nesting level', angular.mock.inject(($compile, $rootScope) => {
-        sandbox.spy(routerController, 'register');
+    it('should register itself on the paTimeline parent controller regardless of the nesting level', angular.mock.inject(($compile, $rootScope) => {
+        sandbox.spy(timelineController, 'register');
         let template = `
             <div>
                 <div>
@@ -82,11 +82,11 @@ describe('pa-class directive', () => {
             </div>`,
             parentElement = angular.element(template);
 
-        parentElement.data('$paRouterController', routerController);
+        parentElement.data('$paTimelineController', timelineController);
         $compile(parentElement)($rootScope.$new());
         element = parentElement.children().children();
-        routerController.register.should.have.been.calledOnce;
-        routerController.register.should.have.been.calledWith('animation-name', element.controller('paClass'));
+        timelineController.register.should.have.been.calledOnce;
+        timelineController.register.should.have.been.calledWith('animation-name', element.controller('paClass'));
     }));
 
     describe('active watch', () => {

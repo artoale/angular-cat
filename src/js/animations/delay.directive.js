@@ -4,7 +4,7 @@ const mod = angular.module('pa.animations.delay', []),
 mod.directive(directiveName, ['$parse', 'paDelayS', 'paAnimationLink', ($parse, paDelayS, paAnimationLink) => {
     return {
         restrict: 'A',
-        require: [directiveName, '^^?paRouter'],
+        require: [directiveName, '^^?paTimeline'],
         controller: ['$q', '$scope', '$attrs', function ($q, $scope, $attrs) {
             const millis = parseInt($attrs[directiveName], 10) || 1000,
                 statusScopeVar = $attrs.paStatus;

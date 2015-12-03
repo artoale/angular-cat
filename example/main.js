@@ -5,7 +5,7 @@ var app = angular.module('example', ['paAnimations']).run(function() {
 app.directive('customAnimation', function($q, paDelayS) {
     return {
         restrict: 'A',
-        require: 'paRouter',
+        require: 'paTimeline',
         link: function (scope, element, attrs, controller) {
             var first = controller.getAnimation('first');
             var second = controller.getAnimation('second');

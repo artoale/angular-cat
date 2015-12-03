@@ -1,8 +1,8 @@
-describe('pa-router directive', () => {
+describe('pa-timeline directive', () => {
     let scope = {},
         template = `
             <div>
-                <div    pa-router
+                <div    pa-timeline
                         pa-active="visible"
                         pa-status="status"
                         pa-animation-name="animation-name"
@@ -13,7 +13,7 @@ describe('pa-router directive', () => {
         compile,
         animate,
         element,
-        routerController = {
+        timelineController = {
             register () {
                 return;
             }
@@ -21,7 +21,7 @@ describe('pa-router directive', () => {
         timeout;
 
     beforeEach(angular.mock.module('pa.animations.animationLink'));
-    beforeEach(angular.mock.module('pa.animations.router'));
+    beforeEach(angular.mock.module('pa.animations.timeline'));
     beforeEach(angular.mock.module('ngAnimateMock'));
 
     beforeEach(angular.mock.inject(($compile, $rootScope, $timeout, $animate) => {
@@ -30,10 +30,10 @@ describe('pa-router directive', () => {
         scope.visible = false;
         compile = () => {
             let parentElement = angular.element(template);
-            parentElement.data('$paRouterController', routerController);
+            parentElement.data('$paTimelineController', timelineController);
             $compile(parentElement)(scope);
             element = parentElement.children();
-            return element.controller('paRouter');
+            return element.controller('paTimeline');
         };
 
         timeout =  $timeout;
@@ -45,12 +45,12 @@ describe('pa-router directive', () => {
         scope.status.should.equal('READY');
     });
 
-    it('should register itself on the paRouter parent controller', () => {
-        sinon.spy(routerController, 'register');
+    it('should register itself on the paTimeline parent controller', () => {
+        sinon.spy(timelineController, 'register');
         let controller = compile();
 
-        routerController.register.should.have.been.calledOnce;
-        routerController.register.should.have.been.calledWith('animation-name', controller);
+        timelineController.register.should.have.been.calledOnce;
+        timelineController.register.should.have.been.calledWith('animation-name', controller);
     });
 
     describe('active watch', () => {
@@ -108,7 +108,7 @@ describe('pa-router directive', () => {
 
             template = `
                <div>
-                   <div    pa-router
+                   <div    pa-timeline
                            pa-active="visible"
                            pa-status="status"
                            pa-animation-name="animation-name"

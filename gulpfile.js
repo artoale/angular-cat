@@ -13,7 +13,7 @@ var gulp = require('gulp'),
     streamify = require('gulp-streamify'),
     js = 'src/js/**/*.js';
 
-gulp.task('compilejs', ['del:dist'], function () {
+gulp.task('compilejs', function () {
     return browserify('src/js/paAnimations.js', {
             debug: true
         })
@@ -22,8 +22,8 @@ gulp.task('compilejs', ['del:dist'], function () {
         .on('error', function (err) {
             console.log('Error : ' + err.message);
         })
-        .pipe(exorcist('dist/src/paAnimations.min.js.map'))
-        .pipe(source('paAnimations.min.js'))
+        .pipe(exorcist('dist/src/paAnimations.js.map'))
+        .pipe(source('paAnimations.js'))
         .pipe(gulp.dest('dist/src'));
 });
 

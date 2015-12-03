@@ -6,7 +6,7 @@
     <title>Scroll spy example page</title>
     <script src="../angular/angular.js"></script>
     <script src="../angular-animate/angular-animate.js"></script>
-    <script src="/paAnimations.min.js"></script>
+    <script src="/paAnimations.js"></script>
     <script src="/main.js"></script>
     <style media="screen">
         body {
@@ -174,7 +174,7 @@
     <section pa-visible="sequence">
         <h1>Two animation in sequence, with undo set</h1>
         <div
-            pa-router
+            pa-timeline
             pa-active="sequence"
             pa-undo=1
         >
@@ -195,7 +195,7 @@
         <h1>Usage:</h1>
         <h2>Markup</h2>
 
-<pre><code>&lt;div pa-router pa-active=&quot;sequence&quot; pa-undo=&quot;1&quot;&gt;
+<pre><code>&lt;div pa-timeline pa-active=&quot;sequence&quot; pa-undo=&quot;1&quot;&gt;
     &lt;div pa-class=&quot;animation-1&quot; class=&quot;animation-1&quot;&gt;&lt;/div&gt;
     &lt;div pa-delay=&quot;500&quot;&gt;&lt;/div&gt;
     &lt;div pa-class=&quot;animation-2&quot; class=&quot;animation-2&quot;&gt; &lt;/div&gt;
@@ -233,17 +233,17 @@
 }</code></pre>
     </section>
     <section pa-visible="nested">
-        <h1>Nested routers!</h1>
+        <h1>Nested timelines!</h1>
         <div
-            pa-router
+            pa-timeline
             pa-disabled="true"
             pa-active="nested"
             pa-undo=1>
             <div class="before-nested"
                 pa-class="before-nested">
             </div>
-            <div pa-router
-                pa-animation-name="nestedRouter">
+            <div pa-timeline
+                pa-animation-name="nestedTimeline">
                 <div
                     pa-class="animation-1"
                     class="animation-1"
@@ -265,9 +265,9 @@
         <h1>Usage:</h1>
         <h2>Markup</h2>
 
-<pre><code>&lt;div pa-router pa-active=&quot;nested&quot; pa-undo=1&gt;
+<pre><code>&lt;div pa-timeline pa-active=&quot;nested&quot; pa-undo=1&gt;
     &lt;div class=&quot;before-nested&quot;pa-class=&quot;before-nested&quot;&gt;&lt;/div&gt;
-    &lt;div pa-router&gt;
+    &lt;div pa-timeline&gt;
         &lt;div pa-class=&quot;animation-1&quot;  class=&quot;animation-1&quot;&gt;&lt;/div&gt;
         &lt;div pa-delay=&quot;500&quot;&gt;&lt;/div&gt;
         &lt;div pa-class=&quot;animation-2&quot; class=&quot;animation-2&quot;&gt;&lt;/div&gt;

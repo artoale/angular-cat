@@ -77,18 +77,18 @@ Introduce a delay in an animation sequence. This is particularly useful when you
 sub-animations and you need to fine tune delays on a per-case scenario.
 
 
-### pa-router directive
+### pa-timeline directive
 
 Combine all its children directive and, (if `pa-active` is set) runs them in
 sequence.
 
-This is where most of the magic happens. You can use the router to play a sequence
+This is where most of the magic happens. You can use the timeline to play a sequence
 of simple animations, nest them, or run them in whatever order you want!
 
 By default, the animations are run in sequence, and not repeated unless `pa-undo` is specified.
 
 ```html
-<div pa-router pa-active="sequence" pa-undo="1">
+<div pa-timeline pa-active="sequence" pa-undo="1">
     <div pa-class="animation-1" class="animation-1"></div>
     <div pa-delay="500"></div>
     <div pa-class="animation-2" class="animation-2"> </div>
@@ -102,7 +102,7 @@ All directives can be controlled both declarative, via HTML attributes, or
 programmatically, by requiring their angular controller.
 
 For most use cases, HTML attributes should be enough. You should care about the programmatic interface only if
-you're writing custom directives that needs to integrate with the router (or if you're contributing to this project!)
+you're writing custom directives that needs to integrate with the timeline (or if you're contributing to this project!)
 
 ### Shared HTML interface
 
@@ -117,7 +117,7 @@ Tells the directive that the animation should be "cleared" (resetted) when `pa-a
 #### `pa-animation-name`
 Defaults to the directive name
 
-Name to be used when registering the animation on the parent `pa-router`.
+Name to be used when registering the animation on the parent `pa-timeline`.
 
 #### `pa-status`
 Read-only variable (written by the directives). Can be used to check the animation
@@ -148,12 +148,12 @@ clearing operation is finished.
 
 #### Additional JS APIs
 
-### `routerController.register(animationName: string, animationController [, order: number])`
+### `timelineController.register(animationName: string, animationController [, order: number])`
 Called by "component" directives to register themselves. The order parameter is
 currently only available via JS APIs, but will be added as a shared attribute in
 the future.
 
-### `routerController.get()` //TODO
+### `timelineController.get()` //TODO
 Not implemented yet, should allow to get a children animation from the controller
 for custom animation ordering and sequencing (e.g. first two in parralle, than the third, than another two...)
 

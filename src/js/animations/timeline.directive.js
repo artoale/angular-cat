@@ -1,10 +1,10 @@
-const mod = angular.module('pa.animations.router', []),
-    directiveName = 'paRouter';
+const mod = angular.module('pa.animations.timeline', []),
+    directiveName = 'paTimeline';
 
 mod.directive(directiveName, ['$parse', 'paAnimationLink', ($parse, paAnimationLink) => {
     return {
         restrict: 'A',
-        require: [directiveName, '^^?paRouter'],
+        require: [directiveName, '^^?paTimeline'],
         controller:  ['$q', '$scope', '$attrs', function ($q, $scope, $attrs) {
             const statusScopeVar = $attrs.paStatus;
             let isDisabled = false;
