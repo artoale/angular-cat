@@ -11,11 +11,7 @@ mod.directive(directiveName, ['$parse', 'catDelayS', 'catAnimationLink', 'catBas
             let baseAnimation = catBaseAnimation({
                 $scope: $scope,
                 $attrs: $attrs,
-                onPlay: () => catDelayS(millis),
-                onSetUp: () => {},
-                onClear: () => {},
-                disable: () => {}
-
+                onPlay: () => catDelayS(millis)
             });
 
             //APIs used by linking function

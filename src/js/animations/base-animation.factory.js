@@ -58,6 +58,11 @@ mod.factory('catBaseAnimation', ['$q', '$parse', ($q, $parse) => {
         if (config.$attrs && config.$attrs.catStatus) {
             statusScopeVar = config.$attrs.catStatus;
         }
+
+        ['onPlay', 'onSetUp', 'onClear', 'disable'].forEach((fun) => {
+            config[fun] = typeof config[fun] === 'function' ? config[fun] : angular.noop;
+        });
+
         return {
             play,
             clear,

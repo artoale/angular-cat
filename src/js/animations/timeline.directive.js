@@ -31,7 +31,6 @@ mod.directive(directiveName, ['$parse', 'catAnimationLink', 'catBaseAnimation', 
                     onClear: () => $q.all(
                         animations.map(animation => animation.controller.clear())
                     ),
-                    onSetUp: () => {},
                     disable: (isDisabled) => {
                         animations.forEach((animation) => {
                             animation.controller.setDisabled(isDisabled);
