@@ -16,8 +16,8 @@ mod.directive(directiveName, ['$parse', 'catDelayS', 'catAnimationLink', 'catBas
 
             //APIs used by linking function
             this.setUp = baseAnimation.setUp;
-
             //Public APIs
+            this.seek = angular.noop;
             this.play = baseAnimation.play;
             this.setDisabled = baseAnimation.setDisabled;
             this.clear = baseAnimation.clear;
