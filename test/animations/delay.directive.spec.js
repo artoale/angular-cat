@@ -20,6 +20,7 @@ describe('cat-delay directive', () => {
         },
         timeout;
     beforeEach(angular.mock.module('cat.utils.delay'));
+    beforeEach(angular.mock.module('cat.animations.base-animation'));
     beforeEach(angular.mock.module('cat.animations.animationLink'));
     beforeEach(angular.mock.module('cat.animations.delay'));
     beforeEach(angular.mock.module('ngAnimateMock'));
@@ -33,6 +34,7 @@ describe('cat-delay directive', () => {
             parentElement.data('$catTimelineController', timelineController);
             $compile(parentElement)(scope);
             element = parentElement.children();
+            scope.$apply();
         };
 
         timeout =  $timeout;
