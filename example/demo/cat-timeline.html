@@ -68,17 +68,17 @@
             cat-undo="1"
         >
             <div
-                class="a-class-name"
                 cat-class="a-class-name"
             >
                 Animation 1 content
             </div>
-            <div ng-if="ifShow"
-                class="a-class-name"
-                cat-status="x.ngiffedStatus"
-                cat-class="a-class-name"
-            >
-                Animation 2 content
+            <div ng-if="ifShow">
+              <div
+                  cat-status="ngiffedStatus"
+                  cat-class="a-class-name"
+              >
+                  Animation 2 content status: {{ngiffedStatus}}
+              </div>
             </div>
         </div>
         <button type="button" name="button" ng-click="triggerUndo = !triggerUndo">
@@ -89,7 +89,7 @@
         </button>
         <ul class="values">
             <li>Status: {{statusUndo}}</li>
-            <li>Animation 2 status: {{x.ngiffedStatus}}</li>
+            <li>Animation 2 </li>
             <li>Active: {{triggerUndo}}</li>
         </ul>
     </section>

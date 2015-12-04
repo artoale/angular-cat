@@ -3,6 +3,7 @@ const mod = angular.module('cat.animations.base-animation', []);
 mod.factory('catBaseAnimation', ['$q', '$parse', ($q, $parse) => {
     return (config) => {
         let statusScopeVar,
+            setupDeferred = $q.defer(),
             playDeferred = $q.defer(),
             status = '',
             isDisabled = false,
@@ -18,8 +19,19 @@ mod.factory('catBaseAnimation', ['$q', '$parse', ($q, $parse) => {
             clearing = statusSetter('CLEARING'),
             ready = statusSetter('READY'),
             finished = statusSetter('FINISHED'),
+            waitForSetup = (fn) => {
+                return (...args) => setupDeferred.promise.then(fn.bind(null, ...args));
+            },
+            seek = (progress) => {
+                if (progress === 'end') {
+                    finished();
+                } else {
+                    ready();
+                }
+                return config.onSeek(progress);
+            },
             play = () => {
-                if (status === 'READY') {
+                if (status === 'READY' && !isDisabled) {
                     playDeferred = $q.defer();
                     running();
 
@@ -28,6 +40,8 @@ mod.factory('catBaseAnimation', ['$q', '$parse', ($q, $parse) => {
                     $q.when(config.onPlay())
                         .then(playDeferred.resolve, playDeferred.reject);
 
+                } else if (isDisabled) {
+                    seek('end');
                 }
                 return playDeferred.promise;
             },
@@ -38,35 +52,36 @@ mod.factory('catBaseAnimation', ['$q', '$parse', ($q, $parse) => {
                 clearing();
 
                 return $q.when(config.onClear())
-                .then(ready);
+                    .then(ready);
             },
             setDisabled = (newIsDisabled) => {
                 let disableP;
                 isDisabled = newIsDisabled;
                 if (status === 'READY') {
                     disableP = $q.when(config.disable());
-                    disableP = newIsDisabled ? disableP.then(finished) : disableP;
                 } else {
                     disableP = $q.when();
                 }
                 return disableP;
             },
             setUp = () => {
-                return $q.when(config.onSetUp()).then(ready);
+                $q.when(config.onSetUp()).then(ready).then(setupDeferred.resolve, setupDeferred.reject);
+                return setupDeferred.promise;
             };
 
         if (config.$attrs && config.$attrs.catStatus) {
             statusScopeVar = config.$attrs.catStatus;
         }
 
-        ['onPlay', 'onSetUp', 'onClear', 'disable'].forEach((fun) => {
+        ['onPlay', 'onSetUp', 'onClear', 'disable', 'onSeek'].forEach((fun) => {
             config[fun] = typeof config[fun] === 'function' ? config[fun] : angular.noop;
         });
 
         return {
-            play,
-            clear,
-            setDisabled,
+            play: waitForSetup(play),
+            clear: waitForSetup(clear),
+            seek: waitForSetup(seek),
+            setDisabled: waitForSetup(setDisabled),
             setUp,
             get status() {
                 return status;

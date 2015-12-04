@@ -33,6 +33,7 @@ mod.directive(directiveName, ['$parse', 'catAnimationLink', 'catBaseAnimation', 
                             animation.controller.setDisabled(isDisabled);
                         });
                     },
+                    onSeek: (progress) => animations.forEach((animation) => animation.controller.seek(progress)),
                     $scope: $scope,
                     $attrs: $attrs
                 }),
@@ -57,11 +58,6 @@ mod.directive(directiveName, ['$parse', 'catAnimationLink', 'catBaseAnimation', 
                 },
                 getAllAnimations = () => {
                     return animationsMap;
-                },
-                seek = (progress) => {
-                    animations.forEach((animation) => {
-                        animation.controller.seek(progress);
-                    });
                 };
 
             //APIs used by linking function
@@ -71,7 +67,7 @@ mod.directive(directiveName, ['$parse', 'catAnimationLink', 'catBaseAnimation', 
             this.play = baseAnimation.play;
             this.clear = baseAnimation.clear;
             this.setDisabled = baseAnimation.setDisabled;
-            this.seek = seek;
+            this.seek = baseAnimation.seek;
             this.register = register;
             this.getAnimation = getAnimation;
             this.getAllAnimations = getAllAnimations;

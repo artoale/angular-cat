@@ -18,14 +18,17 @@ mod.directive(directiveName, ['$animate', '$parse', '$timeout', 'catAnimationLin
                 } else if (progress === 'start') {
                     $element.addClass(classNameStart);
                 }
-                $timeout(() => $element.css({
+                // Force relayout
+                $element[0].offsetHeight; //jshint ignore:line
+                $element.css({
                     transition: ''
-                }), 0, false); // skip $apply
+                });
             };
 
             let baseAnimation = catBaseAnimation({
                 $scope: $scope,
                 $attrs: $attrs,
+                onSeek: seek,
                 onPlay: () => $animate.removeClass(
                     $element,
                     classNameStart
@@ -52,7 +55,7 @@ mod.directive(directiveName, ['$animate', '$parse', '$timeout', 'catAnimationLin
             this.setDisabled = baseAnimation.setDisabled;
             this.play = baseAnimation.play;
             this.clear = baseAnimation.clear;
-            this.seek = seek;
+            this.seek = baseAnimation.seek;
 
         }],
         link: (...args) => catAnimationLink(...args)

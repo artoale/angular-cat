@@ -214,7 +214,19 @@ describe('cat-timeline directive', () => {
                 mockAnimation.setDisabled.should.have.been.calledWith(true);
             });
 
-            it('should seek to end if disabled', () => {
+            it('should seek to end if not ready', () => {
+                let controller = compile(),
+                    mockAnimation = {
+                        setDisabled: sinon.spy(),
+                        seek: sinon.spy()
+                    };
+                scope.$apply();
+
+                controller.register('a-name', mockAnimation);
+                mockAnimation.seek.should.not.have.been.called;
+            });
+
+            it('should seek to end if ready', () => {
                 let controller = compile(),
                     mockAnimation = {
                         setDisabled: sinon.spy(),
@@ -222,8 +234,10 @@ describe('cat-timeline directive', () => {
                     };
                 scope.$apply();
                 // Disable forces the status to FINISHED
-                controller.setDisabled(true);
+                controller.play();
+                console.log(scope.status);
                 scope.$apply();
+                console.log(scope.status);
                 controller.register('a-name', mockAnimation);
                 mockAnimation.seek.should.have.been.calledWith('end');
             });
