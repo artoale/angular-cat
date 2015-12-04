@@ -36,7 +36,7 @@ mod.directive(directiveName, ['$parse', 'catDelayS', 'catAnimationLink', ($parse
                     clearDeferred.resolve();
 
                     if (status === 'RUNNING') {
-                        resolve();
+                        deferred.reject();
                     }
                     setUp();
 

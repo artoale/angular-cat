@@ -21,6 +21,7 @@ describe('cat-class directive', () => {
         },
         sandbox,
         timeout;
+    beforeEach(angular.mock.module('cat.animations.base-animation'));
     beforeEach(angular.mock.module('cat.animations.animationLink'));
     beforeEach(angular.mock.module('cat.animations.class'));
     beforeEach(angular.mock.module('ngAnimateMock'));
@@ -29,7 +30,7 @@ describe('cat-class directive', () => {
         scope = $rootScope.$new();
         sandbox = sinon.sandbox.create();
         animate = $animate;
-        scope.visible = true;
+        scope.visible = false;
         compile = () => {
             let parentElement = angular.element(template);
             parentElement.data('$catTimelineController', timelineController);
@@ -56,6 +57,7 @@ describe('cat-class directive', () => {
 
     it('should set the status to READY if variable is binded', () => {
         compile();
+        scope.$apply();
         scope.status.should.equal('READY');
     });
 
@@ -114,6 +116,7 @@ describe('cat-class directive', () => {
 
         beforeEach(() => {
             compile();
+            scope.$apply();
             controller = element.controller('catClass');
         });
 
@@ -188,6 +191,8 @@ describe('cat-class directive', () => {
                 scope.status.should.equal('FINISHED');
 
                 controller.clear();
+                scope.status.should.equal('CLEARING');
+                scope.$apply();
                 scope.status.should.equal('READY');
             });
 
@@ -197,8 +202,10 @@ describe('cat-class directive', () => {
 
                 scope.status.should.equal('RUNNING');
 
-                controller.clear();
                 animate.flush();
+                controller.clear();
+                scope.status.should.equal('CLEARING');
+                scope.$apply();
                 scope.status.should.equal('READY');
             });
 
@@ -216,9 +223,9 @@ describe('cat-class directive', () => {
                 spy.should.have.been.calledOnce;
             });
 
-            it('should resolve the "play" promise if still running', () => {
+            it('should reject the "play" promise if still running', () => {
                 let spy = sandbox.spy();
-                controller.play().then(spy);
+                controller.play().catch(spy);
 
                 spy.should.not.have.been.called;
 

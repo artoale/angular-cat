@@ -411,7 +411,7 @@ describe('cat-timeline directive', () => {
             }));
 
 
-            it('should resolve the play promise',  angular.mock.inject(($q) => {
+            it('should reject the play promise',  angular.mock.inject(($q) => {
                 let controller = compile(),
                     deferred1 = $q.defer(),
                     deferred2 = $q.defer(),
@@ -427,7 +427,7 @@ describe('cat-timeline directive', () => {
                 controller.register('a-name', mockAnimation1);
 
                 playPromise = controller.play();
-                playPromise.then(promiseSpy);
+                playPromise.catch(promiseSpy);
 
                 scope.$apply();
 

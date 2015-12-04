@@ -15,9 +15,9 @@ mod.directive(directiveName, ['$parse', 'catAnimationLink', 'catBaseAnimation', 
                         });
 
                     return ordered.reduce(
-                        (prev, curr) => prev.then(
-                            //Prevent animation to run if cleared
-                            () =>  baseAnimation.status === 'RUNNING' ? curr.controller.play() : prev
+                        (prev, curr) => prev.then(curr.controller.play
+
+                            // () =>  baseAnimation.status === 'RUNNING' ? curr.controller.play() : prev
                         ),
                         promise
                     );

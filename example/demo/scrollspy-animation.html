@@ -38,7 +38,7 @@
             height: 15px;
             margin-bottom: 30px;
             transform-origin: left center;
-            transition: transform 1s ease-in-out;
+            transition: transform 2s ease-in-out;
             width: 100%;
         }
 
@@ -54,7 +54,7 @@
             margin-bottom: 30px;
             transform-origin: top center;
             transform: scale3d(1, 1, 1);
-            transition: transform 1s ease-in;
+            transition: transform 4s ease-in;
         }
 
         .animation-2--start {
@@ -180,16 +180,20 @@
         >
             <div
                 cat-class="animation-1"
+                cat-status="animationStatusOne"
                 class="animation-1"
             >
             </div>
             <div cat-delay="500"></div>
             <div
                 cat-class="animation-2"
+                cat-status="animationStatusTwo"
                 class="animation-2"
             >
             </div>
         </div>
+        one: {{animationStatusOne}} <br>
+        two: {{animationStatusTwo}}
     </section>
     <section class="with-border">
         <h1>Usage:</h1>

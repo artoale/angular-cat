@@ -22,15 +22,18 @@ mod.factory('catBaseAnimation', ['$q', '$parse', ($q, $parse) => {
                 if (status === 'READY') {
                     playDeferred = $q.defer();
                     running();
+
+                    playDeferred.promise.then(finished, ready);
+
                     $q.when(config.onPlay())
-                    .then(playDeferred.resolve)
-                    .then(finished);
+                        .then(playDeferred.resolve, playDeferred.reject);
+
                 }
                 return playDeferred.promise;
             },
             clear = () => {
                 if (status === 'RUNNING') {
-                    playDeferred.resolve(); // Maybe reject?
+                    playDeferred.reject(); // Maybe reject?
                 }
                 clearing();
 
