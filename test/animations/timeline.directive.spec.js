@@ -20,6 +20,7 @@ describe('cat-timeline directive', () => {
         },
         timeout;
 
+    beforeEach(angular.mock.module('cat.animations.base-animation'));
     beforeEach(angular.mock.module('cat.animations.animationLink'));
     beforeEach(angular.mock.module('cat.animations.timeline'));
     beforeEach(angular.mock.module('ngAnimateMock'));
@@ -41,7 +42,7 @@ describe('cat-timeline directive', () => {
 
     it('should set the status to READY', () => {
         compile();
-        console.log(scope.status);
+        scope.$apply();
         scope.status.should.equal('READY');
     });
 
@@ -79,6 +80,7 @@ describe('cat-timeline directive', () => {
                 };
 
             controller.register('a-name', mockAnimation);
+            scope.$apply();
             scope.status.should.equal('READY');
 
             scope.visible = true;
@@ -218,8 +220,10 @@ describe('cat-timeline directive', () => {
                         setDisabled: sinon.spy(),
                         seek: sinon.spy()
                     };
+                scope.$apply();
                 // Disable forces the status to FINISHED
                 controller.setDisabled(true);
+                scope.$apply();
                 controller.register('a-name', mockAnimation);
                 mockAnimation.seek.should.have.been.calledWith('end');
             });
@@ -238,7 +242,7 @@ describe('cat-timeline directive', () => {
                         play: () => deferred2.promise,
                         setDisabled: sinon.spy()
                     };
-
+                scope.$apply();
                 sinon.spy(mockAnimation1, 'play');
                 sinon.spy(mockAnimation2, 'play');
                 mockAnimation1.play.should.not.have.been.called;
@@ -265,7 +269,7 @@ describe('cat-timeline directive', () => {
                         play: () => deferred2.promise,
                         setDisabled: sinon.spy()
                     };
-
+                scope.$apply();
                 sinon.spy(mockAnimation1, 'play');
                 sinon.spy(mockAnimation2, 'play');
                 mockAnimation1.play.should.not.have.been.called;
@@ -296,6 +300,7 @@ describe('cat-timeline directive', () => {
                     playPromise,
                     spy = sinon.spy();
 
+                scope.$apply();
                 controller.register('a-name', mockAnimation1);
                 controller.register('a-name-2', mockAnimation2);
                 playPromise = controller.play();
@@ -327,6 +332,7 @@ describe('cat-timeline directive', () => {
                         setDisabled: sinon.spy()
                     };
 
+                scope.$apply();
                 controller.register('a-name', mockAnimation1);
                 controller.register('a-name-2', mockAnimation2);
 
@@ -345,7 +351,6 @@ describe('cat-timeline directive', () => {
                 scope.$apply();
                 scope.status.should.equal('FINISHED');
 
-
             }));
         });
         describe('#clear', () => {
@@ -361,7 +366,7 @@ describe('cat-timeline directive', () => {
                         clear: () => deferred2.promise,
                         setDisabled: sinon.spy()
                     };
-
+                scope.$apply();
                 sinon.spy(mockAnimation1, 'clear');
                 sinon.spy(mockAnimation2, 'clear');
                 mockAnimation1.clear.should.not.have.been.called;
@@ -387,7 +392,7 @@ describe('cat-timeline directive', () => {
                         setDisabled: sinon.spy(),
                         seek: sinon.spy()
                     };
-
+                scope.$apply();
                 sinon.spy(mockAnimation1, 'clear');
                 sinon.spy(mockAnimation2, 'clear');
 
@@ -418,7 +423,7 @@ describe('cat-timeline directive', () => {
                     playPromise,
                     promiseSpy = sinon.spy();
 
-
+                scope.$apply();
                 controller.register('a-name', mockAnimation1);
 
                 playPromise = controller.play();
@@ -435,6 +440,37 @@ describe('cat-timeline directive', () => {
                 deferred1.resolve();
                 promiseSpy.should.have.been.called;
 
+            }));
+
+            it('should update status correctly', angular.mock.inject(($q) => {
+                let controller = compile(),
+                    deferred1 = $q.defer(),
+                    deferred2 = $q.defer(),
+                    mockAnimation1 = {
+                        clear: () => deferred1.promise,
+                        setDisabled: sinon.spy()
+                    },
+                    mockAnimation2 = {
+                        clear: () => deferred2.promise,
+                        setDisabled: sinon.spy()
+                    };
+
+                scope.$apply();
+                controller.register('a-name', mockAnimation1);
+                controller.register('a-name-2', mockAnimation2);
+
+                scope.status.should.equal('READY');
+                controller.clear();
+
+                scope.status.should.equal('CLEARING');
+
+                deferred1.resolve();
+                scope.$apply();
+                scope.status.should.equal('CLEARING');
+
+                deferred2.resolve();
+                scope.$apply();
+                scope.status.should.equal('READY');
             }));
 
         });
@@ -463,6 +499,7 @@ describe('cat-timeline directive', () => {
                     promiseSpy = sinon.spy(),
                     promise;
 
+                scope.$apply();
                 controller.setCustomAnimation(customAnimation);
                 customAnimation.should.not.have.been.called;
                 promise = controller.play().then(promiseSpy);

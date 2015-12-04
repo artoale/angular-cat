@@ -1,7 +1,7 @@
 const mod = angular.module('cat.animations.class', []),
     directiveName = 'catClass';
 
-mod.directive(directiveName, ['$animate', '$parse', 'catAnimationLink', ($animate, $parse, catAnimationLink) => {
+mod.directive(directiveName, ['$animate', '$parse', '$timeout', 'catAnimationLink', ($animate, $parse, $timeout, catAnimationLink) => {
     return {
         restrict: 'A',
         require: [directiveName, '^?catTimeline'],
@@ -34,15 +34,8 @@ mod.directive(directiveName, ['$animate', '$parse', 'catAnimationLink', ($animat
                     if (!$element.hasClass(className)) {
                         $element.addClass(className);
                     }
-                    $element.css({
-                        transition: 'none'
-                    });
 
-                    $element[0].classList.add(classNameStart);
-
-                    setTimeout(() => $element.css({
-                        transition: ''
-                    }), 0);
+                    seek('start');
                 },
 
                 clear = () => {
@@ -89,9 +82,9 @@ mod.directive(directiveName, ['$animate', '$parse', 'catAnimationLink', ($animat
                     } else if (progress === 'start') {
                         $element.addClass(classNameStart);
                     }
-                    $element.css({
+                    $timeout(() => $element.css({
                         transition: ''
-                    });
+                    }), 0, false); // skip $apply
                 },
                 setDisabled = (isDisabled) => {
                     if (status === 'READY') {
