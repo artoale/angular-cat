@@ -25,6 +25,7 @@
   "devDependencies": {
     "babelify": "^6.3.0",
     "browserify": "^11.0.1",
+    "chai": "^3.4.1",
     "del": "^1.2.0",
     "exorcist": "^0.4.0",
     "gulp": "^3.9.0",
@@ -39,7 +40,10 @@
     "karma-mocha": "^0.2.0",
     "karma-mocha-reporter": "^1.0.2",
     "karma-notify-reporter": "^0.1.1",
+    "mocha": "^2.3.4",
     "run-sequence": "^1.1.5",
+    "sinon": "^1.17.2",
+    "sinon-chai": "^2.8.0",
     "vinyl-source-stream": "^1.1.0"
   }
 }
