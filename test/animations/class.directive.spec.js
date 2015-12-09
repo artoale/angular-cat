@@ -26,6 +26,7 @@ describe('cat-class directive', () => {
         },
         sandbox,
         timeout;
+
     beforeEach(function() {
         sandbox = sinon.sandbox.create();
     });
@@ -35,6 +36,7 @@ describe('cat-class directive', () => {
                 return sandbox.spy($delegate);
         });
     }));
+
     beforeEach(angular.mock.module('cat.animations.animationLink', function($provide) {
         $provide.decorator('catAnimationLink', function($delegate) {
                 return sandbox.spy($delegate);
@@ -126,12 +128,14 @@ describe('cat-class directive', () => {
 
         it('Should pass catBaseAnimation a config with defined onPlay, onSetUp, onClear, disable and attrs', () => {
             var config;
+            var apiFunctions = ['onSeek', 'onPlay', 'onSetUp', 'disable'];
             config = catBaseAnimation.args[0][0];
             config.$attrs.should.be.defined;
-            config.onSeek.should.be.function;
-            config.onPlay.should.be.function;
-            config.onSetUp.should.be.function;
-            config.disable.should.be.function;
+            apiFunctions.forEach(function(api) {
+                config[api].should.be.function;
+                config[api].should.not.be.equal(angular.noop);
+
+            });
         });
 
         describe('#setUp', () => {
@@ -173,12 +177,6 @@ describe('cat-class directive', () => {
                 controller.seek('end');
                 $rootScope.$apply();
                 element.hasClass('a-class-name--start').should.be.false;
-            });
-        });
-
-        describe('#setDisabled', () => {
-            it('should be defined', () => {
-                controller.disable.should.be.a('function');
             });
         });
     });

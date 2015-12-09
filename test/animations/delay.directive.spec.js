@@ -1,4 +1,4 @@
-describe.only('cat-delay directive', () => {
+describe('cat-delay directive', () => {
     let element,
         scope = {},
         catAnimationLink,
@@ -110,12 +110,14 @@ describe.only('cat-delay directive', () => {
 
         it('Should pass catBaseAnimation a config with defined onPlay, onSetUp, onClear, disable and attrs', () => {
             var config;
+            var apiFunctions = ['onSetUp'];
             config = catBaseAnimation.args[0][0];
             config.$attrs.should.be.defined;
-            config.onSeek.should.be.function;
-            config.onPlay.should.be.function;
-            config.onSetUp.should.be.function;
-            config.disable.should.be.function;
+            apiFunctions.forEach(function(api) {
+                config[api].should.be.function;
+                config[api].should.not.be.equal(angular.noop);
+
+            });
         });
 
         describe('#play', () => {
