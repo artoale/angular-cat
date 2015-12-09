@@ -26,7 +26,7 @@ mod.factory('catAnimationLink', () => {
                 if (newVal) {
                     selfController.play();
                 } else if (attrs.catUndo) {
-                    selfController.clear();
+                    selfController.seek('start');
                 }
             });
         }

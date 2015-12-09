@@ -16,19 +16,19 @@ mod.factory('catBaseAnimation', ['$q', '$parse', ($q, $parse) => {
                 status = newStatus;
             },
             running = statusSetter('RUNNING'),
-            clearing = statusSetter('CLEARING'),
+            seeking = statusSetter('SEEKING'),
             ready = statusSetter('READY'),
             finished = statusSetter('FINISHED'),
             waitForSetup = (fn) => {
                 return (...args) => setupDeferred.promise.then(fn.bind(null, ...args));
             },
             seek = (progress) => {
-                if (progress === 'end') {
-                    finished();
-                } else {
-                    ready();
+                let onSeeked = progress === 'end' ? finished : ready;
+                if (status === 'RUNNING') {
+                    playDeferred.reject(); // Maybe reject?
                 }
-                return config.onSeek(progress);
+                seeking();
+                return $q.when(config.onSeek(progress)).then(onSeeked);
             },
             play = () => {
                 if (status === 'READY' && !isDisabled) {
@@ -44,15 +44,6 @@ mod.factory('catBaseAnimation', ['$q', '$parse', ($q, $parse) => {
                     seek('end');
                 }
                 return playDeferred.promise;
-            },
-            clear = () => {
-                if (status === 'RUNNING') {
-                    playDeferred.reject(); // Maybe reject?
-                }
-                clearing();
-
-                return $q.when(config.onClear())
-                    .then(ready);
             },
             setDisabled = (newIsDisabled) => {
                 let disableP;
@@ -73,13 +64,12 @@ mod.factory('catBaseAnimation', ['$q', '$parse', ($q, $parse) => {
             statusScopeVar = config.$attrs.catStatus;
         }
 
-        ['onPlay', 'onSetUp', 'onClear', 'disable', 'onSeek'].forEach((fun) => {
+        ['onPlay', 'onSetUp', 'disable', 'onSeek'].forEach((fun) => {
             config[fun] = typeof config[fun] === 'function' ? config[fun] : angular.noop;
         });
 
         return {
             play: waitForSetup(play),
-            clear: waitForSetup(clear),
             seek: waitForSetup(seek),
             setDisabled: waitForSetup(setDisabled),
             setUp,

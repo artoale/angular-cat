@@ -24,10 +24,6 @@ mod.directive(directiveName, ['$parse', 'catAnimationLink', 'catBaseAnimation', 
                     onPlay: () => {
                         return runAnimation($q.when());
                     },
-
-                    onClear: () => $q.all(
-                        animations.map(animation => animation.controller.clear())
-                    ),
                     disable: (isDisabled) => {
                         animations.forEach((animation) => {
                             animation.controller.setDisabled(isDisabled);
@@ -65,7 +61,6 @@ mod.directive(directiveName, ['$parse', 'catAnimationLink', 'catBaseAnimation', 
 
             //Public APIs
             this.play = baseAnimation.play;
-            this.clear = baseAnimation.clear;
             this.setDisabled = baseAnimation.setDisabled;
             this.seek = baseAnimation.seek;
             this.register = register;

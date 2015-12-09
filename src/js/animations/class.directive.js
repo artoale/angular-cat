@@ -40,22 +40,19 @@ mod.directive(directiveName, ['$animate', '$parse', '$timeout', 'catAnimationLin
 
                     seek('start');
                 },
-                onClear: () => {
-                    seek('start');
-                },
                 disable: (isDisabled) => {
                     let seekTo = isDisabled ? 'end' : 'start';
                     seek(seekTo);
-                }
+                 }
             });
 
+            //APIs used by linking function
+            this.setUp = baseAnimation.setUp;
 
             //Public APIs
-            this.setUp = baseAnimation.setUp;
-            this.setDisabled = baseAnimation.setDisabled;
             this.play = baseAnimation.play;
-            this.clear = baseAnimation.clear;
             this.seek = baseAnimation.seek;
+            this.setDisabled = baseAnimation.setDisabled;
 
         }],
         link: (...args) => catAnimationLink(...args)

@@ -20,7 +20,6 @@ mod.directive(directiveName, ['$parse', 'catDelayS', 'catAnimationLink', 'catBas
             this.seek = baseAnimation.seek;
             this.play = baseAnimation.play;
             this.setDisabled = baseAnimation.setDisabled;
-            this.clear = baseAnimation.clear;
 
         }],
         link: (...args) => catAnimationLink(...args)
