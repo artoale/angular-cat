@@ -35,7 +35,7 @@ mod.factory('catBaseAnimation', ['$q', '$parse', ($q, $parse) => {
                     playDeferred = $q.defer();
                     running();
 
-                    playDeferred.promise.then(finished, ready);
+                    playDeferred.promise.then(finished);
 
                     $q.when(config.onPlay())
                         .then(playDeferred.resolve, playDeferred.reject);
@@ -46,14 +46,16 @@ mod.factory('catBaseAnimation', ['$q', '$parse', ($q, $parse) => {
                 return playDeferred.promise;
             },
             setDisabled = (newIsDisabled) => {
-                let disableP;
                 isDisabled = newIsDisabled;
-                if (status === 'READY') {
-                    disableP = $q.when(config.disable());
-                } else {
-                    disableP = $q.when();
+
+                if(newIsDisabled) {
+                    if (status === 'READY') {
+                        seek('start');
+                    } else {
+                        seek('end');
+                    }
                 }
-                return disableP;
+                return $q.when(config.disable);
             },
             setUp = () => {
                 $q.when(config.onSetUp()).then(ready).then(setupDeferred.resolve, setupDeferred.reject);

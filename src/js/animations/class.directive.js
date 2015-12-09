@@ -39,11 +39,7 @@ mod.directive(directiveName, ['$animate', '$parse', '$timeout', 'catAnimationLin
                     }
 
                     seek('start');
-                },
-                disable: (isDisabled) => {
-                    let seekTo = isDisabled ? 'end' : 'start';
-                    seek(seekTo);
-                 }
+                }
             });
 
             //APIs used by linking function
