@@ -16,7 +16,7 @@ mod.directive('paScrollContainer', ['$window', '$timeout', 'paDebounce', 'window
             };
 
             this.getScrollContainer = () => {
-                return $element[0];
+                return $element[0].tagName === 'BODY' ? windowScrollGetter()[0] : $element[0];
             };
         }],
         link (scope, elem, attrs, selfCtrl) {
