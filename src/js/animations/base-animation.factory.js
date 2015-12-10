@@ -48,14 +48,14 @@ mod.factory('catBaseAnimation', ['$q', '$parse', ($q, $parse) => {
             setDisabled = (newIsDisabled) => {
                 isDisabled = newIsDisabled;
 
-                if(newIsDisabled) {
+                if (newIsDisabled) {
                     if (status === 'READY') {
                         seek('start');
                     } else {
                         seek('end');
                     }
                 }
-                return $q.when(config.disable);
+                return $q.when(config.disable(newIsDisabled));
             },
             setUp = () => {
                 $q.when(config.onSetUp()).then(ready).then(setupDeferred.resolve, setupDeferred.reject);

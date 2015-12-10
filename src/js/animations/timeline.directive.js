@@ -56,17 +56,20 @@ mod.directive(directiveName, ['$parse', 'catAnimationLink', 'catBaseAnimation', 
                     return animationsMap;
                 };
 
-            //APIs used by linking function
-            this.setUp = baseAnimation.setUp;
 
             //Public APIs
-            this.play = baseAnimation.play;
-            this.setDisabled = baseAnimation.setDisabled;
-            this.seek = baseAnimation.seek;
-            this.register = register;
-            this.getAnimation = getAnimation;
+
+            //Router specific
             this.getAllAnimations = getAllAnimations;
+            this.getAnimation = getAnimation;
+            this.register = register;
             this.setCustomAnimation = setCustomAnimation;
+
+            //Animation specific
+            this.play = baseAnimation.play;
+            this.seek = baseAnimation.seek;
+            this.setDisabled = baseAnimation.setDisabled;
+            this.setUp = baseAnimation.setUp;
 
         }],
         link: (...args) => catAnimationLink(...args)
