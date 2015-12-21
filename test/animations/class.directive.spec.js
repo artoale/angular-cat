@@ -128,7 +128,7 @@ describe('cat-class directive', () => {
 
         it('Should pass catBaseAnimation a config with defined onPlay, onSetUp, onClear, disable and attrs', () => {
             var config;
-            var apiFunctions = ['onSeek', 'onPlay', 'onSetUp', 'disable'];
+            var apiFunctions = ['onSeek', 'onPlay', 'onSetUp'];
             config = catBaseAnimation.args[0][0];
             config.$attrs.should.be.defined;
             apiFunctions.forEach(function(api) {

@@ -108,9 +108,9 @@ describe('cat-delay directive', () => {
             config.$scope.should.equal(scope);
         });
 
-        it('Should pass catBaseAnimation a config with defined onPlay, onSetUp, onClear, disable and attrs', () => {
+        it('Should pass catBaseAnimation a config with defined onPlay and attrs', () => {
             var config;
-            var apiFunctions = ['onSetUp'];
+            var apiFunctions = ['onPlay'];
             config = catBaseAnimation.args[0][0];
             config.$attrs.should.be.defined;
             apiFunctions.forEach(function(api) {
