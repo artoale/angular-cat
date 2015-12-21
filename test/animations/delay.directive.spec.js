@@ -29,7 +29,7 @@ describe('cat-delay directive', () => {
     });
 
 
-    beforeEach(angular.mock.module('cat.animations.base-animation', function($provide) {
+    beforeEach(angular.mock.module('cat.animations.baseAnimation', function($provide) {
         $provide.decorator('catBaseAnimation', function($delegate) {
                 return sandbox.spy($delegate);
         });

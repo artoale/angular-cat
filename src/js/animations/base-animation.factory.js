@@ -1,4 +1,4 @@
-const mod = angular.module('cat.animations.base-animation', []);
+const mod = angular.module('cat.animations.baseAnimation', []);
 
 mod.factory('catBaseAnimation', ['$q', '$parse', ($q, $parse) => {
     return (config) => {
