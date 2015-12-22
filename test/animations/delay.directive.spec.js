@@ -90,7 +90,7 @@ describe('cat-delay directive', () => {
         });
     });
 
-    describe('controller', () => {
+    describe('#Controller', () => {
         let controller;
 
         beforeEach(() => {
