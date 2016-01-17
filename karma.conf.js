@@ -26,6 +26,12 @@ module.exports = function(config) {
                 flags: ['--no-sandbox']
             }
         },
+        coverageReporter: {
+            reporters: [
+                { type: 'html', subdir: 'chrome'},
+                { type: 'lcov', subdir: 'chrome-lcov' },
+            ]
+        },
         browserify: {
             debug: true,
             transform: [istanbul({
