@@ -4,7 +4,8 @@
   "description": "CSS Animation Timeline. Set of angularjs directives to simplify development of animations on static websites",
   "main": "dist/cat.js",
   "scripts": {
-    "test": "node_modules/karma/bin/karma start karma.conf.js --single-run"
+    "test": "node_modules/karma/bin/karma start karma.conf.js --single-run",
+    "codecov": "cat coverage/*/lcov.info | codecov"
   },
   "repository": {
     "type": "git",
