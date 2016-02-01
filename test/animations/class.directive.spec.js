@@ -1,6 +1,12 @@
 describe('cat-class directive', () => {
     let element,
         scope = {},
+        $compile,
+        $rootScope,
+        $timeout,
+        catAnimationLink,
+        catBaseAnimation,
+        $animate,
         template = `
             <div>
                 <div
@@ -13,7 +19,6 @@ describe('cat-class directive', () => {
             </div>
             `,
         compile,
-        animate,
         timelineController = {
             register () {
                 return;
@@ -21,15 +26,36 @@ describe('cat-class directive', () => {
         },
         sandbox,
         timeout;
-    beforeEach(angular.mock.module('cat.animations.animationLink'));
+
+    beforeEach(function() {
+        sandbox = sinon.sandbox.create();
+    });
+
+    beforeEach(angular.mock.module('cat.animations.baseAnimation', function($provide) {
+        $provide.decorator('catBaseAnimation', function($delegate) {
+                return sandbox.spy($delegate);
+        });
+    }));
+
+    beforeEach(angular.mock.module('cat.animations.animationLink', function($provide) {
+        $provide.decorator('catAnimationLink', function($delegate) {
+                return sandbox.spy($delegate);
+        });
+    }));
+
     beforeEach(angular.mock.module('cat.animations.class'));
     beforeEach(angular.mock.module('ngAnimateMock'));
 
-    beforeEach(angular.mock.inject(($compile, $rootScope, $timeout, $animate) => {
-        scope = $rootScope.$new();
-        sandbox = sinon.sandbox.create();
-        animate = $animate;
-        scope.visible = true;
+    beforeEach(angular.mock.inject(
+            (_$compile_, _$rootScope_, _$timeout_, _$animate_, _catAnimationLink_, _catBaseAnimation_) => {
+        scope = _$rootScope_.$new();
+        $compile = _$compile_;
+        catAnimationLink =  _catAnimationLink_;
+        catBaseAnimation =  _catBaseAnimation_;
+        $rootScope = _$rootScope_;
+        $timeout = _$timeout_;
+        $animate = _$animate_;
+        scope.visible = false;
         compile = () => {
             let parentElement = angular.element(template);
             parentElement.data('$catTimelineController', timelineController);
@@ -44,21 +70,6 @@ describe('cat-class directive', () => {
         sandbox.restore();
     });
 
-    it('should add a class with --start suffix', () => {
-        compile();
-        element.hasClass('a-class-name--start').should.be.true;
-    });
-
-    it('should add the base class if not already specified', () => {
-        compile();
-        element.hasClass('a-class-name').should.be.true;
-    });
-
-    it('should set the status to READY if variable is binded', () => {
-        compile();
-        scope.status.should.equal('READY');
-    });
-
     it('should register itself on the catTimeline parent controller', () => {
         sandbox.spy(timelineController, 'register');
         compile();
@@ -66,7 +77,7 @@ describe('cat-class directive', () => {
         timelineController.register.should.have.been.calledWith('animation-name', element.controller('catClass'));
     });
 
-    it('should register itself on the catTimeline parent controller regardless of the nesting level', angular.mock.inject(($compile, $rootScope) => {
+    it('should register itself on the catTimeline parent controller regardless of the nesting level', () => {
         sandbox.spy(timelineController, 'register');
         let template = `
             <div>
@@ -87,34 +98,54 @@ describe('cat-class directive', () => {
         element = parentElement.children().children();
         timelineController.register.should.have.been.calledOnce;
         timelineController.register.should.have.been.calledWith('animation-name', element.controller('catClass'));
-    }));
+    });
 
-    describe('active watch', () => {
-        it('should remove the prefixed class', () => {
+    describe('#Linking Function', () => {
+        it('Should call catAnimationLink function', () => {
             compile();
-            scope.visible = true;
-            scope.$apply();
-            element.hasClass('a-class-name--start').should.be.false;
-            animate.flush();
-        });
-
-        it('should set the status to "RUNNING", then to "FINISHED"', () => {
-            compile();
-            scope.visible = true;
-            scope.$apply();
-            scope.status.should.equal('RUNNING');
-
-            animate.flush();
-            scope.status.should.equal('FINISHED');
+            catAnimationLink.should.have.been.calledOnce;
         });
     });
 
-    describe('controller', () => {
+    describe('#Controller', () => {
         let controller;
 
         beforeEach(() => {
             compile();
+            scope.$apply();
             controller = element.controller('catClass');
+        });
+
+        it('Should use catBaseAnimation', () => {
+            catBaseAnimation.should.have.been.calledOnce;
+        });
+
+        it('Should pass scope catBaseAnimation', () => {
+            var config;
+            config = catBaseAnimation.args[0][0];
+            config.$scope.should.equal(scope);
+        });
+
+        it('Should pass catBaseAnimation a config with defined onPlay, onSetUp, onClear, disable and attrs', () => {
+            var config;
+            var apiFunctions = ['onSeek', 'onPlay', 'onSetUp'];
+            config = catBaseAnimation.args[0][0];
+            config.$attrs.should.be.defined;
+            apiFunctions.forEach(function(api) {
+                config[api].should.be.function;
+                config[api].should.not.be.equal(angular.noop);
+
+            });
+        });
+
+        describe('#setUp', () => {
+            it('should be defined', () => {
+                controller.setUp.should.be.a('function');
+            });
+
+            it('Should call catAnimationLink function', () => {
+                element.hasClass('a-class-name--start').should.be.true;
+            });
         });
 
         describe('#play', () => {
@@ -122,113 +153,30 @@ describe('cat-class directive', () => {
                 controller.play.should.be.a('function');
             });
 
-            it('should remove the prefixed class', () => {
+            it('Should call catAnimationLink function', () => {
                 element.hasClass('a-class-name--start').should.be.true;
-
                 controller.play();
                 scope.$apply();
-
                 element.hasClass('a-class-name--start').should.be.false;
-            });
-
-            it('should update status correctly', () => {
-                scope.status.should.equal('READY');
-
-                controller.play();
-                scope.status.should.equal('RUNNING');
-
-                scope.$apply();
-                animate.flush();
-
-                scope.status.should.equal('FINISHED');
-
-                element.hasClass('a-class-name--start').should.be.false;
-            });
-
-            it('should return a promise', () => {
-                let retval = controller.play();
-                retval.then.should.be.a('function');
-            });
-
-            it('should resolve the promise when done', () => {
-                let retval = controller.play(),
-                    spy = sandbox.spy();
-
-                retval.then(spy);
-                spy.should.not.have.been.called;
-
-                scope.$apply();
-                spy.should.not.have.been.called;
-
-                animate.flush();
-                spy.should.have.been.calledOnce;
             });
         });
 
-        describe('#clear', () => {
+        describe('#seek', () => {
+            //TODO: we should probably test the transition none and the forced reflow as well.
             it('should be defined', () => {
-                controller.clear.should.be.a('function');
+                controller.seek.should.be.a('function');
             });
 
-            it('should add the prefixed class', () => {
-                controller.play();
-                scope.$apply();
-
-                element.hasClass('a-class-name--start').should.be.false;
-
-                controller.clear();
-                scope.$apply();
+            it('Should add start class if called with "start"', () => {
+                controller.seek('start');
+                $rootScope.$apply();
                 element.hasClass('a-class-name--start').should.be.true;
             });
 
-            it('should update status correctly when animation finished', () => {
-                controller.play();
-                scope.$apply();
-                animate.flush();
-                scope.status.should.equal('FINISHED');
-
-                controller.clear();
-                scope.status.should.equal('READY');
-            });
-
-            it('should update status correctly when animation running', () => {
-                controller.play();
-                scope.$apply();
-
-                scope.status.should.equal('RUNNING');
-
-                controller.clear();
-                animate.flush();
-                scope.status.should.equal('READY');
-            });
-
-            it('should return a promise', () => {
-                controller.clear().then.should.be.a('function');
-            });
-
-            it('should resolve the promise when done (immediately)', () => {
-                let spy = sandbox.spy();
-                controller.clear().then(spy);
-
-                spy.should.not.have.been.called;
-
-                scope.$apply();
-                spy.should.have.been.calledOnce;
-            });
-
-            it('should resolve the "play" promise if still running', () => {
-                let spy = sandbox.spy();
-                controller.play().then(spy);
-
-                spy.should.not.have.been.called;
-
-                scope.$apply();
-                spy.should.not.have.been.called;
-
-                controller.clear();
-
-                scope.$apply();
-                spy.should.have.been.calledOnce;
+            it('Should remove start class if called with "end"', () => {
+                controller.seek('end');
+                $rootScope.$apply();
+                element.hasClass('a-class-name--start').should.be.false;
             });
         });
     });

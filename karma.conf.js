@@ -1,7 +1,11 @@
 //jshint node:true
-module.exports = function (config) {
-    'use strict';
 
+var istanbul = require('browserify-istanbul');
+var isparta = require('isparta');
+
+
+module.exports = function(config) {
+    'use strict';
     config.set({
         files: [
             'bower_components/angular/angular.js',
@@ -15,16 +19,25 @@ module.exports = function (config) {
             'src/**/*.js': ['browserify'],
             'test/**/*.js': ['browserify']
         },
-        reporters: ['mocha', 'notify'],
+        reporters: ['mocha', 'notify', 'coverage'],
         customLaunchers: {
             ChromeTravis: {
                 base: 'Chrome',
                 flags: ['--no-sandbox']
             }
         },
+        coverageReporter: {
+            reporters: [
+                { type: 'html', subdir: 'chrome'},
+                { type: 'lcov', subdir: 'chrome-lcov' },
+            ]
+        },
         browserify: {
             debug: true,
-            transform: ['babelify']
+            transform: [istanbul({
+                instrumenter: require('isparta'),
+                ignore: ['test/**/*.js']
+            }), 'babelify']
         }
     });
 

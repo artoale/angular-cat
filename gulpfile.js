@@ -62,7 +62,7 @@ gulp.task('server', function () {
 });
 
 gulp.task('watch', function () {
-    gulp.watch([js], ['compilejs']);
+    gulp.watch([js], ['compilejs-dev']);
 });
 
 gulp.task('del:dist', function (done) {

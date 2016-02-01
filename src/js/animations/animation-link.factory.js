@@ -6,11 +6,12 @@ mod.factory('catAnimationLink', () => {
             timelineController = controllers[1],
             animationName = attrs.catAnimationName;
 
+        selfController.setUp();
+
         if (timelineController) {
             timelineController.register(animationName, selfController);
         }
 
-        selfController.setUp();
 
         if (angular.isDefined(attrs.catDisabled)) {
             scope.$watch(attrs.catDisabled, (newVal) => {
@@ -25,7 +26,7 @@ mod.factory('catAnimationLink', () => {
                 if (newVal) {
                     selfController.play();
                 } else if (attrs.catUndo) {
-                    selfController.clear();
+                    selfController.seek('start');
                 }
             });
         }

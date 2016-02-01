@@ -58,7 +58,7 @@
             <li>Active: {{trigger}}</li>
         </ul>
     </section>
-    <section>
+    <section ng-init="x = {}">
         <h1>Timeline + class + undo directive example</h1>
 
         <div
@@ -68,23 +68,28 @@
             cat-undo="1"
         >
             <div
-                class="a-class-name"
                 cat-class="a-class-name"
             >
                 Animation 1 content
             </div>
-            <div
-                class="a-class-name"
-                cat-class="a-class-name"
-            >
-                Animation 2 content
+            <div ng-if="ifShow">
+              <div
+                  cat-status="ngiffedStatus"
+                  cat-class="a-class-name"
+              >
+                  Animation 2 content status: {{ngiffedStatus}}
+              </div>
             </div>
         </div>
         <button type="button" name="button" ng-click="triggerUndo = !triggerUndo">
             Toggle animation "active" binding to {{!triggerUndo}}
         </button>
+        <button type="button" name="button" ng-click="ifShow = !ifShow">
+            Toggle second animation visibility (ng-if) binding to {{!ifShow}}
+        </button>
         <ul class="values">
             <li>Status: {{statusUndo}}</li>
+            <li>Animation 2 </li>
             <li>Active: {{triggerUndo}}</li>
         </ul>
     </section>
@@ -156,13 +161,14 @@
         </ul>
     </section>
     <section>
-        <h1>Timeline + is-disabled</h1>
+        <h1>Timeline + is-disabled + undo</h1>
 
         <div
             cat-timeline
             cat-status="statusIsDisabledDemo"
             cat-active="isDisabledDemo"
-            cat-disabled="true"
+            cat-disabled="isDisabled"
+            cat-undo="1"
         >
             <div
                 class="a-class-name"
@@ -171,7 +177,7 @@
             >
                 Animation 1 content
             </div>
-            <div
+            <div ng-if="showDisabled"
                 class="a-class-name"
                 cat-class="a-class-name"
                 cat-animation-name="second"
@@ -181,6 +187,12 @@
         </div>
         <button type="button" name="button" ng-click="isDisabledDemo = !isDisabledDemo">
             Toggle animation "active" binding to {{!isDisabledDemo}}
+        </button>
+        <button type="button" name="button" ng-click="isDisabled = !isDisabled">
+            Toggle animation "disabled" binding to {{!isDisabled}}
+        </button>
+        <button type="button" name="button" ng-click="showDisabled = !showDisabled">
+            Toggle second animation visibilirti binding to {{!showDisabled}}
         </button>
         <ul class="values">
             <li>Status: {{statusIsDisabledDemo}}</li>

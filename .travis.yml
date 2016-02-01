@@ -13,3 +13,6 @@ before_install:
     - 'npm install -g bower'
     - 'npm install'
     - 'bower install'
+
+after_success:
+  - npm run codecov
