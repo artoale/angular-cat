@@ -1,7 +1,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 var mod = angular.module('cat.animations.animationLink', []);
@@ -12,11 +12,11 @@ mod.factory('catAnimationLink', function () {
             timelineController = controllers[1],
             animationName = attrs.catAnimationName;
 
+        selfController.setUp();
+
         if (timelineController) {
             timelineController.register(animationName, selfController);
         }
-
-        selfController.setUp();
 
         if (angular.isDefined(attrs.catDisabled)) {
             scope.$watch(attrs.catDisabled, function (newVal) {
@@ -31,61 +31,60 @@ mod.factory('catAnimationLink', function () {
                 if (newVal) {
                     selfController.play();
                 } else if (attrs.catUndo) {
-                    selfController.clear();
+                    selfController.seek('start');
                 }
             });
         }
     };
 });
 
-exports['default'] = mod;
-module.exports = exports['default'];
+exports.default = mod;
 
 },{}],2:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+var _animationLink = require('./animation-link.factory');
 
-var _animationLinkFactory = require('./animation-link.factory');
+var _animationLink2 = _interopRequireDefault(_animationLink);
 
-var _animationLinkFactory2 = _interopRequireDefault(_animationLinkFactory);
+var _baseAnimation = require('./base-animation.factory');
 
-var _baseAnimationFactory = require('./base-animation.factory');
+var _baseAnimation2 = _interopRequireDefault(_baseAnimation);
 
-var _baseAnimationFactory2 = _interopRequireDefault(_baseAnimationFactory);
+var _class = require('./class.directive');
 
-var _classDirective = require('./class.directive');
+var _class2 = _interopRequireDefault(_class);
 
-var _classDirective2 = _interopRequireDefault(_classDirective);
+var _delay = require('./delay.directive');
 
-var _delayDirective = require('./delay.directive');
+var _delay2 = _interopRequireDefault(_delay);
 
-var _delayDirective2 = _interopRequireDefault(_delayDirective);
+var _timeline = require('./timeline.directive');
 
-var _timelineDirective = require('./timeline.directive');
+var _timeline2 = _interopRequireDefault(_timeline);
 
-var _timelineDirective2 = _interopRequireDefault(_timelineDirective);
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _module = angular.module('cat.animations', ['ngAnimate', _animationLinkFactory2['default'].name, _baseAnimationFactory2['default'].name, _classDirective2['default'].name, _delayDirective2['default'].name, _timelineDirective2['default'].name]);
+var _module = angular.module('cat.animations', ['ngAnimate', _animationLink2.default.name, _baseAnimation2.default.name, _class2.default.name, _delay2.default.name, _timeline2.default.name]);
 
-exports['default'] = _module;
-module.exports = exports['default'];
+exports.default = _module;
 
 },{"./animation-link.factory":1,"./base-animation.factory":3,"./class.directive":4,"./delay.directive":5,"./timeline.directive":6}],3:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
-var mod = angular.module('cat.animations.base-animation', []);
+var mod = angular.module('cat.animations.baseAnimation', []);
 
 mod.factory('catBaseAnimation', ['$q', '$parse', function ($q, $parse) {
     return function (config) {
         var statusScopeVar = undefined,
+            setupDeferred = $q.defer(),
             playDeferred = $q.defer(),
             status = '',
             isDisabled = false,
@@ -100,146 +99,99 @@ mod.factory('catBaseAnimation', ['$q', '$parse', function ($q, $parse) {
             };
         },
             running = statusSetter('RUNNING'),
-            clearing = statusSetter('CLEARING'),
+            seeking = statusSetter('SEEKING'),
             ready = statusSetter('READY'),
             finished = statusSetter('FINISHED'),
+            waitForSetup = function waitForSetup(fn) {
+            return function () {
+                for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+                    args[_key] = arguments[_key];
+                }
+
+                return setupDeferred.promise.then(fn.bind.apply(fn, [null].concat(args)));
+            };
+        },
+            seek = function seek(progress) {
+            var onSeeked = progress === 'end' ? finished : ready;
+            if (status === 'RUNNING') {
+                playDeferred.reject(); // Maybe reject?
+            }
+            seeking();
+            return $q.when(config.onSeek(progress)).then(onSeeked);
+        },
             play = function play() {
-            if (status === 'READY') {
+            if (status === 'READY' && !isDisabled) {
                 playDeferred = $q.defer();
                 running();
-                $q.when(config.onPlay()).then(playDeferred.resolve).then(finished);
+
+                playDeferred.promise.then(finished);
+
+                $q.when(config.onPlay()).then(playDeferred.resolve, playDeferred.reject);
+            } else if (isDisabled) {
+                seek('end');
             }
             return playDeferred.promise;
         },
-            clear = function clear() {
-            if (status === 'RUNNING') {
-                playDeferred.resolve(); // Maybe reject?
-            }
-            clearing();
-
-            return $q.when(config.onClear()).then(ready);
-        },
             setDisabled = function setDisabled(newIsDisabled) {
-            var disableP = undefined;
             isDisabled = newIsDisabled;
-            if (status === 'READY') {
-                disableP = $q.when(config.disable());
-                disableP = newIsDisabled ? disableP.then(finished) : disableP;
-            } else {
-                disableP = $q.when();
+
+            if (newIsDisabled) {
+                if (status === 'READY') {
+                    seek('start');
+                } else {
+                    seek('end');
+                }
             }
-            return disableP;
+            return $q.when(config.disable(newIsDisabled));
         },
             setUp = function setUp() {
-            return $q.when(config.onSetUp()).then(ready);
+            $q.when(config.onSetUp()).then(ready).then(setupDeferred.resolve, setupDeferred.reject);
+            return setupDeferred.promise;
         };
 
         if (config.$attrs && config.$attrs.catStatus) {
             statusScopeVar = config.$attrs.catStatus;
         }
-        return Object.defineProperties({
-            play: play,
-            clear: clear,
-            setDisabled: setDisabled,
-            setUp: setUp
-        }, {
-            status: {
-                get: function get() {
-                    return status;
-                },
-                configurable: true,
-                enumerable: true
-            },
-            isDisabled: {
-                get: function get() {
-                    return isDisabled;
-                },
-                configurable: true,
-                enumerable: true
-            }
+
+        ['onPlay', 'onSetUp', 'disable', 'onSeek'].forEach(function (fun) {
+            config[fun] = typeof config[fun] === 'function' ? config[fun] : angular.noop;
         });
+
+        return {
+            play: waitForSetup(play),
+            seek: waitForSetup(seek),
+            setDisabled: waitForSetup(setDisabled),
+            setUp: setUp,
+            get status() {
+                return status;
+            },
+            get isDisabled() {
+                return isDisabled;
+            }
+        };
     };
 }]);
 
-exports['default'] = mod;
-module.exports = exports['default'];
+exports.default = mod;
 
 },{}],4:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 var mod = angular.module('cat.animations.class', []),
     directiveName = 'catClass';
 
-mod.directive(directiveName, ['$animate', '$parse', '$timeout', 'catAnimationLink', function ($animate, $parse, $timeout, catAnimationLink) {
+mod.directive(directiveName, ['$animate', '$parse', '$timeout', 'catAnimationLink', 'catBaseAnimation', function ($animate, $parse, $timeout, catAnimationLink, catBaseAnimation) {
     return {
         restrict: 'A',
         require: [directiveName, '^?catTimeline'],
         controller: ['$q', '$scope', '$attrs', '$element', function ($q, $scope, $attrs, $element) {
             var className = $attrs[directiveName] || directiveName,
-                classNameStart = className + '--start',
-                statusScopeVar = $attrs.catStatus;
+                classNameStart = className + '--start';
 
-            var status = '',
-                deferred = $q.defer(),
-                resolve = function resolve() {
-                for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-                    args[_key] = arguments[_key];
-                }
-
-                return deferred && deferred.resolve(args);
-            },
-                setStatus = function setStatus(newStatus) {
-                var statusM = undefined;
-                if (statusScopeVar) {
-                    statusM = $parse(statusScopeVar);
-                    statusM.assign($scope, newStatus);
-                }
-                status = newStatus;
-            },
-                setUp = function setUp() {
-                // FIXME: do we need to have a different state when an animation
-                // is disabled?
-                setStatus('READY');
-                if (!$element.hasClass(className)) {
-                    $element.addClass(className);
-                }
-
-                seek('start');
-            },
-                clear = function clear() {
-                var clearDeferred = $q.defer();
-                clearDeferred.resolve();
-
-                if (status === 'RUNNING') {
-                    //TODO we might want to reject this to handle this
-                    //usecase, needs more cowbell
-                    resolve();
-                }
-                setUp();
-
-                return clearDeferred.promise;
-            },
-                runAnimation = function runAnimation() {
-                setStatus('RUNNING');
-
-                $animate.removeClass($element, classNameStart).then(function () {
-                    if (status === 'RUNNING') {
-                        setStatus('FINISHED');
-                        resolve();
-                    }
-                });
-            },
-                play = function play() {
-                if (status === 'READY') {
-                    deferred = $q.defer();
-                    runAnimation();
-                }
-                return deferred.promise;
-            },
-                seek = function seek(progress) {
+            var seek = function seek(progress) {
                 $element.css({
                     transition: 'none'
                 });
@@ -248,33 +200,36 @@ mod.directive(directiveName, ['$animate', '$parse', '$timeout', 'catAnimationLin
                 } else if (progress === 'start') {
                     $element.addClass(classNameStart);
                 }
-                $timeout(function () {
-                    return $element.css({
-                        transition: ''
-                    });
-                }, 0, false); // skip $apply
-            },
-                setDisabled = function setDisabled(isDisabled) {
-                if (status === 'READY') {
-                    if (isDisabled) {
-                        seek('end');
-                        setStatus('FINISHED');
-                    } else {
-                        seek('start');
-                    }
-                }
+                // Force relayout
+                $element[0].offsetHeight; //jshint ignore:line
+                $element.css({
+                    transition: ''
+                });
             };
 
+            var baseAnimation = catBaseAnimation({
+                $scope: $scope,
+                $attrs: $attrs,
+                onSeek: seek,
+                onPlay: function onPlay() {
+                    return $animate.removeClass($element, classNameStart);
+                },
+                onSetUp: function onSetUp() {
+                    if (!$element.hasClass(className)) {
+                        $element.addClass(className);
+                    }
+
+                    seek('start');
+                }
+            });
+
             //APIs used by linking function
-            this.runAnimation = runAnimation;
-            this.resolve = resolve;
+            this.setUp = baseAnimation.setUp;
 
             //Public APIs
-            this.setUp = setUp;
-            this.setDisabled = setDisabled;
-            this.play = play;
-            this.clear = clear;
-            this.seek = seek;
+            this.play = baseAnimation.play;
+            this.seek = baseAnimation.seek;
+            this.setDisabled = baseAnimation.setDisabled;
         }],
         link: function link() {
             return catAnimationLink.apply(undefined, arguments);
@@ -282,94 +237,38 @@ mod.directive(directiveName, ['$animate', '$parse', '$timeout', 'catAnimationLin
     };
 }]);
 
-exports['default'] = mod;
-module.exports = exports['default'];
+exports.default = mod;
 
 },{}],5:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 var mod = angular.module('cat.animations.delay', []),
     directiveName = 'catDelay';
 
-mod.directive(directiveName, ['$parse', 'catDelayS', 'catAnimationLink', function ($parse, catDelayS, catAnimationLink) {
+mod.directive(directiveName, ['$parse', 'catDelayS', 'catAnimationLink', 'catBaseAnimation', function ($parse, catDelayS, catAnimationLink, catBaseAnimation) {
     return {
         restrict: 'A',
         require: [directiveName, '^^?catTimeline'],
         controller: ['$q', '$scope', '$attrs', function ($q, $scope, $attrs) {
-            var millis = parseInt($attrs[directiveName], 10) || 1000,
-                statusScopeVar = $attrs.catStatus;
-            var isDisabled = false;
+            var millis = parseInt($attrs[directiveName], 10) || 1000;
 
-            var status = '',
-                deferred = $q.defer(),
-                resolve = function resolve() {
-                for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-                    args[_key] = arguments[_key];
+            var baseAnimation = catBaseAnimation({
+                $scope: $scope,
+                $attrs: $attrs,
+                onPlay: function onPlay() {
+                    return catDelayS(millis);
                 }
-
-                return deferred && deferred.resolve(args);
-            },
-                setStatus = function setStatus(newStatus) {
-                var statusM = undefined;
-                if (statusScopeVar) {
-                    statusM = $parse(statusScopeVar);
-                    statusM.assign($scope, newStatus);
-                }
-                status = newStatus;
-            },
-                setUp = function setUp() {
-                setStatus('READY');
-            },
-                clear = function clear() {
-                var clearDeferred = $q.defer();
-                clearDeferred.resolve();
-
-                if (status === 'RUNNING') {
-                    resolve();
-                }
-                setUp();
-
-                return clearDeferred.promise;
-            },
-                runAnimation = function runAnimation() {
-                setStatus('RUNNING');
-                return catDelayS(millis).then(function () {
-                    if (status === 'RUNNING') {
-                        setStatus('FINISHED');
-                        resolve();
-                    }
-                });
-            },
-                play = function play() {
-                if (status === 'READY') {
-                    deferred = $q.defer();
-                    if (isDisabled) {
-                        setStatus('FINISHED');
-                        resolve();
-                    } else {
-                        runAnimation();
-                    }
-                }
-                return deferred.promise;
-            },
-                setDisabled = function setDisabled(newIsDisabled) {
-                isDisabled = newIsDisabled;
-                setStatus('FINISHED');
-            };
+            });
 
             //APIs used by linking function
-            this.setUp = setUp;
-            this.setUp = setUp;
-            this.runAnimation = runAnimation;
-            this.resolve = resolve;
-
+            this.setUp = baseAnimation.setUp;
             //Public APIs
-            this.play = play;
-            this.setDisabled = setDisabled;
-            this.clear = clear;
+            this.seek = baseAnimation.seek;
+            this.play = baseAnimation.play;
+            this.setDisabled = baseAnimation.setDisabled;
         }],
         link: function link() {
             return catAnimationLink.apply(undefined, arguments);
@@ -377,13 +276,12 @@ mod.directive(directiveName, ['$parse', 'catDelayS', 'catAnimationLink', functio
     };
 }]);
 
-exports['default'] = mod;
-module.exports = exports['default'];
+exports.default = mod;
 
 },{}],6:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 var mod = angular.module('cat.animations.timeline', []),
@@ -402,11 +300,7 @@ mod.directive(directiveName, ['$parse', 'catAnimationLink', 'catBaseAnimation', 
                 });
 
                 return ordered.reduce(function (prev, curr) {
-                    return prev.then(
-                    //Prevent animation to run if cleared
-                    function () {
-                        return baseAnimation.status === 'RUNNING' ? curr.controller.play() : prev;
-                    });
+                    return prev.then(curr.controller.play);
                 }, promise);
             },
                 animationsMap = {},
@@ -414,16 +308,14 @@ mod.directive(directiveName, ['$parse', 'catAnimationLink', 'catBaseAnimation', 
                 onPlay: function onPlay() {
                     return runAnimation($q.when());
                 },
-
-                onClear: function onClear() {
-                    return $q.all(animations.map(function (animation) {
-                        return animation.controller.clear();
-                    }));
-                },
-                onSetUp: function onSetUp() {},
                 disable: function disable(isDisabled) {
                     animations.forEach(function (animation) {
                         animation.controller.setDisabled(isDisabled);
+                    });
+                },
+                onSeek: function onSeek(progress) {
+                    return animations.forEach(function (animation) {
+                        return animation.controller.seek(progress);
                     });
                 },
                 $scope: $scope,
@@ -452,25 +344,21 @@ mod.directive(directiveName, ['$parse', 'catAnimationLink', 'catBaseAnimation', 
             },
                 getAllAnimations = function getAllAnimations() {
                 return animationsMap;
-            },
-                seek = function seek(progress) {
-                animations.forEach(function (animation) {
-                    animation.controller.seek(progress);
-                });
             };
 
-            //APIs used by linking function
-            this.setUp = baseAnimation.setUp;
-
             //Public APIs
-            this.play = baseAnimation.play;
-            this.clear = baseAnimation.clear;
-            this.setDisabled = baseAnimation.setDisabled;
-            this.seek = seek;
-            this.register = register;
-            this.getAnimation = getAnimation;
+
+            //Router specific
             this.getAllAnimations = getAllAnimations;
+            this.getAnimation = getAnimation;
+            this.register = register;
             this.setCustomAnimation = setCustomAnimation;
+
+            //Animation specific
+            this.play = baseAnimation.play;
+            this.seek = baseAnimation.seek;
+            this.setDisabled = baseAnimation.setDisabled;
+            this.setUp = baseAnimation.setUp;
         }],
         link: function link() {
             return catAnimationLink.apply(undefined, arguments);
@@ -478,53 +366,51 @@ mod.directive(directiveName, ['$parse', 'catAnimationLink', 'catBaseAnimation', 
     };
 }]);
 
-exports['default'] = mod;
-module.exports = exports['default'];
+exports.default = mod;
 
 },{}],7:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+var _scrollSpy = require('./scroll-spy/scroll-spy.module');
 
-var _scrollSpyScrollSpyModule = require('./scroll-spy/scroll-spy.module');
+var _scrollSpy2 = _interopRequireDefault(_scrollSpy);
 
-var _scrollSpyScrollSpyModule2 = _interopRequireDefault(_scrollSpyScrollSpyModule);
+var _animations = require('./animations/animations.module');
 
-var _animationsAnimationsModule = require('./animations/animations.module');
+var _animations2 = _interopRequireDefault(_animations);
 
-var _animationsAnimationsModule2 = _interopRequireDefault(_animationsAnimationsModule);
+var _delay = require('./utils/delay.service');
 
-var _utilsDelayService = require('./utils/delay.service');
+var _delay2 = _interopRequireDefault(_delay);
 
-var _utilsDelayService2 = _interopRequireDefault(_utilsDelayService);
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _module = angular.module('cat', ['ngAnimate', _animationsAnimationsModule2['default'].name, _utilsDelayService2['default'].name, _scrollSpyScrollSpyModule2['default'].name]);
+var _module = angular.module('cat', ['ngAnimate', _animations2.default.name, _delay2.default.name, _scrollSpy2.default.name]);
 
-exports['default'] = _module;
-module.exports = exports['default'];
+exports.default = _module;
 
 },{"./animations/animations.module":2,"./scroll-spy/scroll-spy.module":9,"./utils/delay.service":12}],8:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+var _debounce = require('../utils/debounce.service');
 
-var _utilsDebounceService = require('../utils/debounce.service');
+var _debounce2 = _interopRequireDefault(_debounce);
 
-var _utilsDebounceService2 = _interopRequireDefault(_utilsDebounceService);
+var _windowScrollHelper = require('../utils/window-scroll-helper.service');
 
-var _utilsWindowScrollHelperService = require('../utils/window-scroll-helper.service');
+var _windowScrollHelper2 = _interopRequireDefault(_windowScrollHelper);
 
-var _utilsWindowScrollHelperService2 = _interopRequireDefault(_utilsWindowScrollHelperService);
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var mod = angular.module('cat.scrollSpy.scrollContainer', [_utilsDebounceService2['default'].name, _utilsWindowScrollHelperService2['default'].name]);
+var mod = angular.module('cat.scrollSpy.scrollContainer', [_debounce2.default.name, _windowScrollHelper2.default.name]);
 
 mod.directive('catScrollContainer', ['$window', '$timeout', 'catDebounce', 'windowScrollGetter', function ($window, $timeout, catDebounce, windowScrollGetter) {
     return {
@@ -624,39 +510,37 @@ mod.directive('catScrollContainer', ['$window', '$timeout', 'catDebounce', 'wind
     };
 }]);
 
-exports['default'] = mod;
-module.exports = exports['default'];
+exports.default = mod;
 
 },{"../utils/debounce.service":11,"../utils/window-scroll-helper.service":13}],9:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+var _scrollContainer = require('./scroll-container.directive');
 
-var _scrollContainerDirective = require('./scroll-container.directive');
+var _scrollContainer2 = _interopRequireDefault(_scrollContainer);
 
-var _scrollContainerDirective2 = _interopRequireDefault(_scrollContainerDirective);
+var _visible = require('./visible.directive');
 
-var _visibleDirective = require('./visible.directive');
+var _visible2 = _interopRequireDefault(_visible);
 
-var _visibleDirective2 = _interopRequireDefault(_visibleDirective);
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var mod = angular.module('cat.scrollSpy', [_scrollContainerDirective2['default'].name, _visibleDirective2['default'].name]);
+var mod = angular.module('cat.scrollSpy', [_scrollContainer2.default.name, _visible2.default.name]);
 
 //TODO: The current implementation works for scroll spies on the
 // body element and for scroll divs when no parents are scrollable.
 // The case where we have nested scroll elements has to be investigated.
 
-exports['default'] = mod;
-module.exports = exports['default'];
+exports.default = mod;
 
 },{"./scroll-container.directive":8,"./visible.directive":10}],10:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 var mod = angular.module('cat.scrollSpy.visible', []);
@@ -724,13 +608,12 @@ mod.directive('catVisible', ['$window', '$parse', '$timeout', function ($window,
     };
 }]);
 
-exports['default'] = mod;
-module.exports = exports['default'];
+exports.default = mod;
 
 },{}],11:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 var mod = angular.module('cat.utils.debounce', []);
@@ -767,13 +650,12 @@ mod.factory('catDebounce', ['$timeout', '$q', function ($timeout, $q) {
     };
 }]);
 
-exports['default'] = mod;
-module.exports = exports['default'];
+exports.default = mod;
 
 },{}],12:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 var mod = angular.module('cat.utils.delay', []);
@@ -786,13 +668,12 @@ mod.factory('catDelayS', ['$timeout', '$q', function ($timeout, $q) {
     };
 }]);
 
-exports['default'] = mod;
-module.exports = exports['default'];
+exports.default = mod;
 
 },{}],13:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 var mod = angular.module('cat.utils.windowScrollHelper', []);
@@ -815,8 +696,7 @@ mod.factory('windowScrollGetter', ['$window', function ($window) {
     };
 }]);
 
-exports['default'] = mod;
-module.exports = exports['default'];
+exports.default = mod;
 
 },{}]},{},[7])
 //# sourceMappingURL=cat.js.map
