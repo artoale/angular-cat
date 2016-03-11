@@ -1,5 +1,5 @@
 {
-  "name": "ng-cat",
+  "name": "angular-cat",
   "version": "0.0.1",
   "description": "CSS Animation Timeline. Set of angularjs directives to simplify development of animations on static websites",
   "main": "dist/cat.js",
@@ -51,5 +51,9 @@
     "sinon": "^1.17.2",
     "sinon-chai": "^2.8.0",
     "vinyl-source-stream": "^1.1.0"
+  },
+  "dependencies": {
+    "angular": "^1.4.9",
+    "angular-animate": "^1.4.9"
   }
 }
