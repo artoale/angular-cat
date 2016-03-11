@@ -9,20 +9,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/artoale/ng-cat.git"
+    "url": "https://github.com/artoale/angular-cat.git"
   },
   "keywords": [
     "angularjs",
     "animations",
     "cat",
-    "ng-cat"
+    "angular-cat"
   ],
   "author": "Alessandro Artoni <aartoni@google.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/artoale/ng-cat/issues"
+    "url": "https://github.com/artoale/angular-cat/issues"
   },
-  "homepage": "https://github.com/artoale/ng-cat",
+  "homepage": "https://github.com/artoale/angular-cat",
   "devDependencies": {
     "babel-preset-es2015": "^6.3.13",
     "babelify": "^7.2.0",

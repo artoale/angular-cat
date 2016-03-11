@@ -1,6 +1,6 @@
 {
   "name": "angular-cat",
-  "homepage": "https://github.com/artoale/ng-cat",
+  "homepage": "https://github.com/artoale/angular-cat",
   "authors": [
     "Alessandro Artoni <aartoni@google.com>",
     "Paolo Chillari <killer.paolo@gmail.com>"
@@ -16,7 +16,7 @@
     "angularjs",
     "animations",
     "cat",
-    "ng-cat"
+    "angular-cat"
   ],
   "license": "MIT",
   "ignore": [
