@@ -1,4 +1,4 @@
-var app = angular.module('example', ['cat']).run(function() {
+var app = angular.module('example', ['cat', 'ngSpy']).run(function() {
     console.log('I am running');
 });
 
