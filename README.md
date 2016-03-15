@@ -152,38 +152,38 @@ How long to wait, in milliseconds.
 All APIs return a promise, which is resolved when the relative action is
 successfully completed, or rejected otherwise.
 
-### `controller.play() : Promise`
+#### `controller.play() : Promise`
 Start the animation and returns a promise, resolved when the animation is over.
 If called when the animation is already running, the same promise is returned.
 
-### `controller.seek(progress: string) : Promise`
+#### `controller.seek(progress: string) : Promise`
 
 `progress` can be either the `'start'` or `'end'` string.
 
 Seek to the end or the beginning of the animation, based on the passed parameter.
 If called when the animation is `RUNNING` it causes the play promise to be rejected.
 
-### `controller.setDisabled(disabled: boolean) : Promise`
+#### `controller.setDisabled(disabled: boolean) : Promise`
 
 Set the disabled status of the animation.
 
-### `controller.setUp() : Promise`
+#### `controller.setUp() : Promise`
 
 Called by the linking function on all animation directives.
 You should probably never call this yourself.
 
-#### Additional JS APIs
+### Additional JS APIs
 
-### `timelineController.register(animationName: string, animationController [, order: number])`
+#### `timelineController.register(animationName: string, animationController [, order: number])`
 Called by "component" directives to register themselves. The order parameter is
 currently only available via JS APIs, but will be added as a shared attribute in
 the future.
 
-### `timelineController.getAnimation(animationName: string) : animationController`
+#### `timelineController.getAnimation(animationName: string) : animationController`
 
 Return a registered animation by name.
 
-### `timelineController.getAllAnimations(): object<animationName: animationController>`
+#### `timelineController.getAllAnimations(): object<animationName: animationController>`
 
 Get all animations objects registered on the timeline controller.
 
