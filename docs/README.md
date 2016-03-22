@@ -3,4 +3,4 @@
 - [API Reference](/docs/api/README.md)
 
   - [Directives](/docs/api/Directives.md)
-  - Services
+  - [Services](/docs/api/Services.md)
